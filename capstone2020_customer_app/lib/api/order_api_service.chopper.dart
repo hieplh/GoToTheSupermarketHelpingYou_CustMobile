@@ -15,4 +15,33 @@ class _$OrderApiService extends OrderApiService {
 
   @override
   final definitionType = OrderApiService;
+
+  @override
+  Future<Response<dynamic>> postOrder(
+      double costDelivery,
+      double costShopping,
+      String cust,
+      String dateDelivery,
+      List<OrderDetail> details,
+      String market,
+      String note,
+      String timeDelivery,
+      TimeTravel timeTravel,
+      double totalCost) {
+    final $url = '/order';
+    final $params = <String, dynamic>{
+      'costDelivery': costDelivery,
+      'costShopping': costShopping,
+      'cust': cust,
+      'dateDelivery': dateDelivery,
+      'details': details,
+      'market': market,
+      'note': note,
+      'timeDelivery': timeDelivery,
+      'timeTravel': timeTravel,
+      'totalCost': totalCost
+    };
+    final $request = Request('POST', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

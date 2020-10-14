@@ -1,4 +1,4 @@
-import 'package:capstone2020customerapp/models/time_delivery_model.dart';
+import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'order_detail_model.dart';
@@ -9,13 +9,14 @@ class Order{
   double costDelivery;
   double costShopping;
   String cust;
-  DateTime dateDelivery;
+  String dateDelivery;
   OrderDetail details;
 //  String lat;
 //  String lng;
   String market;
   String note;
-  TimeDelivery timeDelivery;
+  String timeDelivery;
+  TimeTravel timeTravel;
   double totalCost;
 
   Order(
@@ -26,6 +27,8 @@ class Order{
       this.details,
       this.market,
       this.note,
+      this.timeDelivery,
+      this.timeTravel,
       this.totalCost,
       );
 

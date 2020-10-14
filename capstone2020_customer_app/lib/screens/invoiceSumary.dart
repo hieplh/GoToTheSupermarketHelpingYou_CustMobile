@@ -1,3 +1,6 @@
+import 'package:capstone2020customerapp/api/order_api_service.dart';
+import 'package:capstone2020customerapp/models/order_detail_model.dart';
+import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +22,21 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
         textColor: Colors.white
     );
 
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }), ModalRoute.withName('/'));
+
+//    Navigator.of(context).pushAndRemoveUntil(
+//        MaterialPageRoute(builder: (context) {
+//          return HomePage();
+//        }), ModalRoute.withName('/'));
+  }
+
+  Future<void> postOrder()async{
+    List<OrderDetail> details = List<OrderDetail>();
+    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
+    details.add(detail);
+    TimeTravel timeTravel = new TimeTravel("00:00:00", "00:00:00", "00:00:00", "00:00:00");
+    final myService = OrderApiService.create();
+    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
+    print(respone.statusCode.toString());
   }
 
   @override
@@ -399,7 +413,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
       height: 70.0,
       child: RaisedButton(
-        onPressed: showToast,
+        onPressed: postOrder,
         textColor: Colors.white,
         color: const Color.fromRGBO(0, 141, 177, 1),
         child: Text(
