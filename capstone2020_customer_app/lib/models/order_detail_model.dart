@@ -15,7 +15,7 @@ class OrderDetail{
       this.pricePaid,
       this.saleOff,
       this.weight,
-      )
+      );
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) =>
       _$OrderDetailFromJson(json);

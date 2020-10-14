@@ -27,7 +27,7 @@ class Order{
       this.market,
       this.note,
       this.totalCost,
-      )
+      );
 
   factory Order.fromJson(Map<String, dynamic> json) =>
       _$OrderFromJson(json);

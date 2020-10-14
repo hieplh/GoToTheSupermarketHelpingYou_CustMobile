@@ -17,7 +17,7 @@ class TimeDelivery{
       this.month,
       this.seconds,
       this.year,
-      )
+      );
   factory TimeDelivery.fromJson(Map<String, dynamic> json) =>
       _$TimeDeliveryFromJson(json);
 
