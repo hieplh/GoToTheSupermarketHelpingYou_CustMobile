@@ -7,7 +7,7 @@ class SaleOffModel{
   String endDate;
   String startTime;
   String endTime;
-  String saleOff;
+  int saleOff;
 
 
   SaleOffModel(

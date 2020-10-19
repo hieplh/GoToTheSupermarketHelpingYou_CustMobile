@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:capstone2020customerapp/api/store_api_service.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
+import 'package:tiengviet/tiengviet.dart';
 
 class DetailSupermarketPage extends StatefulWidget {
   @override
@@ -9,29 +14,47 @@ class DetailSupermarketPage extends StatefulWidget {
 FocusNode myFocusNode = new FocusNode();
 class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   String search;
+  String storeID;
   TextEditingController searchController = new TextEditingController();
   List<String> img = ["facebook.png", "facebook.png", "facebook.png"];
+
+  List<StoreModel> list;
+  Future<void> getAllStore()async{
+    final myService = StoreApiService.create();
+    final response = await myService.getAllStore();
+//    String body = utf8.decode(response.bodyBytes);
+    list = response.body;
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
 //      backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
-      body: Form(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(),
-            _buildBody(),
-          ],
-        ),
+      body: FutureBuilder(
+        future: getAllStore(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    _buildHeader(),
+                    _buildBody(),
+                  ],
+                ),
+              );
+            }
+          }
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Expanded(
-      flex: 1,
-      child: Row(
+    return Row(
         children: <Widget>[
           Container(
             alignment: Alignment.centerLeft,
@@ -55,14 +78,11 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
             ),
           ),
         ],
-      ),
     );
   }
 
   Widget _buildBody() {
-    return Expanded(
-      flex: 10,
-      child: Column(
+    return Column(
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
@@ -134,7 +154,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                     width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.only(left: 15.0),
                     child: Text(
-                      'AEON',
+                      'Bic C',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -158,7 +178,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                     width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.only(left: 15.0),
                     child: Text(
-                      '30 Bờ Bao Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú, Tp.Hồ Chí Minh.',
+                      'Lô A, Khu dân cư Cityland, số 99, Đường Nguyễn Thị Thập, Phường Tân Phú, Quận 7, Thành phố Hồ Chí Minh.',
                       style: TextStyle(
                         fontSize: 15.0,
                         color: Colors.grey[900],
@@ -174,7 +194,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                 height: 150,
                 padding: EdgeInsets.only(bottom: 10.0, right: 15.0),
                 child: Image.network(
-                    'https://aeonmall-vietnam.com/wp-content/uploads/2017/01/icon-mall-01-1.jpg',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
@@ -190,15 +210,21 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
               ),
             ),
           ),
-          for (String image in img)
+          for (var listStore in list)
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(bottom: 10.0),
               child: ListTile(
-                leading: Image.network('https://diadiemanuong.edu.vn/wp-content/uploads/2020/08/tphcm-benh-nhan-450-tung-di-bo-den-aeon-mall-binh-tan-it-nhat-6-lan-mua-thuc-an-63f4672a637317057186251385.jpg'),
+                leading: Image.network(
+                  'https://www.bigc.vn/files/images/store/big-c-nha-trang.jpg',
+                  fit: BoxFit.contain,
+                  height: 100.0,
+                  width: 100.0,
+                  alignment: Alignment.center,
+                ),
                     title: Text(
-                      'AEON MALL Binh Tan',
+                      '${listStore.name}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -206,7 +232,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                       ),
                     ),
                     subtitle: Text(
-                      '21phút . 1.8km',
+                      '${listStore.addr1}, ${listStore.addr2}, ${listStore.addr3}, ${listStore.addr4} ',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.grey[500],
@@ -218,7 +244,9 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                       color: Colors.black,
                       size: 40.0,
                     ),
-                    onTap: goToHomePage,
+                    onTap: (){
+                        goToHomePage('${listStore.id}');
+                    },
                     isThreeLine: true,
                   ),
               decoration: BoxDecoration(
@@ -228,7 +256,6 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
               ),
             ),
         ],
-      ),
     );
   }
 
@@ -239,9 +266,9 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
     }), ModalRoute.withName('/'));
   }
 
-  goToHomePage() async {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return HomePage();
-    }));
+  goToHomePage(String storeID) async {
+    Navigator.push(
+        context, MaterialPageRoute(
+        builder: (context) => HomePage(storeID: storeID)));
   }
 }

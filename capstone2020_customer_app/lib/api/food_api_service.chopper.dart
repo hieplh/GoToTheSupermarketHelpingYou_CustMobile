@@ -17,9 +17,9 @@ class _$FoodApiService extends FoodApiService {
   final definitionType = FoodApiService;
 
   @override
-  Future<Response<FoodModel>> getAllFood(int store_id) {
+  Future<Response<List<FoodModel>>> getAllFood(String store_id) {
     final $url = '/foods/$store_id';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<FoodModel, FoodModel>($request);
+    return client.send<List<FoodModel>, FoodModel>($request);
   }
 }

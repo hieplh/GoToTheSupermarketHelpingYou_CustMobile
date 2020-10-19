@@ -12,7 +12,7 @@ FoodModel _$FoodModelFromJson(Map<String, dynamic> json) {
     json['name'] as String,
     json['image'] as String,
     json['description'] as String,
-    json['price'] as String,
+    (json['price'] as num)?.toDouble(),
     json['saleOff'] == null
         ? null
         : SaleOffModel.fromJson(json['saleOff'] as Map<String, dynamic>),

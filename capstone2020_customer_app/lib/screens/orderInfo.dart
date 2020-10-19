@@ -1,3 +1,4 @@
+import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +6,21 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 
 class OrderInfoPage extends StatefulWidget {
+  final List<Data> list;
+  final double total;
+  final String storeID;
+
+  OrderInfoPage({Key key, @required this.list, @required this.total, @required this.storeID}) : super(key: key);
+
   @override
-  _OrderInfoPage createState() => _OrderInfoPage();
+  _OrderInfoPage createState() => _OrderInfoPage(list, total, storeID);
 }
 
 class _OrderInfoPage extends State<OrderInfoPage> {
+  List<Data> data;
+  double total;
+  String storeID;
+  _OrderInfoPage(this.data, this.total, this.storeID);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -310,6 +321,17 @@ class _OrderInfoPage extends State<OrderInfoPage> {
             ),
           ),
           Container(
+                  padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+                  margin: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    '388/4 Huỳnh Tấn Phát, phường Bình Thuận, Quận 7, Thành Phố HCM',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Color.fromRGBO(0, 141, 177, 1),
+                    ),
+                  ),
+                ),
+          Container(
             child: Row(
               children: <Widget>[
                 Container(
@@ -398,7 +420,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) {
-            return PaymentPage();
+            return PaymentPage(list: data, total: total, storeID: storeID,);
           }));
         },
         textColor: Colors.white,

@@ -12,7 +12,7 @@ abstract class OrderApiService extends ChopperService{
 
   static OrderApiService create(){
     final client = ChopperClient(
-        baseUrl: 'https://smhu.azurewebsites.net/smhu/api',
+        baseUrl: 'http://172.16.191.127:1234/smhu/api',
         services: [_$OrderApiService()],
         converter: JsonToTypeConverter({
           Order: (jsonData) => Order.fromJson(jsonData)

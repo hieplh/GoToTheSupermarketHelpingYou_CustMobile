@@ -11,7 +11,7 @@ abstract class FoodApiService extends ChopperService{
 
   static FoodApiService create(){
     final client = ChopperClient(
-        baseUrl: 'https://smhu.azurewebsites.net/smhu/api',
+        baseUrl: 'http://172.16.191.127:1234/smhu/api',
         services: [_$FoodApiService()],
         converter: JsonToTypeConverter({
           FoodModel: (jsonData) => FoodModel.fromJson(jsonData)
@@ -20,7 +20,7 @@ abstract class FoodApiService extends ChopperService{
     return _$FoodApiService(client);
   }
   @Get(path: "{store_id}")
-  Future<Response<FoodModel>> getAllFood(@Path() int store_id);
+  Future<Response<List<FoodModel>>> getAllFood(@Path() String store_id);
 }
 
 class JsonToTypeConverter extends JsonConverter {

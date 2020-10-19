@@ -8,19 +8,19 @@ class FoodDetailPage extends StatefulWidget {
 FocusNode myFocusNode = new FocusNode();
 
 class _FoodDetailPage extends State<FoodDetailPage> {
-  int _n = 0;
+//  int _n = 0;
 
-  void add() {
-    setState(() {
-      _n++;
-    });
-  }
-
-  void minus() {
-    setState(() {
-      if (_n != 0) _n--;
-    });
-  }
+//  void add() {
+//    setState(() {
+//      _n++;
+//    });
+//  }
+//
+//  void minus() {
+//    setState(() {
+//      if (_n != 0) _n--;
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,31 +145,31 @@ class _FoodDetailPage extends State<FoodDetailPage> {
     );
   }
 
-  Widget _buildQuantity() {
-    return Container(
-      child: new Center(
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            new FloatingActionButton(
-              onPressed: add,
-              child: new Icon(Icons.add,
-                  color: const Color.fromRGBO(0, 141, 177, 1)),
-              backgroundColor: Colors.white,
-            ),
-            new Text('$_n', style: new TextStyle(fontSize: 60.0)),
-            new FloatingActionButton(
-              onPressed: minus,
-              child: new Icon(
-                  const IconData(0xe15b, fontFamily: 'MaterialIcons'),
-                  color: const Color.fromRGBO(0, 141, 177, 1)),
-              backgroundColor: Colors.white,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+//  Widget _buildQuantity() {
+//    return Container(
+//      child: new Center(
+//        child: new Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//          children: <Widget>[
+//            new FloatingActionButton(
+//              onPressed: add,
+//              child: new Icon(Icons.add,
+//                  color: const Color.fromRGBO(0, 141, 177, 1)),
+//              backgroundColor: Colors.white,
+//            ),
+//            new Text('$_n', style: new TextStyle(fontSize: 60.0)),
+//            new FloatingActionButton(
+//              onPressed: minus,
+//              child: new Icon(
+//                  const IconData(0xe15b, fontFamily: 'MaterialIcons'),
+//                  color: const Color.fromRGBO(0, 141, 177, 1)),
+//              backgroundColor: Colors.white,
+//            ),
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   Widget _buildOrderButton() {
     return Container(

@@ -12,7 +12,7 @@ SaleOffModel _$SaleOffModelFromJson(Map<String, dynamic> json) {
     json['endDate'] as String,
     json['startTime'] as String,
     json['endTime'] as String,
-    json['saleOff'] as String,
+    json['saleOff'] as int,
   );
 }
 

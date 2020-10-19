@@ -1,3 +1,7 @@
+import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/api/store_api_service.dart';
+import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
@@ -368,7 +372,6 @@ class _LoginPageState extends State<LoginPage> {
 
 
   changeThePage() async {
-    print('username:' + usernameController.text);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
           return SupermarketPage();

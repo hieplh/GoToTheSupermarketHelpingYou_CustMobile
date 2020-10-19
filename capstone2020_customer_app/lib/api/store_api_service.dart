@@ -10,7 +10,7 @@ abstract class StoreApiService extends ChopperService{
 
   static StoreApiService create(){
     final client = ChopperClient(
-        baseUrl: 'https://smhu.azurewebsites.net/smhu/api',
+        baseUrl: 'http://172.16.191.127:1234/smhu/api',
         services: [_$StoreApiService()],
         converter: JsonToTypeConverter({
           StoreModel: (jsonData) => StoreModel.fromJson(jsonData)

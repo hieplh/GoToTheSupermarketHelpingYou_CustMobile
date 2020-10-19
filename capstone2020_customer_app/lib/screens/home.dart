@@ -1,20 +1,70 @@
+import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/bloc/cart_items_bloc.dart';
+import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/screens/food.dart';
 import 'package:capstone2020customerapp/screens/foodType.dart';
 import 'package:capstone2020customerapp/screens/orderInfo.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:localstorage/localstorage.dart';
 
 class HomePage extends StatefulWidget {
+  final String storeID;
+
+  HomePage({Key key, @required this.storeID}) : super(key: key);
+
   @override
-  _HomePage createState() => _HomePage();
+  _HomePage createState() => _HomePage(storeID);
 }
 
 FocusNode myFocusNode = new FocusNode();
 
+
 class _HomePage extends State<HomePage> {
+  String storeID;
+  double total = 0;
+  _HomePage(this.storeID);
   int _selectedIndex = 0;
   String search;
   TextEditingController searchController = new TextEditingController();
+  List<FoodModel> list;
+  List<Data> listCart = new List();
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'Thêm Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+
+  }
+  void showToastDelete() {
+    Fluttertoast.showToast(
+        msg: 'Xóa Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+
+  }
+
+  Future<void> getAllFood() async {
+    print('storeID' + storeID);
+    final myService = FoodApiService.create();
+    final response = await myService.getAllFood(storeID);
+    list = response.body;
+//    for (var listItem in list) {
+//      print(listItem.name);
+//    }
+
+  }
 
   Future<void> _onItemTapped(int index) async {
     setState(() {
@@ -24,48 +74,61 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
-      Card(
-          child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildHomeHeader(),
-            _buildHomeBody(),
-          ],
-        ),
-      )),
-      Card(
-        child: Column(
-          children: <Widget>[
-            _buildActivityHeader(),
-          ],
-        ),
-      ),
-      Card(
-          child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildCartHeader(),
-            _buildCartBody(),
-            _buildCartSubBody(),
-            _buildOrderButton(),
-          ],
-        ),
-      )),
-      Card(
-        child: Column(
-          children: <Widget>[
-            _buildInfo(),
-          ],
-        ),
-      ),
-    ];
     // TODO: implement build
     return Scaffold(
 //      backgroundColor: const Color.fromRGBO(0, 141, 177, 1)
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: FutureBuilder(
+          future: getAllFood(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            print(snapshot.connectionState);
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              List<Widget> _widgetOptions = <Widget>[
+                Card(
+                    child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      _buildHomeHeader(),
+                      _buildHomeBody(),
+                    ],
+                  ),
+                )),
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      _buildActivityHeader(),
+                    ],
+                  ),
+                ),
+                Card(
+                    child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      _buildCartHeader(),
+                      _buildCartBody(),
+                      _buildCartSubBody(),
+                     _buildOrderButton(),
+                    ],
+                  ),
+                )
+
+            ),
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      _buildInfo(),
+                    ],
+                  ),
+                ),
+              ];
+              return Center(
+                child: _widgetOptions.elementAt(_selectedIndex),
+              );
+            }
+          }),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -466,12 +529,18 @@ class _HomePage extends State<HomePage> {
             ),
             Container(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: Text(
-                'Xem tất cả',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  color: Color.fromRGBO(0, 141, 177, 1),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => FoodPage(storeID: storeID,)));
+                },
+                child: Text(
+                  'Xem tất cả',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: Color.fromRGBO(0, 141, 177, 1),
+                  ),
                 ),
               ),
             ),
@@ -482,7 +551,7 @@ class _HomePage extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            for (var i = 0; i < 5; i++)
+            for (var listFood in list)
               Container(
                 margin: const EdgeInsets.only(left: 10.0),
                 decoration:
@@ -493,18 +562,18 @@ class _HomePage extends State<HomePage> {
                       width: 100.0,
                       height: 100.0,
                       child: Image.network(
-                          'https://bizweb.dktcdn.net/100/146/885/products/fillet-uc-ga.jpg?v=1594694876573'),
+                          '${listFood.image}'),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: 10.0, left: 10.0),
                       width: 100.0,
-                      height: 60.0,
+                      height: 70.0,
                       child: Column(
                         children: <Widget>[
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              'Ức gà',
+                              '${listFood.name}',
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
@@ -514,7 +583,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '500g',
+                              '${listFood.price}',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -522,17 +591,17 @@ class _HomePage extends State<HomePage> {
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              '56,000 VND',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+//                          Container(
+//                            alignment: Alignment.center,
+//                            child: Text(
+//                              '${listFood.description}',
+//                              style: TextStyle(
+//                                fontSize: 13.0,
+//                                color: Colors.grey,
+//                                fontWeight: FontWeight.bold,
+//                              ),
+//                            ),
+//                          ),
                         ],
                       ),
                     ),
@@ -808,7 +877,7 @@ class _HomePage extends State<HomePage> {
           ],
         ),
       ),
-      for (var i = 0; i < 5; i++)
+      for (var listFood in list)
         Container(
           padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
@@ -821,9 +890,12 @@ class _HomePage extends State<HomePage> {
           ),
           child: ListTile(
             leading: Image.network(
-                'https://vinmec-prod.s3.amazonaws.com/images/20200708_040238_836115_15639394169.max-800x800.jpg'),
+                '${listFood.image}',fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center),
             title: Text(
-              'Cá hồi',
+              '${listFood.name}',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 18.0,
@@ -831,7 +903,7 @@ class _HomePage extends State<HomePage> {
               ),
             ),
             subtitle: Text(
-              '175g',
+              '${listFood.price}',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 13.0,
@@ -842,13 +914,116 @@ class _HomePage extends State<HomePage> {
               color: Color.fromRGBO(0, 141, 177, 1),
               size: 30.0,
             ),
+            onTap: (){
+              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}');
+              total = total + double.parse(data.price);
+              listCart.add(data);
+              print(total);
+              showToast();
+            },
           ),
         ),
     ]);
   }
 
   Widget _buildCartBody() {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1.0, color: Colors.grey),
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            for (var listOrder in listCart)
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(15.0),
+                      width: 150.0,
+                      height: 150.0,
+                      child: Image.network(
+                        '${listOrder.image}',
+                        fit: BoxFit.cover,
+                        height: double.infinity,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              '${listOrder.name}',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              '${listOrder.price}\n',
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              'Số Lượng: 1\n',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.45,
+                                  child: Text(
+                                    '${listOrder.price}đ',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: IconButton(
+                                    icon: new Icon(
+                                      Icons.delete,
+                                      color: const Color.fromRGBO(0, 141, 177, 1),
+                                    ),
+                                    onPressed: (){
+                                      //listCart.removeWhere(('${listOrder.id}') => '${listOrder.id}');
+                                      showToastDelete();
+                                    },
+                                  ),
+
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+          ],
+        ),
+    );
+  }
+
+  Widget _buildCartSubBody() {
     return Container(
+      padding: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(width: 1.0, color: Colors.grey),
@@ -856,74 +1031,35 @@ class _HomePage extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-          for (var i = 0; i < 1; i++)
-            Container(
+          Container(
             child: Row(
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.all(15.0),
-                  width: 150.0,
-                  height: 150.0,
-                  child: Image.network(
-                    'https://vinmec-prod.s3.amazonaws.com/images/20200708_040238_836115_15639394169.max-800x800.jpg',
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                    alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 15.0),
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: Text(
+                    'Voucher\n',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
                   ),
                 ),
                 Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          'Cá Hồi 300g',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          '135,000đ\n',
-                          style: TextStyle(
-                            fontSize: 13.0,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          'Số Lượng: 1\n',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.45,
-                              child: Text(
-                                '135,000đ',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Icon(
-                                Icons.delete,
-                                color: const Color.fromRGBO(0, 141, 177, 1),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+                      top: BorderSide(width: 1.0, color: Colors.grey),
+                      left: BorderSide(width: 1.0, color: Colors.grey),
+                      right: BorderSide(width: 1.0, color: Colors.grey),
+                    ),
+                  ),
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: const Color.fromRGBO(0, 141, 177, 1),
                   ),
                 ),
               ],
@@ -933,81 +1069,102 @@ class _HomePage extends State<HomePage> {
             child: Row(
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.all(15.0),
-                  width: 150.0,
-                  height: 150.0,
-                  child: Image.network(
-                    'https://fohlabeef.vn/wp-content/uploads/2019/05/th%C4%83n-n%E1%BB%99i-b%C3%B2-%C3%BAc-Tenderloin.png',
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                    alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 15.0),
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
+                    'Tổng Cộng(đã bao gồm thuế)\n',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
                   ),
                 ),
                 Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                              'Thịt bò 450g',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Icon(
-                              Icons.stars,
-                              color: Colors.red,
-                              size: 20.0,
-                            ),
-                          ),
-                        ],
-
-                      ),
-                      Container(
-                        child: Text(
-                          '110,000đ\n',
-                          style: TextStyle(
-                            fontSize: 13.0,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          'Số Lượng: 1\n',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.45,
-                              child: Text(
-                                '90,000đ',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Icon(
-                                Icons.delete,
-                                color: const Color.fromRGBO(0, 141, 177, 1),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Text(
+                    '$total',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
+                    'Giảm Giá\n',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Text(
+                    '-0đ',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
+                    'Voucher\n',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Text(
+                    '-0đ',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
+                    'Tổng Tiền\n',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Text(
+                    '$total',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromRGBO(0, 141, 177, 1),
+                    ),
                   ),
                 ),
               ],
@@ -1018,173 +1175,15 @@ class _HomePage extends State<HomePage> {
     );
   }
 
-  Widget _buildCartSubBody() {
-    return Container(
-      padding: const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1.0, color: Colors.grey),
-          ),
-        ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Text(
-                      'Voucher\n',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey),
-                        top: BorderSide(width: 1.0, color: Colors.grey),
-                        left: BorderSide(width: 1.0, color: Colors.grey),
-                        right: BorderSide(width: 1.0, color: Colors.grey),
-                      ),
-                    ),
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: const Color.fromRGBO(0, 141, 177, 1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Text(
-                      'Tổng Cộng(đã bao gồm thuế)\n',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: Text(
-                      '225,000đ',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Text(
-                      'Giảm Giá\n',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: Text(
-                      '-0đ',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Text(
-                      'Voucher\n',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: Text(
-                      '-0đ',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Text(
-                      'Tổng Tiền\n',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: Text(
-                      '225,000đ',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: const Color.fromRGBO(0, 141, 177, 1),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-    );
-  }
-
   Widget _buildOrderButton() {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.8,
+      width: MediaQuery.of(context).size.width * 0.8,
       padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
       height: 70.0,
       child: RaisedButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) {
-            return OrderInfoPage();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return OrderInfoPage(list: listCart, total: total, storeID: storeID,);
           }));
         },
         textColor: Colors.white,

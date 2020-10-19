@@ -1,3 +1,5 @@
+import 'package:capstone2020customerapp/api/store_api_service.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/detailSupermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ class SupermarketPage extends StatefulWidget {
   _SupermarketPage createState() => _SupermarketPage();
 }
 FocusNode myFocusNode = new FocusNode();
+
 class _SupermarketPage extends State<SupermarketPage> {
   String search;
   TextEditingController searchController = new TextEditingController();
@@ -131,13 +134,13 @@ class _SupermarketPage extends State<SupermarketPage> {
               ),
             ),
           ),
-          for (String image in img)
+          for (int i = 0; i < 1; i++)
             Container(
             width: MediaQuery.of(context).size.width * 0.9,
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: ListTile(
-              leading: Image.network('https://aeonmall-vietnam.com/wp-content/uploads/2017/01/icon-mall-01-1.jpg'),
+              leading: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg'),
               title: Text(
                 'PROMO',
                 style: TextStyle(
@@ -147,7 +150,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 ),
               ),
               subtitle: Text(
-                'AEON',
+                'Big C',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,

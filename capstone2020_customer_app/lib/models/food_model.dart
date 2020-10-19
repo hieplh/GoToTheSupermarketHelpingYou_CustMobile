@@ -8,7 +8,7 @@ class FoodModel{
   String name;
   String image;
   String description;
-  String price;
+  double price;
   SaleOffModel saleOff;
 
 
