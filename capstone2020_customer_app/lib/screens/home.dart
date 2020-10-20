@@ -985,7 +985,7 @@ class _HomePage extends State<HomePage> {
                             child: Row(
                               children: <Widget>[
                                 Container(
-                                  width: MediaQuery.of(context).size.width * 0.45,
+                                  width: MediaQuery.of(context).size.width * 0.4,
                                   child: Text(
                                     '${listOrder.price}đ',
                                     style: TextStyle(
