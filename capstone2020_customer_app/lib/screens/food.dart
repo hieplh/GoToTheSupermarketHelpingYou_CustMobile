@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/bloc/cart_items_bloc.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:localstorage/localstorage.dart';
 
 class FoodPage extends StatefulWidget {
   final String storeID;
@@ -132,7 +133,7 @@ class _FoodPage extends State<FoodPage> {
                   width: 100.0,
                   alignment: Alignment.center),
               title: Text(
-                '${listFood.name}',
+                '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 18.0,

@@ -5,12 +5,12 @@ import 'package:chopper/chopper.dart';
 
 part "store_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/malls')
+@ChopperApi(baseUrl: '/markets')
 abstract class StoreApiService extends ChopperService{
 
   static StoreApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://172.16.191.127:1234/smhu/api',
+        baseUrl: 'http://10.1.148.136:1234/smhu/api',
         services: [_$StoreApiService()],
         converter: JsonToTypeConverter({
           StoreModel: (jsonData) => StoreModel.fromJson(jsonData)

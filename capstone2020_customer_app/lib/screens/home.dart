@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/bloc/cart_items_bloc.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
@@ -9,7 +11,6 @@ import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:localstorage/localstorage.dart';
 
 class HomePage extends StatefulWidget {
   final String storeID;
@@ -182,7 +183,7 @@ class _HomePage extends State<HomePage> {
           width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
           child: Text(
-            'AEON MALL- Bình Tân',
+            '${storeID}',
             style: TextStyle(
               fontSize: 20.0,
               fontFamily: 'Montserrat',
@@ -214,7 +215,7 @@ class _HomePage extends State<HomePage> {
             width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.center,
             child: Text(
-              'AEON MALL- Bình Tân',
+              '${storeID}',
               style: TextStyle(
                 fontSize: 20.0,
                 fontFamily: 'Montserrat',
@@ -505,7 +506,7 @@ class _HomePage extends State<HomePage> {
         height: 300.0,
         alignment: Alignment.center,
         child: Image.network(
-          'https://aeonmall-vietnam.com/wp-content/uploads/2017/01/icon-mall-01-1.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
@@ -573,7 +574,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '${listFood.name}',
+                              '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
@@ -895,7 +896,7 @@ class _HomePage extends State<HomePage> {
                 width: 100.0,
                 alignment: Alignment.center),
             title: Text(
-              '${listFood.name}',
+              '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 18.0,
@@ -957,7 +958,7 @@ class _HomePage extends State<HomePage> {
                         children: <Widget>[
                           Container(
                             child: Text(
-                              '${listOrder.name}',
+                              '${utf8.decode(latin1.encode(listOrder.name), allowMalformed: true)}',
                               style: TextStyle(
                                 fontSize: 18.0,
                               ),

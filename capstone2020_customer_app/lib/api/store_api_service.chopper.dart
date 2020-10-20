@@ -18,7 +18,7 @@ class _$StoreApiService extends StoreApiService {
 
   @override
   Future<Response<List<StoreModel>>> getAllStore() {
-    final $url = '/malls';
+    final $url = '/markets';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<List<StoreModel>, StoreModel>($request);
   }

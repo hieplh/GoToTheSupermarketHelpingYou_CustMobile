@@ -135,7 +135,7 @@ class _PaymentPage extends State<PaymentPage> {
             margin: const EdgeInsets.only(left: 30.0),
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
-              'Thời Gian Dự Kiến Giao:\n 11:00, 22/09/2020 - Giao Hàng Trong Ngày',
+              'Thời Gian Dự Kiến Giao:\n 16:30, 20/10/2020 - Giao Hàng Trong Ngày',
               style: TextStyle(
                 fontSize: 15.0,
               ),

@@ -5,7 +5,7 @@ import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
-import 'package:tiengviet/tiengviet.dart';
+import 'dart:convert' show utf8;
 
 class DetailSupermarketPage extends StatefulWidget {
   @override
@@ -22,8 +22,11 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   Future<void> getAllStore()async{
     final myService = StoreApiService.create();
     final response = await myService.getAllStore();
-//    String body = utf8.decode(response.bodyBytes);
+    String body = utf8.decode(response.bodyBytes);
     list = response.body;
+//    for(var listStore in list){
+//      print(utf8.decode(latin1.encode(listStore.name), allowMalformed: true));
+//    }
   }
 
   @override
@@ -224,7 +227,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                   alignment: Alignment.center,
                 ),
                     title: Text(
-                      '${listStore.name}',
+                      '${utf8.decode(latin1.encode(listStore.name), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -232,7 +235,10 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                       ),
                     ),
                     subtitle: Text(
-                      '${listStore.addr1}, ${listStore.addr2}, ${listStore.addr3}, ${listStore.addr4} ',
+                      '${utf8.decode(latin1.encode(listStore.addr1), allowMalformed: true)}, '
+                          '${utf8.decode(latin1.encode(listStore.addr2), allowMalformed: true)}, '
+                          '${utf8.decode(latin1.encode(listStore.addr3), allowMalformed: true)}, '
+                          '${utf8.decode(latin1.encode(listStore.addr4), allowMalformed: true)} ',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.grey[500],

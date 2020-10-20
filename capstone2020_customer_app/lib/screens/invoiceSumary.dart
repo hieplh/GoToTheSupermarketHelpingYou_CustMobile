@@ -47,7 +47,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://172.16.191.127:1234/smhu/api/order';
+    var url = 'http://10.1.148.136:1234/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
@@ -57,7 +57,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "costDelivery": '20000',
           "costShopping": '50000',
           "cust": "123456",
-          "dateDelivery": "2020-10-19",
+          "dateDelivery": "2020-10-20",
           "details": [
             for(var list in data)
             {
@@ -83,7 +83,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
         }));
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
-
+    showToast();
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -96,6 +96,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
+      print("false");
       throw Exception('Fail ');
     }
   }
@@ -182,7 +183,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                       children: <Widget>[
                         Container(
                           child: Text(
-                            '${list.name}',
+                            '${utf8.decode(latin1.encode(list.name), allowMalformed: true)}',
                             style: TextStyle(
                               fontSize: 18.0,
                             ),
@@ -402,7 +403,9 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
       height: 70.0,
       child: RaisedButton(
-        onPressed: postOrder,
+        onPressed: (){
+          postOrder();
+        },
         textColor: Colors.white,
         color: const Color.fromRGBO(0, 141, 177, 1),
         child: Text(

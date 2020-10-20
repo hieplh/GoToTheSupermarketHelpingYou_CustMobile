@@ -1,7 +1,7 @@
-import 'package:capstone2020customerapp/api/food_api_service.dart';
-import 'package:capstone2020customerapp/api/store_api_service.dart';
-import 'package:capstone2020customerapp/models/food_model.dart';
-import 'package:capstone2020customerapp/models/store_model.dart';
+
+
+import 'dart:convert' show latin1, utf8;
+import 'package:unicode/unicode.dart' as unicode;
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
@@ -372,6 +372,13 @@ class _LoginPageState extends State<LoginPage> {
 
 
   changeThePage() async {
+//    var encoded = utf8.encode("BigC Tháº£o Äiá»n");
+//    var decoded = utf8.decode(encoded);
+//    print(decoded);
+//    print(utf8.decode(utf8.encode("BigC Tháº£o Äiá»n")));
+    const input = 'BigC Tháº£o Äiá»n';
+    final output = utf8.decode(latin1.encode(input), allowMalformed: true);
+    print(output);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
           return SupermarketPage();
