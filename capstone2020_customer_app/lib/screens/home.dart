@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:badges/badges.dart';
+//import 'package:badges/badges.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
@@ -155,13 +155,16 @@ class _HomePage extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             title: Text('Cart'),
-              icon: Badge(
-                  showBadge: showBadge,
-                  badgeContent: Text(
-                    badgeData.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  child: Icon(Icons.shopping_cart))
+            icon: Icon(
+              Icons.assignment,
+            ),
+//              icon: Badge(
+//                  showBadge: showBadge,
+//                  badgeContent: Text(
+//                    badgeData.toString(),
+//                    style: TextStyle(color: Colors.white),
+//                  ),
+//                  child: Icon(Icons.shopping_cart))
           ),
           BottomNavigationBarItem(
             icon: Icon(
