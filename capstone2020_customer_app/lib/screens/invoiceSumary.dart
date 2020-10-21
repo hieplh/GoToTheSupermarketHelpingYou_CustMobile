@@ -47,16 +47,17 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://172.16.189.173:1234/smhu/api/order';
+    var url = 'http://172.16.191.93:8084/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
           "Accept": "application/json",
         },
         body: json.encode({
+          "addressDelivery": "388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, TP Hồ Chí Minh",
           "costDelivery": '20000',
           "costShopping": '50000',
-          "cust": "123456",
+          "cust": "cust123",
           "dateDelivery": "2020-10-20",
           "details": [
             for(var list in data)
@@ -68,8 +69,6 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               "weight": '1'
             }
           ],
-          "lat": "string",
-          "lng": "string",
           "market": storeID,
           "note": "abcde",
           "timeDelivery": "18:30:00",

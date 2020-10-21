@@ -1,8 +1,10 @@
 import 'dart:convert';
 //import 'package:badges/badges.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
 import 'package:capstone2020customerapp/screens/foodType.dart';
 import 'package:capstone2020customerapp/screens/orderInfo.dart';
@@ -34,6 +36,7 @@ class _HomePage extends State<HomePage> {
   String search;
   TextEditingController searchController = new TextEditingController();
   List<FoodModel> list;
+  List<History> listHistory;
   List<Data> listCart = new List();
   List<String> foodName = [];
 
@@ -68,9 +71,15 @@ class _HomePage extends State<HomePage> {
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
     list = response.body;
+
+//    final myService1 = HistoryApiService.create();
+//    final response1 = await myService1.getAllHistory();
+//    listHistory = response1.body;
+
     for (var listItem in list) {
         foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
       }
+
   }
 
 
@@ -988,7 +997,8 @@ class _HomePage extends State<HomePage> {
                 ),
               ),
             ),
-            Container(
+            //for(var listHistory in listHistory)
+              Container(
               width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
@@ -1036,7 +1046,7 @@ class _HomePage extends State<HomePage> {
                                       ),
                                       Container(
                                         child: Text(
-                                          '21 Oct',
+                                          '22 Oct',
                                           style: TextStyle(
                                             fontSize: 15.0,
                                           ),
@@ -1047,7 +1057,7 @@ class _HomePage extends State<HomePage> {
                                   Container(
                                     width: MediaQuery.of(context).size.width * 0.5,
                                     child: Text(
-                                      '1 item - 388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, T.P Hồ Chí Minh',
+                                      '388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, T.P Hồ Chí Minh',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
