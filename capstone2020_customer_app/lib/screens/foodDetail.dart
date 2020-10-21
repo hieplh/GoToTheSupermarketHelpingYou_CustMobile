@@ -179,7 +179,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
       child: RaisedButton(
         onPressed: () {},
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 255, 0, 1),
+        color: const Color.fromRGBO(144, 238, 144, 1),
           child: Text(
             'Thêm Vào Giỏ Hàng',
             style: TextStyle(

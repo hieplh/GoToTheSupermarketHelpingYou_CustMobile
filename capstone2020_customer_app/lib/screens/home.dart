@@ -155,16 +155,30 @@ class _HomePage extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             title: Text('Cart'),
-            icon: Icon(
-              Icons.assignment,
-            ),
-//              icon: Badge(
-//                  showBadge: showBadge,
-//                  badgeContent: Text(
-//                    badgeData.toString(),
-//                    style: TextStyle(color: Colors.white),
-//                  ),
-//                  child: Icon(Icons.shopping_cart))
+              icon: new Stack(
+                children: <Widget>[
+                  new Icon(Icons.shopping_cart),
+                  new Positioned(
+                    top: -2.0,
+                    right: 0.0,
+                    child: new Stack(
+                      children: <Widget>[
+                        new Icon(Icons.brightness_1,
+                            size: 18.0, color: Colors.red),
+                        new Positioned(
+                          top: 1.0,
+                          right: 4.0,
+                          child: new Text(badgeData.toString(),
+                              style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500)),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
