@@ -135,7 +135,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
                 labelText: 'E.g. Tôi không cần túi nhựa',
                 labelStyle: TextStyle(
                     color: myFocusNode.hasFocus
-                        ? const Color.fromRGBO(0, 141, 177, 1)
+                        ? const Color.fromRGBO(0, 255, 0, 1)
                         : Colors.grey),
               ),
             ),
@@ -179,7 +179,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
       child: RaisedButton(
         onPressed: () {},
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 141, 177, 1),
+        color: const Color.fromRGBO(0, 255, 0, 1),
           child: Text(
             'Thêm Vào Giỏ Hàng',
             style: TextStyle(

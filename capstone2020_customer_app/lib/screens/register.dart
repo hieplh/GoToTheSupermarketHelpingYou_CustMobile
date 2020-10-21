@@ -76,7 +76,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_pin,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(0, 255, 0, 1),
                 size: 30.0,
               ),
               labelText: 'Tài Khoản',
@@ -135,7 +135,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.phone_android,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(0, 255, 0, 1),
                 size: 30.0,
               ),
               labelText: 'Số Điện Thoại',
@@ -155,7 +155,7 @@ class _RegisterPage extends State<RegisterPage> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30.0),
                 borderSide: BorderSide(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(0, 255, 0, 1),
                 ),
               ),
               labelStyle: TextStyle(
@@ -194,7 +194,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.home,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(0, 255, 0, 1),
                 size: 30.0,
               ),
               labelText: 'Địa Chỉ',
@@ -254,7 +254,7 @@ class _RegisterPage extends State<RegisterPage> {
                 fontFamily: 'Montserrat',
               ),
             ),
-            color: const Color.fromRGBO(0, 141, 177, 1),
+            color: const Color.fromRGBO(0, 255, 0, 1),
           ),
         ),
       ),
@@ -284,7 +284,7 @@ class _RegisterPage extends State<RegisterPage> {
               TextSpan(
                 text: "Đăng nhập",
                 style: TextStyle(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(0, 255, 0, 1),
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),

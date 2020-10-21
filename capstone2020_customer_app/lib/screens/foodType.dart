@@ -99,7 +99,7 @@ class _FoodTypePage extends State<FoodTypePage> {
               ),
               trailing: Icon(
                 Icons.add_circle_outline,
-                color: Color.fromRGBO(0, 141, 177, 1),
+                color: Color.fromRGBO(0, 255, 0, 1),
                 size: 30.0,
               ),
               onTap: (){

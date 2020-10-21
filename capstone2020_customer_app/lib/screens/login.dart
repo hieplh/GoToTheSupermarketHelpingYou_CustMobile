@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_pin,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               labelText: 'Tài Khoản',
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               labelStyle: TextStyle(
                   color:
-                  myFocusNode.hasFocus ? const Color.fromRGBO(0, 141, 177, 1) : Colors.black),
+                  myFocusNode.hasFocus ? Colors.black : Colors.black),
               hintStyle: TextStyle(
                 color: Colors.black,
               ),
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
               ),
               labelText: 'Mật Khẩu',
               hintText: 'Nhập mật khẩu',
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               labelStyle: TextStyle(
                   color:
-                  myFocusNode.hasFocus ? const Color.fromRGBO(0, 141, 177, 1) : Colors.black),
+                  myFocusNode.hasFocus ? Colors.black : Colors.black),
               hintStyle: TextStyle(
                 color: Colors.black,
               ),
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                   _isHidePassword
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  color: _isHidePassword ? const Color.fromRGBO(0, 141, 177, 1) : const Color.fromRGBO(0, 141, 177, 1),
+                  color: _isHidePassword ? const Color.fromRGBO(144, 238, 144, 1) : const Color.fromRGBO(144, 238, 144, 1),
                 ),
               ),
               //isDense: true,
@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontFamily: 'Montserrat',
               ),
             ),
-            color: const Color.fromRGBO(0, 141, 177, 1),
+            color: const Color.fromRGBO(144, 238, 144, 1),
           ),
         ),
       ),
@@ -358,7 +358,7 @@ class _LoginPageState extends State<LoginPage> {
               TextSpan(
                 text: "Đăng Kí",
                 style: TextStyle(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                   fontSize: 20.0,
                   fontWeight: FontWeight.w900,
                 ),
@@ -372,13 +372,6 @@ class _LoginPageState extends State<LoginPage> {
 
 
   changeThePage() async {
-//    var encoded = utf8.encode("BigC Tháº£o Äiá»n");
-//    var decoded = utf8.decode(encoded);
-//    print(decoded);
-//    print(utf8.decode(utf8.encode("BigC Tháº£o Äiá»n")));
-    const input = 'BigC Tháº£o Äiá»n';
-    final output = utf8.decode(latin1.encode(input), allowMalformed: true);
-    print(output);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
           return SupermarketPage();

@@ -1,7 +1,6 @@
 import 'dart:convert';
-
+import 'package:badges/badges.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
-import 'package:capstone2020customerapp/bloc/cart_items_bloc.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
@@ -11,6 +10,8 @@ import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'search.dart';
 
 class HomePage extends StatefulWidget {
   final String storeID;
@@ -25,6 +26,7 @@ FocusNode myFocusNode = new FocusNode();
 
 
 class _HomePage extends State<HomePage> {
+
   String storeID;
   double total = 0;
   _HomePage(this.storeID);
@@ -33,6 +35,11 @@ class _HomePage extends State<HomePage> {
   TextEditingController searchController = new TextEditingController();
   List<FoodModel> list;
   List<Data> listCart = new List();
+  List<String> foodName = [];
+
+  var showBadge = true;
+  int badgeData = 0;
+
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Thêm Thành Công',
@@ -61,11 +68,11 @@ class _HomePage extends State<HomePage> {
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
     list = response.body;
-//    for (var listItem in list) {
-//      print(listItem.name);
-//    }
-
+    for (var listItem in list) {
+        foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
+      }
   }
+
 
   Future<void> _onItemTapped(int index) async {
     setState(() {
@@ -101,6 +108,7 @@ class _HomePage extends State<HomePage> {
                   child: Column(
                     children: <Widget>[
                       _buildActivityHeader(),
+                      _buildActivityBody(),
                     ],
                   ),
                 ),
@@ -132,7 +140,7 @@ class _HomePage extends State<HomePage> {
           }),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
@@ -146,10 +154,14 @@ class _HomePage extends State<HomePage> {
             title: Text('Activity'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.shopping_cart,
-            ),
             title: Text('Cart'),
+              icon: Badge(
+                  showBadge: showBadge,
+                  badgeContent: Text(
+                    badgeData.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Icon(Icons.shopping_cart))
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -159,7 +171,7 @@ class _HomePage extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(0, 141, 177, 1),
+        selectedItemColor: const Color.fromRGBO(144, 238, 144, 1),
         onTap: _onItemTapped,
       ),
     );
@@ -167,20 +179,21 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildHomeHeader() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
           child: IconButton(
             icon: new Icon(
               Icons.keyboard_backspace,
-              color: const Color.fromRGBO(0, 141, 177, 1),
+              color: const Color.fromRGBO(144, 238, 144, 1),
               size: 30.0,
             ),
             onPressed: changeThePage,
           ),
         ),
         Container(
-          width: MediaQuery.of(context).size.width * 0.8,
+//          width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
           child: Text(
             '${storeID}',
@@ -191,34 +204,48 @@ class _HomePage extends State<HomePage> {
             ),
           ),
         ),
+        Container(
+          child: IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: Search(foodName),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildActivityHeader() {
-    return Expanded(
-      flex: 1,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1.0, color: Colors.grey),
+        ),
+      ),
       child: Row(
         children: <Widget>[
           Container(
+            width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: new Icon(
-                Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
-                size: 30.0,
+            child: Text(
+              'My Activity',
+              style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
               ),
-              onPressed: changeThePage,
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            alignment: Alignment.center,
             child: Text(
-              '${storeID}',
+              'Lịch sử',
               style: TextStyle(
                 fontSize: 20.0,
-                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                color: const Color.fromRGBO(144, 238, 144, 1),
               ),
             ),
           ),
@@ -241,7 +268,7 @@ class _HomePage extends State<HomePage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -303,7 +330,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                   size: 40.0,
                 ),
                 onTap: () {
@@ -333,7 +360,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.question_answer,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 title: Text(
                   'Support',
@@ -343,7 +370,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 onTap: () {},
               ),
@@ -363,7 +390,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.account_balance_wallet,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 title: Text(
                   'My Wallet',
@@ -373,7 +400,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 onTap: () {},
               ),
@@ -393,7 +420,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.gavel,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 title: Text(
                   'Policy',
@@ -403,7 +430,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 onTap: () {},
               ),
@@ -423,7 +450,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.supervisor_account,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 title: Text(
                   'About Us',
@@ -433,7 +460,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(0, 141, 177, 1),
+                  color: const Color.fromRGBO(144, 238, 144, 1),
                 ),
                 onTap: () {},
               ),
@@ -452,56 +479,56 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildHomeBody() {
     return Column(children: <Widget>[
-      Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: StreamBuilder<String>(
-          //stream: bloc.email,
-          builder: (context, snapshot) => TextFormField(
-            //onChanged: bloc.emailChanged,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            controller: searchController,
-            onSaved: (input) => search = input,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.search,
-                color: const Color.fromRGBO(0, 141, 177, 1),
-                size: 30.0,
-              ),
-              labelText: 'Tìm kiếm đồ ăn...',
-              hintText: 'Nhập đồ ăn...',
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
-                ),
-              ),
-              labelStyle: TextStyle(
-                  color: myFocusNode.hasFocus
-                      ? const Color.fromRGBO(0, 141, 177, 1)
-                      : Colors.grey),
-              hintStyle: TextStyle(
-                color: Colors.grey,
-              ),
-              errorText: snapshot.error,
-            ),
-          ),
-        ),
-      ),
+//      Container(
+//        width: MediaQuery.of(context).size.width * 0.9,
+//        padding: EdgeInsets.only(bottom: 20.0),
+//        child: StreamBuilder<String>(
+//          //stream: bloc.email,
+//          builder: (context, snapshot) => TextFormField(
+//            //onChanged: bloc.emailChanged,
+//            style: TextStyle(
+//              color: Colors.black,
+//            ),
+//            controller: searchController,
+//            onSaved: (input) => search = input,
+//            decoration: InputDecoration(
+//              prefixIcon: Icon(
+//                Icons.search,
+//                color: const Color.fromRGBO(0, 255, 0, 1),
+//                size: 30.0,
+//              ),
+//              labelText: 'Tìm kiếm đồ ăn...',
+//              hintText: 'Nhập đồ ăn...',
+//              focusedBorder: OutlineInputBorder(
+//                borderRadius: BorderRadius.circular(30.0),
+//                borderSide: BorderSide(
+//                  color: Colors.black,
+//                ),
+//              ),
+//              enabledBorder: OutlineInputBorder(
+//                borderRadius: BorderRadius.circular(30.0),
+//                borderSide: BorderSide(
+//                  color: Colors.black,
+//                ),
+//              ),
+//              border: OutlineInputBorder(
+//                borderRadius: BorderRadius.circular(30.0),
+//                borderSide: BorderSide(
+//                  color: const Color.fromRGBO(0, 141, 177, 1),
+//                ),
+//              ),
+//              labelStyle: TextStyle(
+//                  color: myFocusNode.hasFocus
+//                      ? const Color.fromRGBO(0, 141, 177, 1)
+//                      : Colors.grey),
+//              hintStyle: TextStyle(
+//                color: Colors.grey,
+//              ),
+//              errorText: snapshot.error,
+//            ),
+//          ),
+//        ),
+//      ),
       Container(
         height: 300.0,
         alignment: Alignment.center,
@@ -540,7 +567,7 @@ class _HomePage extends State<HomePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
-                    color: Color.fromRGBO(0, 141, 177, 1),
+                    color: Color.fromRGBO(144, 238, 144, 1),
                   ),
                 ),
               ),
@@ -634,7 +661,7 @@ class _HomePage extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
-                  color: Color.fromRGBO(0, 141, 177, 1),
+                  color: Color.fromRGBO(144, 238, 144, 1),
                 ),
               ),
             ),
@@ -912,19 +939,132 @@ class _HomePage extends State<HomePage> {
             ),
             trailing: Icon(
               Icons.add_circle_outline,
-              color: Color.fromRGBO(0, 141, 177, 1),
+              color: Color.fromRGBO(144, 238, 144, 1),
               size: 30.0,
             ),
             onTap: (){
               Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}');
               total = total + double.parse(data.price);
               listCart.add(data);
+              badgeData++;
               print(total);
               showToast();
             },
           ),
         ),
     ]);
+  }
+
+  Widget _buildActivityBody(){
+    return Container(
+//
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 20.0, left: 20.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Hiện tại',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10.0) //         <--- border radius here
+                  ),
+                border: Border(
+                  bottom: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                  top: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                  left: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                  right: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(top: 10.0,left: 10.0),
+                              child: Image.network(
+                                'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+                                fit: BoxFit.cover,
+                                height: 100.0,
+                                width: 100.0,
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 20.0, top: 10.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: MediaQuery.of(context).size.width * 0.4,
+                                        child: Text(
+                                          '${storeID}',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '21 Oct',
+                                          style: TextStyle(
+                                            fontSize: 15.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.5,
+                                    child: Text(
+                                      '1 item - 388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, T.P Hồ Chí Minh',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            'Reorder',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromRGBO(144, 238, 144, 1),
+                            ),
+                          ),
+                        ),
+                      ],
+
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildCartBody() {
@@ -998,7 +1138,7 @@ class _HomePage extends State<HomePage> {
                                   child: IconButton(
                                     icon: new Icon(
                                       Icons.delete,
-                                      color: const Color.fromRGBO(0, 141, 177, 1),
+                                      color: const Color.fromRGBO(144, 238, 144, 1),
                                     ),
                                     onPressed: (){
                                       //listCart.removeWhere(('${listOrder.id}') => '${listOrder.id}');
@@ -1032,40 +1172,40 @@ class _HomePage extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  child: Text(
-                    'Voucher\n',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border(
-                      bottom: BorderSide(width: 1.0, color: Colors.grey),
-                      top: BorderSide(width: 1.0, color: Colors.grey),
-                      left: BorderSide(width: 1.0, color: Colors.grey),
-                      right: BorderSide(width: 1.0, color: Colors.grey),
-                    ),
-                  ),
-                  alignment: Alignment.centerRight,
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
-                  ),
-                ),
-              ],
-            ),
-          ),
+//          Container(
+//            child: Row(
+//              children: <Widget>[
+//                Container(
+//                  padding: const EdgeInsets.only(top: 15.0),
+//                  width: MediaQuery.of(context).size.width * 0.25,
+//                  child: Text(
+//                    'Voucher\n',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.6,
+//                  height: 40.0,
+//                  decoration: BoxDecoration(
+//                    borderRadius: BorderRadius.circular(10.0),
+//                    border: Border(
+//                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+//                      top: BorderSide(width: 1.0, color: Colors.grey),
+//                      left: BorderSide(width: 1.0, color: Colors.grey),
+//                      right: BorderSide(width: 1.0, color: Colors.grey),
+//                    ),
+//                  ),
+//                  alignment: Alignment.centerRight,
+//                  child: Icon(
+//                    Icons.arrow_forward_ios,
+//                    color: const Color.fromRGBO(0, 141, 177, 1),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
           Container(
             child: Row(
               children: <Widget>[
@@ -1073,7 +1213,7 @@ class _HomePage extends State<HomePage> {
                   padding: const EdgeInsets.only(top: 15.0),
                   width: MediaQuery.of(context).size.width * 0.65,
                   child: Text(
-                    'Tổng Cộng(đã bao gồm thuế)\n',
+                    'Giá trị đơn hàng\n',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -1082,7 +1222,7 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: Text(
-                    '$total',
+                    '$totalđ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -1092,6 +1232,58 @@ class _HomePage extends State<HomePage> {
               ],
             ),
           ),
+//          Container(
+//            child: Row(
+//              children: <Widget>[
+//                Container(
+//                  padding: const EdgeInsets.only(top: 15.0),
+//                  width: MediaQuery.of(context).size.width * 0.65,
+//                  child: Text(
+//                    'Giảm Giá\n',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.2,
+//                  child: Text(
+//                    '-0đ',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//          Container(
+//            child: Row(
+//              children: <Widget>[
+//                Container(
+//                  padding: const EdgeInsets.only(top: 15.0),
+//                  width: MediaQuery.of(context).size.width * 0.65,
+//                  child: Text(
+//                    'Voucher\n',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.2,
+//                  child: Text(
+//                    '-0đ',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
           Container(
             child: Row(
               children: <Widget>[
@@ -1099,7 +1291,7 @@ class _HomePage extends State<HomePage> {
                   padding: const EdgeInsets.only(top: 15.0),
                   width: MediaQuery.of(context).size.width * 0.65,
                   child: Text(
-                    'Giảm Giá\n',
+                    'Thành tiền\n',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -1108,63 +1300,11 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: Text(
-                    '-0đ',
+                    '$totalđ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  child: Text(
-                    'Voucher\n',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: Text(
-                    '-0đ',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  child: Text(
-                    'Tổng Tiền\n',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: Text(
-                    '$total',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(0, 141, 177, 1),
+                      color: const Color.fromRGBO(144, 238, 144, 1),
                     ),
                   ),
                 ),
@@ -1188,9 +1328,9 @@ class _HomePage extends State<HomePage> {
           }));
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 141, 177, 1),
+        color: const Color.fromRGBO(144, 238, 144, 1),
         child: Text(
-          'Đặt Hàng',
+          'Thanh Toán',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,

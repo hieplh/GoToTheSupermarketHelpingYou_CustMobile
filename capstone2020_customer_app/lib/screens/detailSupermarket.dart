@@ -64,7 +64,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -102,7 +102,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
+                    color: const Color.fromRGBO(144, 238, 144, 1),
                     size: 30.0,
                   ),
                   labelText: 'Tìm kiếm địa chỉ Siêu Thị',

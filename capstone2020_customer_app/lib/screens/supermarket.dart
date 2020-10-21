@@ -42,7 +42,7 @@ class _SupermarketPage extends State<SupermarketPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -82,7 +82,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
+                    color: const Color.fromRGBO(144, 238, 144, 1),
                     size: 30.0,
                   ),
                   labelText: 'Tìm kiếm Brand Siêu Thị',
@@ -140,7 +140,11 @@ class _SupermarketPage extends State<SupermarketPage> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: ListTile(
-              leading: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg'),
+              leading: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center,),
               title: Text(
                 'PROMO',
                 style: TextStyle(
@@ -151,6 +155,170 @@ class _SupermarketPage extends State<SupermarketPage> {
               ),
               subtitle: Text(
                 'Big C',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.black,
+                size: 40.0,
+              ),
+              onTap: changeToDetail,
+              isThreeLine: true,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Color(0xFFFF000000)),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+            child: ListTile(
+              leading: Image.network('https://lh3.googleusercontent.com/proxy/p_LMtje1nnFGJqX4ez0Ock5pK17mtkdmNY6P1rCzyrzL2l_Rx22FIRcaugVw5qV6Pb3UklUIchAS-AolrFpesLkTUZov0TJbvl81duUjtOZ0jLRLamqn9N6jFxbE7geoEZJlPUDeD-c2InrpB5U8jh-3ow7nItE8e1pxXQ',
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center,),
+              title: Text(
+                'PROMO',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.red,
+                  fontSize: 15.0,
+                ),
+              ),
+              subtitle: Text(
+                'AEON',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.black,
+                size: 40.0,
+              ),
+              onTap: changeToDetail,
+              isThreeLine: true,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Color(0xFFFF000000)),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+            child: ListTile(
+              leading: Image.network('https://media.cungcau.vn/files/hongphuong/2019/09/02/baa590178a246d7a3435-1957.jpg',
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center,),
+              title: Text(
+                'PROMO',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.red,
+                  fontSize: 15.0,
+                ),
+              ),
+              subtitle: Text(
+                'Bách Hóa Xanh',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.black,
+                size: 40.0,
+              ),
+              onTap: changeToDetail,
+              isThreeLine: true,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Color(0xFFFF000000)),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+            child: ListTile(
+              leading: Image.network('https://image.viettimes.vn/666x374/Uploaded/2020/nsxrureyxq/2016_09_13/emart-_vt_nglt.jpg',
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center,),
+              title: Text(
+                'PROMO',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.red,
+                  fontSize: 15.0,
+                ),
+              ),
+              subtitle: Text(
+                'E Mart',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.black,
+                size: 40.0,
+              ),
+              onTap: changeToDetail,
+              isThreeLine: true,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Color(0xFFFF000000)),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+            child: ListTile(
+              leading: Image.network('https://wyldfamilytravel.com/wp-content/uploads/2019/07/67480882_1107650772779613_9142937422638612480_n-1080x675.jpg',
+                fit: BoxFit.cover,
+                height: 100.0,
+                width: 100.0,
+                alignment: Alignment.center,),
+              title: Text(
+                'PROMO',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.red,
+                  fontSize: 15.0,
+                ),
+              ),
+              subtitle: Text(
+                'Lotte Mart',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,

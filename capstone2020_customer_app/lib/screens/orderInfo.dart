@@ -51,7 +51,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -61,7 +61,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
             width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.center,
             child: Text(
-              'Thông Tin Đặt Hàng',
+              'Thông Tin Vận Chuyển',
               style: TextStyle(
                 fontSize: 20.0,
                 fontFamily: 'Montserrat',
@@ -83,7 +83,54 @@ class _OrderInfoPage extends State<OrderInfoPage> {
           Container(
             padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
             child: Text(
-              '1. Thông Tin Người Nhận',
+              '1. Địa Chỉ Giao Hàng',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+            margin: const EdgeInsets.only(left: 10.0),
+            child: Text(
+              '388/4 Huỳnh Tấn Phát, phường Bình Thuận, Quận 7, Thành Phố HCM',
+              style: TextStyle(
+                fontSize: 16.0,
+                //color: Color.fromRGBO(0, 255, 0, 1),
+              ),
+            ),
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 30.0,
+                  height: 30.0,
+                  child: Icon(
+                    Icons.add_circle,
+                    color: Color.fromRGBO(144, 238, 144, 1),
+                  ),
+
+                ),
+                Container(
+                  padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+                  margin: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    'Thêm Địa Chỉ Mới',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Color.fromRGBO(144, 238, 144, 1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+            child: Text(
+              '2. Thông Tin Người Nhận',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -133,12 +180,12 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
-                      color: const Color.fromRGBO(0, 141, 177, 1),
+                      color: const Color.fromRGBO(144, 238, 144, 1),
                     ),
                   ),
                   labelStyle: TextStyle(
                       color: myFocusNode.hasFocus
-                          ? const Color.fromRGBO(0, 141, 177, 1)
+                          ? const Color.fromRGBO(144, 238, 144, 1)
                           : Colors.grey),
                   hintStyle: TextStyle(
                     color: Colors.black,
@@ -191,12 +238,12 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
-                      color: const Color.fromRGBO(0, 141, 177, 1),
+                      color: const Color.fromRGBO(144, 238, 144, 1),
                     ),
                   ),
                   labelStyle: TextStyle(
                       color: myFocusNode.hasFocus
-                          ? const Color.fromRGBO(0, 141, 177, 1)
+                          ? const Color.fromRGBO(144, 238, 144, 1)
                           : Colors.grey),
                   hintStyle: TextStyle(
                     color: Colors.black,
@@ -209,7 +256,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
           Container(
             padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
             child: Text(
-              '2. Thời Gian Giao Hàng',
+              '3. Thời Gian Giao Hàng',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -228,10 +275,10 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50.0),
                           border: Border(
-                            bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                            top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                            left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                            right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
+                            bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                            top: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                            left: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                            right: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
                           ),
 
                         ),
@@ -272,7 +319,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                           onPressed: () {
                           },
                           textColor: Colors.white,
-                          color: Color.fromRGBO(0, 141, 177, 1),
+                          color: Color.fromRGBO(144, 238, 144, 1),
                           child: Icon(
                             Icons.alarm,
                           ),
@@ -290,7 +337,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                         'Chi Phí Giao Hàng: ',
                         style: TextStyle(
                           fontSize: 15.0,
-                          color: Color.fromRGBO(0, 141, 177, 1),
+                          color: Color.fromRGBO(144, 238, 144, 1),
                         ),
                       ),
                     ),
@@ -300,7 +347,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                         '20,000đ',
                         style: TextStyle(
                           fontSize: 15.0,
-                          color: Color.fromRGBO(0, 141, 177, 1),
+                          color: Color.fromRGBO(144, 238, 144, 1),
                         ),
                       ),
                     ),
@@ -310,53 +357,8 @@ class _OrderInfoPage extends State<OrderInfoPage> {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-            child: Text(
-              '3. Địa Chỉ Giao Hàng',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-                  padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-                  margin: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    '388/4 Huỳnh Tấn Phát, phường Bình Thuận, Quận 7, Thành Phố HCM',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Color.fromRGBO(0, 141, 177, 1),
-                    ),
-                  ),
-                ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  width: 30.0,
-                  height: 30.0,
-                  child: Icon(
-                    Icons.add_circle,
-                    color: Color.fromRGBO(0, 141, 177, 1),
-                  ),
 
-                ),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-                  margin: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    'Thêm Địa Chỉ Mới',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Color.fromRGBO(0, 141, 177, 1),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+
           Container(
             padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
             child: Text(
@@ -395,7 +397,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
-                      color: const Color.fromRGBO(0, 141, 177, 1),
+                      color: const Color.fromRGBO(144, 238, 144, 1),
                     ),
                   ),
                   errorText: snapshot.error,
@@ -424,9 +426,9 @@ class _OrderInfoPage extends State<OrderInfoPage> {
           }));
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 141, 177, 1),
+        color: const Color.fromRGBO(144, 238, 144, 1),
         child: Text(
-          'Xác Nhận Thông Tin',
+          'Tiếp Tục',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,

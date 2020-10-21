@@ -30,7 +30,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 1,
-        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        backgroundColor: const Color.fromRGBO(144, 238, 144, 1),
         textColor: Colors.white
     );
 //    Navigator.of(context).pushAndRemoveUntil(
@@ -47,7 +47,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://10.1.148.136:1234/smhu/api/order';
+    var url = 'http://172.16.189.173:1234/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
@@ -132,7 +132,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -142,7 +142,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.center,
             child: Text(
-              'Sơ Lược Hóa Đơn',
+              'Xác Nhận Thanh Toán',
               style: TextStyle(
                 fontSize: 20.0,
                 fontFamily: 'Montserrat',
@@ -239,7 +239,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   padding: const EdgeInsets.only(top: 15.0),
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Text(
-                    'Tổng Cộng(đã bao gồm thuế)\n',
+                    'Tổng giá trị đơn hàng\n',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -258,6 +258,58 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               ],
             ),
           ),
+//          Container(
+//            child: Row(
+//              children: <Widget>[
+//                Container(
+//                  padding: const EdgeInsets.only(top: 15.0),
+//                  width: MediaQuery.of(context).size.width * 0.6,
+//                  child: Text(
+//                    'Giảm Giá\n',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.2,
+//                  child: Text(
+//                    '-0đ',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//          Container(
+//            child: Row(
+//              children: <Widget>[
+//                Container(
+//                  padding: const EdgeInsets.only(top: 15.0),
+//                  width: MediaQuery.of(context).size.width * 0.6,
+//                  child: Text(
+//                    'Voucher\n',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.2,
+//                  child: Text(
+//                    '-0đ',
+//                    style: TextStyle(
+//                      fontSize: 15.0,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
           Container(
             child: Row(
               children: <Widget>[
@@ -265,59 +317,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   padding: const EdgeInsets.only(top: 15.0),
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Text(
-                    'Giảm Giá\n',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: Text(
-                    '-0đ',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Text(
-                    'Voucher\n',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: Text(
-                    '-0đ',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Text(
-                    'Phí giao hàng\n',
+                    'Phí vận chuyển\n',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -369,7 +369,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   padding: const EdgeInsets.only(top: 15.0),
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Text(
-                    'Tổng Tiền\n',
+                    'Tổng cộng(VAT)\n',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -378,11 +378,11 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: Text(
-                    '${total + 20000 + 50000}',
+                    '${total + 20000 + 50000}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(0, 141, 177, 1),
+                      color: const Color.fromRGBO(144, 238, 144, 1),
                     ),
                   ),
                 ),
@@ -407,7 +407,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           postOrder();
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 141, 177, 1),
+        color: const Color.fromRGBO(144, 238, 144, 1),
         child: Text(
           'Đặt Hàng',
           style: TextStyle(

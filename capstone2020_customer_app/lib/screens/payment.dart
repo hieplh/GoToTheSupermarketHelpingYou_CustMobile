@@ -49,7 +49,7 @@ class _PaymentPage extends State<PaymentPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -59,7 +59,7 @@ class _PaymentPage extends State<PaymentPage> {
             width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.center,
             child: Text(
-              'Thanh Toán',
+              'Xác Nhận Thanh Toán',
               style: TextStyle(
                 fontSize: 20.0,
                 fontFamily: 'Montserrat',
@@ -85,13 +85,13 @@ class _PaymentPage extends State<PaymentPage> {
                 Container(
                   child: Icon(
                     Icons.assignment,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
+                    color: const Color.fromRGBO(144, 238, 144, 1),
                     size: 30.0,
                   ),
                 ),
                 Container(
                   child: Text(
-                    'Chi Tiết Đơn Hàng',
+                    'Thông Tin Người Nhận',
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -106,7 +106,7 @@ class _PaymentPage extends State<PaymentPage> {
               'Phan Công Bình',
               style: TextStyle(
                 fontSize: 16.0,
-                color: const Color.fromRGBO(0, 141, 177, 1),
+                color: const Color.fromRGBO(144, 238, 144, 1),
               ),
             ),
           ),
@@ -148,7 +148,7 @@ class _PaymentPage extends State<PaymentPage> {
                 Container(
                   child: Icon(
                     Icons.payment,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
+                    color: const Color.fromRGBO(144, 238, 144, 1),
                     size: 30.0,
                   ),
                 ),
@@ -179,10 +179,10 @@ class _PaymentPage extends State<PaymentPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50.0),
                     border: Border(
-                      bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                      top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                      left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
-                      right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 141, 177, 1),),
+                      bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                      top: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                      left: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                      right: BorderSide(width: 1.0, color: const Color.fromRGBO(144, 238, 144, 1),),
                     ),
                   ),
                 ),
@@ -190,7 +190,7 @@ class _PaymentPage extends State<PaymentPage> {
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Icon(
                     Icons.account_balance_wallet,
-                    color: const Color.fromRGBO(0, 141, 177, 1),
+                    color: const Color.fromRGBO(144, 238, 144, 1),
                     size: 30.0,
                   ),
                 ),
@@ -228,7 +228,7 @@ class _PaymentPage extends State<PaymentPage> {
           }));
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(0, 141, 177, 1),
+        color: const Color.fromRGBO(144, 238, 144, 1),
         child: Text(
           'Xác Nhận Thanh Toán',
           style: TextStyle(
