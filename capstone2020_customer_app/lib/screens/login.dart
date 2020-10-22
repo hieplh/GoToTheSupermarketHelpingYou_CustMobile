@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_pin,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               labelText: 'Tài Khoản',
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
               ),
               labelText: 'Mật Khẩu',
               hintText: 'Nhập mật khẩu',
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                   _isHidePassword
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  color: _isHidePassword ? const Color.fromRGBO(144, 238, 144, 1) : const Color.fromRGBO(144, 238, 144, 1),
+                  color: _isHidePassword ? const Color.fromRGBO(0, 175, 82, 1) : const Color.fromRGBO(0, 175, 82, 1),
                 ),
               ),
               //isDense: true,
@@ -192,27 +192,41 @@ class _LoginPageState extends State<LoginPage> {
     return Expanded(
       flex: 0,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.only(bottom: 10.0),
-        height: 60.0,
+//        width: MediaQuery.of(context).size.width * 0.8,
+//        padding: EdgeInsets.only(bottom: 10.0),
+//        height: 60.0,
         child: StreamBuilder<bool>(
           //stream: bloc.submitCheck,
           builder: (context, snapshot) => RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
+//            shape: RoundedRectangleBorder(
+//              borderRadius: BorderRadius.circular(30.0),
+//            ),
             onPressed: changeThePage,
-            child: Text(
-              'ĐĂNG NHẬP',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 18.0,
-                letterSpacing: 2.0,
-                fontFamily: 'Montserrat',
+            child: Ink(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [const Color.fromRGBO(0, 99, 46, 1), const Color.fromRGBO(0, 220, 103, 1)],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(30.0)
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 60.0,
+                alignment: Alignment.center,
+                child: Text(
+                  'ĐĂNG NHẬP',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    letterSpacing: 2.0,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
               ),
             ),
-            color: const Color.fromRGBO(144, 238, 144, 1),
+            color: Colors.white,
           ),
         ),
       ),
@@ -358,7 +372,7 @@ class _LoginPageState extends State<LoginPage> {
               TextSpan(
                 text: "Đăng Kí",
                 style: TextStyle(
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                   fontSize: 20.0,
                   fontWeight: FontWeight.w900,
                 ),

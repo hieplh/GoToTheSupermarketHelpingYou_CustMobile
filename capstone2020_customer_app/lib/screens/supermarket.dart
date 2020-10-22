@@ -21,7 +21,7 @@ class _SupermarketPage extends State<SupermarketPage> {
     // TODO: implement build
     return Scaffold(
       //backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
-      body: Form(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             _buildHeader(),
@@ -33,8 +33,7 @@ class _SupermarketPage extends State<SupermarketPage> {
   }
 
   Widget _buildHeader() {
-    return Expanded(
-      flex: 1,
+    return Container(
       child: Row(
         children: <Widget>[
           Container(
@@ -42,7 +41,7 @@ class _SupermarketPage extends State<SupermarketPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -63,8 +62,7 @@ class _SupermarketPage extends State<SupermarketPage> {
     );
   }
   Widget _buildBody() {
-    return Expanded(
-      flex: 10,
+    return Container(
       child: Column(
         children: <Widget>[
           Container(
@@ -82,7 +80,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
-                    color: const Color.fromRGBO(144, 238, 144, 1),
+                    color: const Color.fromRGBO(0, 175, 82, 1),
                     size: 30.0,
                   ),
                   labelText: 'Tìm kiếm Brand Siêu Thị',
@@ -181,7 +179,7 @@ class _SupermarketPage extends State<SupermarketPage> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: ListTile(
-              leading: Image.network('https://lh3.googleusercontent.com/proxy/p_LMtje1nnFGJqX4ez0Ock5pK17mtkdmNY6P1rCzyrzL2l_Rx22FIRcaugVw5qV6Pb3UklUIchAS-AolrFpesLkTUZov0TJbvl81duUjtOZ0jLRLamqn9N6jFxbE7geoEZJlPUDeD-c2InrpB5U8jh-3ow7nItE8e1pxXQ',
+              leading: Image.network('https://aeonmall-vietnam.com/wp-content/uploads/2017/01/icon-mall-01-1.jpg',
                 fit: BoxFit.cover,
                 height: 100.0,
                 width: 100.0,

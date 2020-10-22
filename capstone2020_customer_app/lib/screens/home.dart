@@ -197,7 +197,7 @@ class _HomePage extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(144, 238, 144, 1),
+        selectedItemColor: const Color.fromRGBO(0, 175, 82, 1),
         onTap: _onItemTapped,
       ),
     );
@@ -212,7 +212,7 @@ class _HomePage extends State<HomePage> {
           child: IconButton(
             icon: new Icon(
               Icons.keyboard_backspace,
-              color: const Color.fromRGBO(144, 238, 144, 1),
+              color: const Color.fromRGBO(0, 175, 82, 1),
               size: 30.0,
             ),
             onPressed: changeThePage,
@@ -271,7 +271,7 @@ class _HomePage extends State<HomePage> {
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
               ),
             ),
           ),
@@ -294,7 +294,7 @@ class _HomePage extends State<HomePage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -356,7 +356,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                   size: 40.0,
                 ),
                 onTap: () {
@@ -386,7 +386,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.question_answer,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 title: Text(
                   'Support',
@@ -396,7 +396,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 onTap: () {},
               ),
@@ -416,7 +416,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.account_balance_wallet,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 title: Text(
                   'My Wallet',
@@ -426,7 +426,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 onTap: () {},
               ),
@@ -446,7 +446,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.gavel,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 title: Text(
                   'Policy',
@@ -456,7 +456,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 onTap: () {},
               ),
@@ -476,7 +476,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: Icon(
                   Icons.supervisor_account,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 title: Text(
                   'About Us',
@@ -486,7 +486,7 @@ class _HomePage extends State<HomePage> {
                 ),
                 trailing: Icon(
                   Icons.keyboard_arrow_right,
-                  color: const Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
                 onTap: () {},
               ),
@@ -593,7 +593,7 @@ class _HomePage extends State<HomePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
-                    color: Color.fromRGBO(144, 238, 144, 1),
+                    color: const Color.fromRGBO(0, 175, 82, 1),
                   ),
                 ),
               ),
@@ -687,7 +687,7 @@ class _HomePage extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
-                  color: Color.fromRGBO(144, 238, 144, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
               ),
             ),
@@ -965,7 +965,7 @@ class _HomePage extends State<HomePage> {
             ),
             trailing: Icon(
               Icons.add_circle_outline,
-              color: Color.fromRGBO(144, 238, 144, 1),
+              color: const Color.fromRGBO(0, 175, 82, 1),
               size: 30.0,
             ),
             onTap: (){
@@ -1005,10 +1005,10 @@ class _HomePage extends State<HomePage> {
                       Radius.circular(10.0) //         <--- border radius here
                   ),
                 border: Border(
-                  bottom: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
-                  top: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
-                  left: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
-                  right: BorderSide(width: 2.0, color: const Color.fromRGBO(144, 238, 144, 1),),
+                  bottom: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                  top: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                  left: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                  right: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
                 ),
               ),
               child: Column(
@@ -1076,7 +1076,7 @@ class _HomePage extends State<HomePage> {
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
-                              color: const Color.fromRGBO(144, 238, 144, 1),
+                              color: const Color.fromRGBO(0, 175, 82, 1),
                             ),
                           ),
                         ),
@@ -1165,7 +1165,7 @@ class _HomePage extends State<HomePage> {
                                   child: IconButton(
                                     icon: new Icon(
                                       Icons.delete,
-                                      color: const Color.fromRGBO(144, 238, 144, 1),
+                                      color: const Color.fromRGBO(0, 175, 82, 1),
                                     ),
                                     onPressed: (){
                                       //listCart.removeWhere(('${listOrder.id}') => '${listOrder.id}');
@@ -1331,7 +1331,7 @@ class _HomePage extends State<HomePage> {
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(144, 238, 144, 1),
+                      color: const Color.fromRGBO(0, 175, 82, 1),
                     ),
                   ),
                 ),
@@ -1355,7 +1355,7 @@ class _HomePage extends State<HomePage> {
           }));
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(144, 238, 144, 1),
+        color: const Color.fromRGBO(0, 175, 82, 1),
         child: Text(
           'Thanh Toán',
           style: TextStyle(

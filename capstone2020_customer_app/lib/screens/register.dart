@@ -76,7 +76,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_pin,
-                color: const Color.fromRGBO(0, 255, 0, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               labelText: 'Tài Khoản',
@@ -135,7 +135,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.phone_android,
-                color: const Color.fromRGBO(0, 255, 0, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               labelText: 'Số Điện Thoại',
@@ -194,7 +194,7 @@ class _RegisterPage extends State<RegisterPage> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.home,
-                color: const Color.fromRGBO(0, 255, 0, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               labelText: 'Địa Chỉ',
@@ -234,27 +234,41 @@ class _RegisterPage extends State<RegisterPage> {
     return Expanded(
       flex: 0,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.only(bottom: 20.0),
-        height: 60.0,
+//        width: MediaQuery.of(context).size.width * 0.8,
+//        padding: EdgeInsets.only(bottom: 10.0),
+//        height: 60.0,
         child: StreamBuilder<bool>(
           //stream: bloc.submitCheck,
           builder: (context, snapshot) => RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
+//            shape: RoundedRectangleBorder(
+//              borderRadius: BorderRadius.circular(30.0),
+//            ),
             onPressed: changeThePage,
-            child: Text(
-              'Register Now',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 20.0,
-                letterSpacing: 2.0,
-                fontFamily: 'Montserrat',
+            child: Ink(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [const Color.fromRGBO(0, 99, 46, 1), const Color.fromRGBO(0, 220, 103, 1)],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(30.0)
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 60.0,
+                alignment: Alignment.center,
+                child: Text(
+                  'ĐĂNG KÍ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    letterSpacing: 2.0,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
               ),
             ),
-            color: const Color.fromRGBO(0, 255, 0, 1),
+            color: Colors.white,
           ),
         ),
       ),
@@ -284,7 +298,7 @@ class _RegisterPage extends State<RegisterPage> {
               TextSpan(
                 text: "Đăng nhập",
                 style: TextStyle(
-                  color: const Color.fromRGBO(0, 255, 0, 1),
+                  color: const Color.fromRGBO(0, 175, 82, 1),
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),

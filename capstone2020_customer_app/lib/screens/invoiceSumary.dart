@@ -30,7 +30,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 1,
-        backgroundColor: const Color.fromRGBO(144, 238, 144, 1),
+        backgroundColor: const Color.fromRGBO(0, 175, 82, 1),
         textColor: Colors.white
     );
 //    Navigator.of(context).pushAndRemoveUntil(
@@ -47,17 +47,16 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://172.16.191.93:8084/smhu/api/order';
+    var url = 'http://10.1.133.199:1234/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
           "Accept": "application/json",
         },
         body: json.encode({
-          "addressDelivery": "388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, TP Hồ Chí Minh",
           "costDelivery": '20000',
           "costShopping": '50000',
-          "cust": "cust123",
+          "cust": "123456",
           "dateDelivery": "2020-10-20",
           "details": [
             for(var list in data)
@@ -69,6 +68,8 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               "weight": '1'
             }
           ],
+          "lat": "string",
+          "lng": "string",
           "market": storeID,
           "note": "abcde",
           "timeDelivery": "18:30:00",
@@ -131,7 +132,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             child: IconButton(
               icon: new Icon(
                 Icons.keyboard_backspace,
-                color: const Color.fromRGBO(144, 238, 144, 1),
+                color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
               onPressed: changeThePage,
@@ -381,7 +382,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(144, 238, 144, 1),
+                      color: const Color.fromRGBO(0, 175, 82, 1),
                     ),
                   ),
                 ),
@@ -406,7 +407,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           postOrder();
         },
         textColor: Colors.white,
-        color: const Color.fromRGBO(144, 238, 144, 1),
+        color: const Color.fromRGBO(0, 175, 82, 1),
         child: Text(
           'Đặt Hàng',
           style: TextStyle(
