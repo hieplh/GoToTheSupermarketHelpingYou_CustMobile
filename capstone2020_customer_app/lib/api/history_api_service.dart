@@ -7,12 +7,12 @@ import 'package:chopper/chopper.dart';
 
 part "history_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/histories/cust/cust123/page/1')
+@ChopperApi(baseUrl: '/histories/customer/cust123/page/1')
 abstract class HistoryApiService extends ChopperService{
 
   static HistoryApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://172.16.191.93:8084/smhu/api',
+        baseUrl: 'http://113.23.69.139/smhu/api',
         services: [_$HistoryApiService()],
         converter: JsonToTypeConverter({
           History: (jsonData) => History.fromJson(jsonData)

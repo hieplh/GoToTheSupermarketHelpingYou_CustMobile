@@ -10,7 +10,7 @@ abstract class StoreApiService extends ChopperService{
 
   static StoreApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://10.1.133.199:1234/smhu/api',
+        baseUrl: 'http://113.23.69.139/smhu/api',
         services: [_$StoreApiService()],
         converter: JsonToTypeConverter({
           StoreModel: (jsonData) => StoreModel.fromJson(jsonData)

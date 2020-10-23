@@ -4,10 +4,12 @@ import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
-import 'package:capstone2020customerapp/models/history_model.dart';
+
 import 'package:capstone2020customerapp/screens/food.dart';
 import 'package:capstone2020customerapp/screens/foodType.dart';
+import 'package:capstone2020customerapp/screens/history.dart';
 import 'package:capstone2020customerapp/screens/orderInfo.dart';
+import 'package:capstone2020customerapp/screens/progress.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,6 @@ class _HomePage extends State<HomePage> {
   String search;
   TextEditingController searchController = new TextEditingController();
   List<FoodModel> list;
-  List<History> listHistory;
   List<Data> listCart = new List();
   List<String> foodName = [];
 
@@ -71,10 +72,6 @@ class _HomePage extends State<HomePage> {
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
     list = response.body;
-
-//    final myService1 = HistoryApiService.create();
-//    final response1 = await myService1.getAllHistory();
-//    listHistory = response1.body;
 
     for (var listItem in list) {
         foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
@@ -266,12 +263,18 @@ class _HomePage extends State<HomePage> {
             ),
           ),
           Container(
-            child: Text(
-              'Lịch sử',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromRGBO(0, 175, 82, 1),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => HistoryPage()));
+              },
+              child: Text(
+                'Lịch sử',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromRGBO(0, 175, 82, 1),
+                ),
               ),
             ),
           ),
@@ -998,96 +1001,102 @@ class _HomePage extends State<HomePage> {
               ),
             ),
             //for(var listHistory in listHistory)
-              Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(10.0) //         <--- border radius here
+            GestureDetector(
+              onTap: (){
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ProgressPage()));
+              },
+                child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10.0) //         <--- border radius here
+                    ),
+                  border: Border(
+                    bottom: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                    top: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                    left: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+                    right: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
                   ),
-                border: Border(
-                  bottom: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                  top: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                  left: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                  right: BorderSide(width: 2.0, color: const Color.fromRGBO(0, 175, 82, 1),),
                 ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.only(top: 10.0,left: 10.0),
-                              child: Image.network(
-                                'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
-                                fit: BoxFit.cover,
-                                height: 100.0,
-                                width: 100.0,
-                                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.only(top: 10.0,left: 10.0),
+                                child: Image.network(
+                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+                                  fit: BoxFit.cover,
+                                  height: 100.0,
+                                  width: 100.0,
+                                  alignment: Alignment.center,
+                                ),
                               ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left: 20.0, top: 10.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: MediaQuery.of(context).size.width * 0.4,
-                                        child: Text(
-                                          '${storeID}',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
+                              Container(
+                                padding: EdgeInsets.only(left: 20.0, top: 10.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.4,
+                                          child: Text(
+                                            '${storeID}',
+                                            style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          '22 Oct',
-                                          style: TextStyle(
-                                            fontSize: 15.0,
+                                        Container(
+                                          child: Text(
+                                            '22 Oct',
+                                            style: TextStyle(
+                                              fontSize: 15.0,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * 0.5,
-                                    child: Text(
-                                      '388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, T.P Hồ Chí Minh',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
+                                      ],
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.5,
+                                      child: Text(
+                                        '388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, T.P Hồ Chí Minh',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: Text(
+                              'Reorder',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: const Color.fromRGBO(0, 175, 82, 1),
                               ),
                             ),
-                          ],
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          padding: EdgeInsets.only(top: 10.0),
-                          child: Text(
-                            'Reorder',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: const Color.fromRGBO(0, 175, 82, 1),
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
 
+                      ),
                     ),
-                  ),
 
-                ],
-              ),
+                  ],
+                ),
             ),
+              ),
           ],
         ),
       ),

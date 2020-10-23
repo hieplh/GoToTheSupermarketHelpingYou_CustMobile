@@ -18,7 +18,7 @@ class _$HistoryApiService extends HistoryApiService {
 
   @override
   Future<Response<List<History>>> getAllHistory() {
-    final $url = '/histories/cust/cust123/page/1';
+    final $url = '/histories/customer/cust123/page/1';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<List<History>, History>($request);
   }
