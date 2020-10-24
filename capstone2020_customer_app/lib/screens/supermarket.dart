@@ -1,6 +1,7 @@
 import 'package:capstone2020customerapp/api/store_api_service.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/detailSupermarket.dart';
+import 'package:capstone2020customerapp/screens/error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -206,7 +207,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 color: Colors.black,
                 size: 40.0,
               ),
-              onTap: changeToDetail,
+              onTap: changeToError,
               isThreeLine: true,
             ),
             decoration: BoxDecoration(
@@ -247,7 +248,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 color: Colors.black,
                 size: 40.0,
               ),
-              onTap: changeToDetail,
+              onTap: changeToError,
               isThreeLine: true,
             ),
             decoration: BoxDecoration(
@@ -288,7 +289,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 color: Colors.black,
                 size: 40.0,
               ),
-              onTap: changeToDetail,
+              onTap: changeToError,
               isThreeLine: true,
             ),
             decoration: BoxDecoration(
@@ -329,7 +330,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 color: Colors.black,
                 size: 40.0,
               ),
-              onTap: changeToDetail,
+              onTap: changeToError,
               isThreeLine: true,
             ),
             decoration: BoxDecoration(
@@ -359,6 +360,14 @@ class _SupermarketPage extends State<SupermarketPage> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) {
           return DetailSupermarketPage();
+        }));
+  }
+
+  changeToError() async {
+
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return ErrorPage();
         }));
   }
 }

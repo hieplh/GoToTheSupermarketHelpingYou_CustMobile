@@ -47,7 +47,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://113.23.69.139/smhu/api/order';
+    var url = 'http://10.1.147.226/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
@@ -58,7 +58,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "costDelivery": '20000',
           "costShopping": '50000',
           "cust": "cust123",
-          "dateDelivery": "2020-10-23",
+          "dateDelivery": "2020-10-24",
           "details": [
             for(var list in data)
             {
@@ -236,7 +236,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Tổng giá trị đơn hàng\n',
                     style: TextStyle(
@@ -245,7 +245,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '${total}đ',
                     style: TextStyle(
@@ -314,7 +314,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Phí vận chuyển\n',
                     style: TextStyle(
@@ -323,7 +323,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '20,000đ',
                     style: TextStyle(
@@ -340,7 +340,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Phí đi chợ\n',
                     style: TextStyle(
@@ -349,7 +349,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '50,000đ',
                     style: TextStyle(
@@ -366,7 +366,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Tổng cộng(VAT)\n',
                     style: TextStyle(
@@ -375,7 +375,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '${total + 20000 + 50000}đ',
                     style: TextStyle(

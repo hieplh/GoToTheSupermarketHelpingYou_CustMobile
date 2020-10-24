@@ -1256,7 +1256,7 @@ class _HomePage extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '$totalđ',
                     style: TextStyle(
@@ -1334,7 +1334,7 @@ class _HomePage extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
                     '$totalđ',
                     style: TextStyle(
