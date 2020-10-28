@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +22,21 @@ class _OrderInfoPage extends State<OrderInfoPage> {
   List<Data> data;
   double total;
   String storeID;
+  String timePicked = "00:00:00";
+
   _OrderInfoPage(this.data, this.total, this.storeID);
+
+  TimeOfDay time = TimeOfDay.now();
+  TimeOfDay picked;
+  Future<Null> selectTime(BuildContext context) async{
+    picked = await showTimePicker(context: context, initialTime: time);
+
+    setState(() {
+      time = picked;
+      timePicked = time.hour.toString() + ":" + time.minute.toString() + ":00";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -299,6 +315,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   ),
                 ),
                 Container(
+                  height: 40.0,
                   child: Row(
                     children: <Widget>[
                       Container(
@@ -311,19 +328,58 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        margin: const EdgeInsets.only(left: 20.0),
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: RaisedButton(
-                          onPressed: () {
-                          },
-                          textColor: Colors.white,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                          child: Icon(
-                            Icons.alarm,
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10.0),
+                                topLeft: Radius.circular(10.0),
+                              ),
+                              border: Border(
+                                bottom: BorderSide(width: 2.0, color: Colors.black),
+                                top: BorderSide(width: 2.0, color: Colors.black),
+                                left: BorderSide(width: 2.0, color: Colors.black),
+                                right: BorderSide(width: 2.0, color: Colors.black),
+                              ),
+                            ),
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: IconButton(
+                              onPressed: () {
+                                selectTime(context);
+                                print(time);
+                              },
+                              color: const Color.fromRGBO(0, 175, 82, 1),
+                              icon: Icon(
+                                Icons.alarm,
+                              ),
+                            ),
                           ),
-                        ),
+                          Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10.0),
+                                  topRight: Radius.circular(10.0),
+                                ),
+                                border: Border(
+                                  bottom: BorderSide(width: 2.0, color: Colors.black),
+                                  top: BorderSide(width: 2.0, color: Colors.black),
+                                  left: BorderSide(width: 2.0, color: Colors.black,),
+                                  right: BorderSide(width: 2.0, color: Colors.black),
+                                ),
+                              ),
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: Text(
+                              '$timePicked',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                color: const Color.fromRGBO(0, 175, 82, 1),
+                              ),
+                            )
+                          ),
+                        ],
+
                       ),
                     ],
                   ),
@@ -422,7 +478,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) {
-            return PaymentPage(list: data, total: total, storeID: storeID,);
+            return PaymentPage(list: data, total: total, storeID: storeID, timePicked: timePicked,);
           }));
         },
         textColor: Colors.white,

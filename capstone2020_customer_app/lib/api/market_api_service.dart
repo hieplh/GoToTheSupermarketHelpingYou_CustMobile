@@ -1,28 +1,25 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:capstone2020customerapp/models/history_model.dart';
-import 'package:capstone2020customerapp/models/order_model.dart';
-import 'package:capstone2020customerapp/models/store_model.dart';
+import 'package:capstone2020customerapp/models/market_model.dart';
 import 'package:chopper/chopper.dart';
 
-part "history_api_service.chopper.dart";
+part "market_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/histories/customer/cust123/page/1')
-abstract class HistoryApiService extends ChopperService{
+@ChopperApi(baseUrl: '/corporations/all')
+abstract class MarketApiService extends ChopperService{
 
-  static HistoryApiService create(){
+  static MarketApiService create(){
     final client = ChopperClient(
         baseUrl: 'http://smhu.ddns.net/smhu/api',
-        services: [_$HistoryApiService()],
+        services: [_$MarketApiService()],
         converter: JsonToTypeConverter({
-          History: (jsonData) => History.fromJson(jsonData)
+          Market: (jsonData) => Market.fromJson(jsonData)
         })
     );
-    return _$HistoryApiService(client);
+    return _$MarketApiService(client);
   }
   @Get()
-  Future<Response<List<History>>> getAllHistory();
-
+  Future<Response<List<Market>>> getAllBranchMarket();
 
 }
 

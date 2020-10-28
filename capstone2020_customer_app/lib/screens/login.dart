@@ -205,8 +205,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Ink(
               decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [const Color.fromRGBO(0, 99, 46, 1), const Color.fromRGBO(0, 220, 103, 1)],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                   borderRadius: BorderRadius.circular(30.0)
               ),

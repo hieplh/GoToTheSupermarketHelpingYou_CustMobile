@@ -14,16 +14,21 @@ class InvoiceSumaryPage extends StatefulWidget {
   final List<Data> list;
   final double total;
   final String storeID;
-  InvoiceSumaryPage({Key key, @required this.list, @required this.total, @required this.storeID}) : super(key: key);
+  final String timePicked;
+  InvoiceSumaryPage({Key key, @required this.list, @required this.total, @required this.storeID, @required this.timePicked}) : super(key: key);
   @override
-  _InvoiceSumaryPage createState() => _InvoiceSumaryPage(list, total, storeID);
+  _InvoiceSumaryPage createState() => _InvoiceSumaryPage(list, total, storeID, timePicked);
 }
 
 class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   List<Data> data;
   double total;
   String storeID;
-  _InvoiceSumaryPage(this.data, this.total, this.storeID);
+  String timePicked;
+  _InvoiceSumaryPage(this.data, this.total, this.storeID, this.timePicked);
+
+  DateTime date = DateTime.now();
+
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Đặt Hàng Thành Công',
@@ -40,6 +45,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
+    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
@@ -47,7 +53,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    final myService = OrderApiService.create();
 //    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
 //    print(respone.body.toString());
-    var url = 'http://10.1.147.226/smhu/api/order';
+    var url = 'http://smhu.ddns.net/smhu/api/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
@@ -58,7 +64,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "costDelivery": '20000',
           "costShopping": '50000',
           "cust": "cust123",
-          "dateDelivery": "2020-10-24",
+          "dateDelivery": now,
           "details": [
             for(var list in data)
             {
@@ -71,7 +77,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           ],
           "market": storeID,
           "note": "abcde",
-          "timeDelivery": "14:30:00",
+          "timeDelivery": timePicked,
           "timeTravel": {
             "delivery": "00:30:00",
             "going": "00:15:00",

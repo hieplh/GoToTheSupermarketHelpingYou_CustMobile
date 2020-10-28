@@ -8,21 +8,27 @@ import 'package:flutter/material.dart';
 import 'dart:convert' show utf8;
 
 class DetailSupermarketPage extends StatefulWidget {
+  final String marketID;
+
+  DetailSupermarketPage({Key key, @required this.marketID}) : super(key: key);
+
+
   @override
-  _DetailSupermarketPage createState() => _DetailSupermarketPage();
+  _DetailSupermarketPage createState() => _DetailSupermarketPage(marketID);
 }
 FocusNode myFocusNode = new FocusNode();
 class _DetailSupermarketPage extends State<DetailSupermarketPage> {
+  String marketID;
+  _DetailSupermarketPage(this.marketID);
   String search;
   String storeID;
   TextEditingController searchController = new TextEditingController();
-  List<String> img = ["facebook.png", "facebook.png", "facebook.png"];
 
   List<StoreModel> list;
   Future<void> getAllStore()async{
+    print(marketID);
     final myService = StoreApiService.create();
-    final response = await myService.getAllStore();
-    String body = utf8.decode(response.bodyBytes);
+    final response = await myService.getAllStore(marketID);
     list = response.body;
 //    for(var listStore in list){
 //      print(utf8.decode(latin1.encode(listStore.name), allowMalformed: true));
@@ -157,7 +163,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                     width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.only(left: 15.0),
                     child: Text(
-                      'Bic C',
+                      '$marketID',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -197,7 +203,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                 height: 150,
                 padding: EdgeInsets.only(bottom: 10.0, right: 15.0),
                 child: Image.network(
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+                    'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
@@ -220,7 +226,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
               padding: EdgeInsets.only(bottom: 10.0),
               child: ListTile(
                 leading: Image.network(
-                  'https://www.bigc.vn/files/images/store/big-c-nha-trang.jpg',
+                  'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
                   fit: BoxFit.contain,
                   height: 100.0,
                   width: 100.0,

@@ -11,7 +11,7 @@ abstract class FoodApiService extends ChopperService{
 
   static FoodApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://10.1.147.226/smhu/api',
+        baseUrl: 'http://smhu.ddns.net/smhu/api',
         services: [_$FoodApiService()],
         converter: JsonToTypeConverter({
           FoodModel: (jsonData) => FoodModel.fromJson(jsonData)

@@ -9,16 +9,18 @@ class PaymentPage extends StatefulWidget {
   final List<Data> list;
   final double total;
   final String storeID;
-  PaymentPage({Key key, @required this.list, @required this.total, @required this.storeID}) : super(key: key);
+  final String timePicked;
+  PaymentPage({Key key, @required this.list, @required this.total, @required this.storeID, @required this.timePicked}) : super(key: key);
   @override
-  _PaymentPage createState() => _PaymentPage(list, total, storeID);
+  _PaymentPage createState() => _PaymentPage(list, total, storeID, timePicked);
 }
 
 class _PaymentPage extends State<PaymentPage> {
   List<Data> data;
   double total;
   String storeID;
-  _PaymentPage(this.data, this.total, this.storeID);
+  String timePicked;
+  _PaymentPage(this.data, this.total, this.storeID, this.timePicked);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -224,7 +226,7 @@ class _PaymentPage extends State<PaymentPage> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) {
-            return InvoiceSumaryPage(list: data, total: total, storeID: storeID,);
+            return InvoiceSumaryPage(list: data, total: total, storeID: storeID, timePicked: timePicked,);
           }));
         },
         textColor: Colors.white,

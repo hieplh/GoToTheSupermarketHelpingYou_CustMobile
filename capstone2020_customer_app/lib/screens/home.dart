@@ -562,7 +562,7 @@ class _HomePage extends State<HomePage> {
         height: 300.0,
         alignment: Alignment.center,
         child: Image.network(
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+          'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
@@ -1029,7 +1029,7 @@ class _HomePage extends State<HomePage> {
                               Container(
                                 padding: EdgeInsets.only(top: 10.0,left: 10.0),
                                 child: Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Big_C_Ratchadamri_%28I%29.jpg/300px-Big_C_Ratchadamri_%28I%29.jpg',
+                                  'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
                                   fit: BoxFit.cover,
                                   height: 100.0,
                                   width: 100.0,
