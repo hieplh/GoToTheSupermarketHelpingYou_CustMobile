@@ -6,30 +6,42 @@ part 'order_model.g.dart';
 
 @JsonSerializable()
 class Order{
-  double costDelivery;
-  double costShopping;
+  String id;
   String cust;
+  String addressDelivery;
+  String note;
+  String market;
+  String shipper;
+  String createDate;
+  String createTime;
+  int status;
+  double costShopping;
+  double costDelivery;
+  double totalCost;
+  double refundCost;
   String dateDelivery;
-  OrderDetail details;
+  String timeDelivery;
+  List<OrderDetail> details;
 //  String lat;
 //  String lng;
-  String market;
-  String note;
-  String timeDelivery;
-  TimeTravel timeTravel;
-  double totalCost;
 
   Order(
-      this.costDelivery,
-      this.costShopping,
+      this.id,
       this.cust,
-      this.dateDelivery,
-      this.details,
-      this.market,
+      this.addressDelivery,
       this.note,
-      this.timeDelivery,
-      this.timeTravel,
+      this.market,
+      this.shipper,
+      this.createDate,
+      this.createTime,
+      this.status,
+      this.costShopping,
+      this.costDelivery,
       this.totalCost,
+      this.refundCost,
+      this.dateDelivery,
+      this.timeDelivery,
+      this.details,
       );
 
   factory Order.fromJson(Map<String, dynamic> json) =>

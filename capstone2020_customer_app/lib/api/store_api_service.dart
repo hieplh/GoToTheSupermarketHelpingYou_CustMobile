@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:chopper/chopper.dart';
 
@@ -10,7 +11,7 @@ abstract class StoreApiService extends ChopperService{
 
   static StoreApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://smhu.ddns.net/smhu/api',
+        baseUrl: API_URL_STARTPOINT,
         services: [_$StoreApiService()],
         converter: JsonToTypeConverter({
           StoreModel: (jsonData) => StoreModel.fromJson(jsonData)

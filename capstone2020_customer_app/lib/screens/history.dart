@@ -105,7 +105,7 @@ class _HistoryPage extends State<HistoryPage> {
         for(var listHistory in listHistory)
         Container(
           margin: EdgeInsets.only(top: 10.0),
-          height: 120.0,
+          height: 150.0,
           color: Colors.grey[200],
           //width: MediaQuery.of(context).size.width * 0.9,
           child: Column(

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:capstone2020customerapp/models/market_model.dart';
 import 'package:chopper/chopper.dart';
 
+import '../api_url_constain.dart';
+
 part "market_api_service.chopper.dart";
 
 @ChopperApi(baseUrl: '/corporations/all')
@@ -10,7 +12,7 @@ abstract class MarketApiService extends ChopperService{
 
   static MarketApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://smhu.ddns.net/smhu/api',
+        baseUrl: API_URL_STARTPOINT,
         services: [_$MarketApiService()],
         converter: JsonToTypeConverter({
           Market: (jsonData) => Market.fromJson(jsonData)

@@ -4,6 +4,8 @@ import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:chopper/chopper.dart';
 
+import '../api_url_constain.dart';
+
 part "food_api_service.chopper.dart";
 
 @ChopperApi(baseUrl: '/foods/')
@@ -11,7 +13,7 @@ abstract class FoodApiService extends ChopperService{
 
   static FoodApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://smhu.ddns.net/smhu/api',
+        baseUrl: API_URL_STARTPOINT,
         services: [_$FoodApiService()],
         converter: JsonToTypeConverter({
           FoodModel: (jsonData) => FoodModel.fromJson(jsonData)

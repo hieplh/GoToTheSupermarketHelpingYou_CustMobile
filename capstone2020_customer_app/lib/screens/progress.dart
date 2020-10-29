@@ -1,17 +1,25 @@
 
 import 'dart:convert';
 
+import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
+import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../api_url_constain.dart';
 
 class ProgressPage extends StatefulWidget {
 
   @override
   _ProgressPage createState() => _ProgressPage();
 }
-
+String img = img1;
+String img1 = "https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deliveryTruck_5.1539672900.png";
+String img2 = "https://i.pinimg.com/736x/17/45/ec/1745ec05166a6c4a3e61c5533eb6883d.jpg";
+String img3 = "https://miro.medium.com/max/720/1*pCcEZ-0Hj6dp1jpCBZsJGg.jpeg";
+int count = 0;
 class _ProgressPage extends State<ProgressPage> {
   List<Step> steps = [
     Step(
@@ -69,12 +77,25 @@ class _ProgressPage extends State<ProgressPage> {
   bool complete = false;
 
   next() {
+    count++;
+    if(count == 1){
+      img = img2;
+    }else{
+      img = img3;
+    }
+
     currentStep + 1 != steps.length
         ? goTo(currentStep + 1)
         : setState(() => complete = true);
   }
 
   cancel() {
+    count--;
+    if(count == 1){
+      img = img2;
+    }else{
+      img = img1;
+    }
     if (currentStep > 0) {
       goTo(currentStep - 1);
     }
@@ -90,20 +111,39 @@ class _ProgressPage extends State<ProgressPage> {
         : stepperType = StepperType.horizontal);
   }
 
+  var myOrder;
+  List<OrderDetail> order;
+  Future<void> getMyOrder() async {
+    final myService1 = OrderApiService.create();
+    myOrder = await myService1.getOrderByID(ID);
+    order = myOrder.body.details;
+  }
+
   @override
   Widget build(BuildContext context) {
 
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: FutureBuilder(
+          future: getMyOrder(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
                     _buildHeader(),
                     _buildBody(),
                   ],
                 ),
-              ),
+              );
+            }
+          }
+      ),
 //      floatingActionButton: FloatingActionButton(
 //        child: Icon(Icons.list),
 //        onPressed: switchStepType,
@@ -154,7 +194,7 @@ class _ProgressPage extends State<ProgressPage> {
           height: 300.0,
           alignment: Alignment.center,
           child: Image.network(
-            'https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deliveryTruck_5.1539672900.png',
+            img,
             fit: BoxFit.cover,
             height: double.infinity,
             width: double.infinity,
@@ -193,7 +233,7 @@ class _ProgressPage extends State<ProgressPage> {
                 margin: const EdgeInsets.only(left: 10.0),
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: Text(
-                  '14:15 - 14:30 PM',
+                  '${utf8.decode(latin1.encode(myOrder.body.timeDelivery), allowMalformed: true)}',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
@@ -295,7 +335,7 @@ class _ProgressPage extends State<ProgressPage> {
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
                 child: Text(
-                  'Big C An Lạc - 1231 Quốc Lộ 1A, Khu Phố 5, Phường Bình Trị Đông, Quận Tân Bình, Tp.HCM',
+                  '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -327,7 +367,7 @@ class _ProgressPage extends State<ProgressPage> {
                         padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
                         width: MediaQuery.of(context).size.width * 0.25,
                         child: Text(
-                          '100.000đ',
+                          '${myOrder.body.totalCost}đ',
                           style: TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
@@ -350,7 +390,7 @@ class _ProgressPage extends State<ProgressPage> {
                 //height: MediaQuery.of(context).size.width ,
                 child: Column(
                   children: <Widget>[
-                    for (int i = 0; i <= 2; i++)
+                    for (var list in order)
                       Container(
                         child: ListTile(
                           leading: Text(
@@ -361,7 +401,7 @@ class _ProgressPage extends State<ProgressPage> {
                             ),
                           ),
                           title: Text(
-                            'Thịt Ba Chỉ Heo',
+                            '${utf8.decode(latin1.encode(list.food), allowMalformed: true)}',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 17.0,
@@ -375,7 +415,7 @@ class _ProgressPage extends State<ProgressPage> {
 //                            ),
 //                          ),
                           trailing: Text(
-                            '350,000đ',
+                            '${list.priceOriginal}đ',
                             style: TextStyle(
                               fontSize: 17.0,
                             ),
@@ -458,10 +498,11 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
                     margin: const EdgeInsets.only(left: 10.0),
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      'Big C An Lạc - 1231 Quốc Lộ 1A, Khu Ph...',
+                      '${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}',
                       style: TextStyle(
                         fontSize: 16.0,
                       ),
@@ -487,9 +528,10 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
                     margin: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      '388/4 Huỳnh Tấn Phát',
+                      '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
                       style: TextStyle(
                         fontSize: 16.0,
                       ),

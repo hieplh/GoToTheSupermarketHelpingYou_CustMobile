@@ -3,18 +3,23 @@ part 'order_detail_model.g.dart';
 
 @JsonSerializable()
 class OrderDetail{
+  String id;
   String food;
+  String image;
   double priceOriginal;
   double pricePaid;
-  int saleOff;
   double weight;
+  int saleOff;
+
 
   OrderDetail(
+      this.id,
       this.food,
+      this.image,
       this.priceOriginal,
       this.pricePaid,
-      this.saleOff,
       this.weight,
+      this.saleOff,
       );
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) =>

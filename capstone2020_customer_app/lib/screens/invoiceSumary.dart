@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
+import 'package:capstone2020customerapp/models/order_model.dart';
 import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+
+import '../api_url_constain.dart';
 
 class InvoiceSumaryPage extends StatefulWidget {
   final List<Data> list;
@@ -28,7 +31,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   _InvoiceSumaryPage(this.data, this.total, this.storeID, this.timePicked);
 
   DateTime date = DateTime.now();
-
+  List<Order> list;
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Đặt Hàng Thành Công',
@@ -50,10 +53,8 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
 //    TimeTravel timeTravel = new TimeTravel("00:00:00", "00:00:00", "00:00:00", "00:00:00");
-//    final myService = OrderApiService.create();
-//    final respone = await myService.postOrder(20, 50, "123456", "2020-10-14", details, "BIGCTHAODIEN", "abcde", "18:30:00", timeTravel, 23900);
-//    print(respone.body.toString());
-    var url = 'http://smhu.ddns.net/smhu/api/order';
+
+    var url = API_URL_STARTPOINT + '/order';
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-type' : 'application/json',
@@ -92,7 +93,8 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      ID = responseJson["msg"];
       print(response.statusCode);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {

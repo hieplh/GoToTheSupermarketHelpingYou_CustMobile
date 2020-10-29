@@ -8,32 +8,43 @@ part of 'order_model.dart';
 
 Order _$OrderFromJson(Map<String, dynamic> json) {
   return Order(
-    (json['costDelivery'] as num)?.toDouble(),
-    (json['costShopping'] as num)?.toDouble(),
+    json['id'] as String,
     json['cust'] as String,
-    json['dateDelivery'] as String,
-    json['details'] == null
-        ? null
-        : OrderDetail.fromJson(json['details'] as Map<String, dynamic>),
-    json['market'] as String,
+    json['addressDelivery'] as String,
     json['note'] as String,
-    json['timeDelivery'] as String,
-    json['timeTravel'] == null
-        ? null
-        : TimeTravel.fromJson(json['timeTravel'] as Map<String, dynamic>),
+    json['market'] as String,
+    json['shipper'] as String,
+    json['createDate'] as String,
+    json['createTime'] as String,
+    json['status'] as int,
+    (json['costShopping'] as num)?.toDouble(),
+    (json['costDelivery'] as num)?.toDouble(),
     (json['totalCost'] as num)?.toDouble(),
+    (json['refundCost'] as num)?.toDouble(),
+    json['dateDelivery'] as String,
+    json['timeDelivery'] as String,
+    (json['details'] as List)
+        ?.map((e) =>
+            e == null ? null : OrderDetail.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
-      'costDelivery': instance.costDelivery,
-      'costShopping': instance.costShopping,
+      'id': instance.id,
       'cust': instance.cust,
-      'dateDelivery': instance.dateDelivery,
-      'details': instance.details,
-      'market': instance.market,
+      'addressDelivery': instance.addressDelivery,
       'note': instance.note,
-      'timeDelivery': instance.timeDelivery,
-      'timeTravel': instance.timeTravel,
+      'market': instance.market,
+      'shipper': instance.shipper,
+      'createDate': instance.createDate,
+      'createTime': instance.createTime,
+      'status': instance.status,
+      'costShopping': instance.costShopping,
+      'costDelivery': instance.costDelivery,
       'totalCost': instance.totalCost,
+      'refundCost': instance.refundCost,
+      'dateDelivery': instance.dateDelivery,
+      'timeDelivery': instance.timeDelivery,
+      'details': instance.details,
     };

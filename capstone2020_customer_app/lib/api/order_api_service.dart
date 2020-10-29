@@ -5,14 +5,16 @@ import 'package:capstone2020customerapp/models/order_model.dart';
 import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:chopper/chopper.dart';
 
+import '../api_url_constain.dart';
+
 part "order_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/order')
+@ChopperApi(baseUrl: '/order/')
 abstract class OrderApiService extends ChopperService{
 
   static OrderApiService create(){
     final client = ChopperClient(
-        baseUrl: 'http://smhu.ddns.net/smhu/api',
+        baseUrl: API_URL_STARTPOINT,
         services: [_$OrderApiService()],
         converter: JsonToTypeConverter({
           Order: (jsonData) => Order.fromJson(jsonData)
@@ -20,11 +22,12 @@ abstract class OrderApiService extends ChopperService{
     );
     return _$OrderApiService(client);
   }
-  @Post()
-  Future<Response> postOrder(@Query() double costDelivery, @Query() double costShopping, @Query() String cust,
-  @Query() String dateDelivery, @Query() List<OrderDetail> details, @Query() String market, @Query() String note,
-  @Query() String timeDelivery, @Query() TimeTravel timeTravel, @Query() double totalCost);
-
+//  @Post()
+//  Future<Response> postOrder(@Query() double costDelivery, @Query() double costShopping, @Query() String cust,
+//  @Query() String dateDelivery, @Query() List<OrderDetail> details, @Query() String market, @Query() String note,
+//  @Query() String timeDelivery, @Query() TimeTravel timeTravel, @Query() double totalCost);
+  @Get(path: "{id}")
+  Future<Response<Order>> getOrderByID(@Path() String id);
 
 }
 
