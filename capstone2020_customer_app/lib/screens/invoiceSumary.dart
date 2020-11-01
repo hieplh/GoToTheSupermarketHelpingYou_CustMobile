@@ -53,7 +53,6 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
 //    TimeTravel timeTravel = new TimeTravel("00:00:00", "00:00:00", "00:00:00", "00:00:00");
-
     var url = API_URL_STARTPOINT + '/order';
     var response = await http.post(Uri.parse(url),
         headers: {
@@ -198,7 +197,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                         ),
                         Container(
                           child: Text(
-                            '${list.price}\n',
+                            '${list.price}đ\n',
                             style: TextStyle(
                               fontSize: 13.0,
                               color: Colors.grey,
@@ -208,7 +207,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                         ),
                         Container(
                           child: Text(
-                            'Số Lượng: x1\n',
+                            'Số Lượng: x${list.quantity}\n',
                             style: TextStyle(
                               fontSize: 15.0,
                             ),
@@ -216,7 +215,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                         ),
                         Container(
                                 child: Text(
-                                  '${list.price}đ',
+                                  '${(double.parse(list.price) * list.quantity).toString().replaceAll(regex, "")}đ',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
@@ -255,7 +254,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${total}đ',
+                    '${total.toString().replaceAll(regex, "")}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -385,7 +384,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${total + 20000 + 50000}đ',
+                    '${(total + 20000 + 50000).toString().replaceAll(regex, "")}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

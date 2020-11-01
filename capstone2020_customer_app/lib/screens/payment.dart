@@ -1,3 +1,4 @@
+import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,8 @@ class _PaymentPage extends State<PaymentPage> {
   String storeID;
   String timePicked;
   _PaymentPage(this.data, this.total, this.storeID, this.timePicked);
+  DateTime date = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -105,7 +108,7 @@ class _PaymentPage extends State<PaymentPage> {
           Container(
             margin: const EdgeInsets.only(left: 30.0),
             child: Text(
-              'Phan Công Bình',
+              '${fullName}',
               style: TextStyle(
                 fontSize: 16.0,
                 color: const Color.fromRGBO(0, 175, 82, 1),
@@ -116,7 +119,7 @@ class _PaymentPage extends State<PaymentPage> {
             margin: const EdgeInsets.only(left: 30.0),
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
-              'Địa Chỉ: 388/4 Huỳnh Tấn Phát, phường Bình Thuận, Quận 7, Thành phố Hồ Chí Minh',
+              'Địa Chỉ: ${deliveryAddr}',
               style: TextStyle(
                 fontSize: 15.0,
               ),
@@ -126,7 +129,7 @@ class _PaymentPage extends State<PaymentPage> {
             margin: const EdgeInsets.only(left: 30.0),
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
-              'Số Điện Thoại: 0123456789',
+              'Số Điện Thoại: ${phoneNumber}',
               style: TextStyle(
                 fontSize: 15.0,
               ),
@@ -137,12 +140,24 @@ class _PaymentPage extends State<PaymentPage> {
             margin: const EdgeInsets.only(left: 30.0),
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
-              'Thời Gian Dự Kiến Giao:\n 16:30, 20/10/2020 - Giao Hàng Trong Ngày',
+              'Thời Gian Dự Kiến Giao:\n ${timePicked}, ${date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString()} - Giao Hàng Trong Ngày',
               style: TextStyle(
                 fontSize: 15.0,
               ),
             ),
           ),
+
+          Container(
+            margin: const EdgeInsets.only(left: 30.0),
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Note:\n ${note}',
+              style: TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+          ),
+
           Container(
             padding: const EdgeInsets.only(bottom: 5.0, top: 15.0),
             child: Row(
@@ -175,19 +190,19 @@ class _PaymentPage extends State<PaymentPage> {
             margin: const EdgeInsets.only(left: 30.0),
             child: Row(
               children: <Widget>[
-                Container(
-                  width: 30.0,
-                  height: 30.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),
-                    border: Border(
-                      bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                      top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                      left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                      right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                    ),
-                  ),
-                ),
+//                Container(
+//                  width: 30.0,
+//                  height: 30.0,
+//                  decoration: BoxDecoration(
+//                    borderRadius: BorderRadius.circular(50.0),
+//                    border: Border(
+//                      bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                      top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                      left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                      right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                    ),
+//                  ),
+//                ),
                 Container(
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Icon(

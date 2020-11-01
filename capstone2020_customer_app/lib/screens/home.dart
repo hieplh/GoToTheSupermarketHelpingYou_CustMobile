@@ -6,7 +6,7 @@ import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
-
+import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
 import 'package:capstone2020customerapp/screens/foodType.dart';
 import 'package:capstone2020customerapp/screens/history.dart';
@@ -42,9 +42,10 @@ class _HomePage extends State<HomePage> {
   List<FoodModel> list;
   List<Data> listCart = new List();
   List<String> foodName = [];
-
+  int _defaultValue = 1;
   var showBadge = true;
   int badgeData = 0;
+  int count = 0;
 
   void showToast() {
     Fluttertoast.showToast(
@@ -646,7 +647,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '${listFood.price}',
+                              '${listFood.price.toString().replaceAll(regex, "")}đ',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -966,7 +967,7 @@ class _HomePage extends State<HomePage> {
               ),
             ),
             subtitle: Text(
-              '${listFood.price}',
+              '${listFood.price.toString().replaceAll(regex, "")}đ',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 13.0,
@@ -978,8 +979,8 @@ class _HomePage extends State<HomePage> {
               size: 30.0,
             ),
             onTap: (){
-              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}');
-              total = total + double.parse(data.price);
+              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${(listFood.price.toString().replaceAll(regex, ""))}', 1);
+              total = total + double.parse(data.price.toString());
               listCart.add(data);
               badgeData++;
               print(total);
@@ -1135,6 +1136,7 @@ class _HomePage extends State<HomePage> {
                       ),
                     ),
                     Container(
+                      padding: const EdgeInsets.only(top: 15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -1148,28 +1150,119 @@ class _HomePage extends State<HomePage> {
                           ),
                           Container(
                             child: Text(
-                              '${listOrder.price}\n',
+                              '${listOrder.price}đ\n',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
                               ),
                             ),
                           ),
-                          Container(
-                            child: Text(
-                              'Số Lượng: 1\n',
-                              style: TextStyle(
-                                fontSize: 15.0,
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  'Số Lượng:\n',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                ),
                               ),
-                            ),
+//                              Counter(
+//                                initialValue: _defaultValue,
+//                                minValue: 0,
+//                                maxValue: 10,
+//                                step: 1,
+//                                color: const Color.fromRGBO(0, 175, 82, 1),
+//                                decimalPlaces: 0,
+//                                onChanged: (value) { // get the latest value from here
+//                                  setState(() {
+//                                    for(var data in listCart){
+//                                      if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
+//                                        if(value > data.quantity ){
+//                                          total = total + double.parse(data.price.toString());
+//                                        }
+//                                        if(value < data.quantity){
+//                                          total = total - double.parse(data.price.toString());
+//                                        }
+//                                        data.quantity = value;
+//                                      }
+//                                    }
+//                                    print(double.parse(listOrder.price) * listOrder.quantity);
+//                                    _defaultValue = value;
+//                                  });
+//                                },
+//                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 30.0,
+                                      height: 30.0,
+                                      child: FloatingActionButton(
+                                          heroTag: null,
+                                          onPressed: () {
+                                            setState(() {
+                                              for(var data in listCart){
+                                                if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
+                                                  _defaultValue--;
+                                                  if(_defaultValue < data.quantity){
+                                                    total = total - double.parse(data.price.toString());
+                                                  }
+                                                  data.quantity = _defaultValue;
+                                                }
+                                              }
+                                            });
+                                          },
+                                          child: new Icon(const IconData(0xe15b, fontFamily: 'MaterialIcons'), color: Colors.white),
+                                          backgroundColor: const Color.fromRGBO(0, 175, 82, 1)),
+                                    ),
+                                    Text(
+                                      '${_defaultValue}',
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    SizedBox(
+                                      width: 30.0,
+                                      height: 30.0,
+                                      child: FloatingActionButton(
+                                        heroTag: null,
+                                        child: Icon(Icons.add, color: Colors.white),
+                                        backgroundColor: const Color.fromRGBO(0, 175, 82, 1),
+                                        onPressed: () {
+                                          setState(() {
+                                            for(var data in listCart){
+                                              if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
+                                                _defaultValue++;
+                                                if(_defaultValue > data.quantity ){
+                                                  total = total + double.parse(data.price.toString());
+                                                }
+                                                data.quantity = _defaultValue;
+
+                                              }
+                                            }
+
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+
                           ),
+
                           Container(
                             child: Row(
                               children: <Widget>[
                                 Container(
                                   width: MediaQuery.of(context).size.width * 0.4,
                                   child: Text(
-                                    '${listOrder.price}đ',
+                                    '${(double.parse(listOrder.price) * listOrder.quantity).toString().replaceAll(regex, "")}đ',
                                     style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
@@ -1264,7 +1357,7 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '$totalđ',
+                    '${total.toString().replaceAll(regex, "")}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -1342,7 +1435,7 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '$totalđ',
+                    '${total.toString().replaceAll(regex, "")}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

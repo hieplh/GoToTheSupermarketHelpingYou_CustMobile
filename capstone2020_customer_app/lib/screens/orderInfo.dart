@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/screens/newAddress.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,9 @@ class _OrderInfoPage extends State<OrderInfoPage> {
   String timePicked = "00:00:00";
 
   _OrderInfoPage(this.data, this.total, this.storeID);
-
+  TextEditingController phoneController = new TextEditingController();
+  TextEditingController fullNameController = new TextEditingController();
+  TextEditingController noteController = new TextEditingController();
   TimeOfDay time = TimeOfDay.now();
   TimeOfDay picked;
   Future<Null> selectTime(BuildContext context) async{
@@ -106,26 +110,33 @@ class _OrderInfoPage extends State<OrderInfoPage> {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-            margin: const EdgeInsets.only(left: 10.0),
-            child: Text(
-              '388/4 Huỳnh Tấn Phát, phường Bình Thuận, Quận 7, Thành Phố HCM',
-              style: TextStyle(
-                fontSize: 16.0,
-                color: const Color.fromRGBO(0, 175, 82, 1),
+          for(var addr in address)
+            Container(
+              padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+              margin: const EdgeInsets.only(left: 10.0),
+              child: Text(
+                '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  //color: const Color.fromRGBO(0, 175, 82, 1),
+                ),
               ),
             ),
-          ),
           Container(
             child: Row(
               children: <Widget>[
                 Container(
                   width: 30.0,
                   height: 30.0,
-                  child: Icon(
-                    Icons.add_circle,
+                  child: IconButton(
+                    icon: new Icon(Icons.add_circle),
                     color: const Color.fromRGBO(0, 175, 82, 1),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return  NewAddressPage();
+                      }));
+                    },
                   ),
 
                 ),
@@ -175,7 +186,9 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 //onChanged: bloc.emailChanged,
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 18.0,
                 ),
+                controller: phoneController,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
@@ -233,7 +246,9 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 //onChanged: bloc.emailChanged,
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 18.0,
                 ),
+                controller: fullNameController,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
@@ -285,21 +300,21 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 Container(
                   child: Row(
                     children: <Widget>[
-                      Container(
-                        width: 30.0,
-                        height: 30.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50.0),
-                          border: Border(
-                            bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                            top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                            left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                            right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
-                          ),
-
-                        ),
-
-                      ),
+//                      Container(
+//                        width: 30.0,
+//                        height: 30.0,
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.circular(50.0),
+//                          border: Border(
+//                            bottom: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                            top: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                            left: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                            right: BorderSide(width: 1.0, color: const Color.fromRGBO(0, 175, 82, 1),),
+//                          ),
+//
+//                        ),
+//
+//                      ),
                       Container(
                         padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
                         margin: const EdgeInsets.only(left: 10.0),
@@ -320,7 +335,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.only(bottom: 15.0),
-                        margin: const EdgeInsets.only(left: 40.0),
+                        margin: const EdgeInsets.only(left: 20.0),
                         child: Text(
                           'Khung Giờ Giao',
                           style: TextStyle(
@@ -374,7 +389,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                               '$timePicked',
                               style: TextStyle(
                                 fontSize: 18.0,
-                                color: const Color.fromRGBO(0, 175, 82, 1),
+                                //color: const Color.fromRGBO(0, 175, 82, 1),
                               ),
                             )
                           ),
@@ -387,12 +402,38 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 Row(
                   children: <Widget>[
                     Container(
+                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+                      margin: const EdgeInsets.only(left: 20.0),
+                      child: Text(
+                        'Chi Phí Đi Chợ: ',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+                      child: Text(
+                        '50,000đ',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
                       padding: const EdgeInsets.only(bottom: 15.0),
-                      margin: const EdgeInsets.only(left: 40.0),
+                      margin: const EdgeInsets.only(left: 20.0),
                       child: Text(
                         'Chi Phí Giao Hàng: ',
                         style: TextStyle(
-                          fontSize: 15.0,
+                          fontSize: 18.0,
                           color: const Color.fromRGBO(0, 175, 82, 1),
                         ),
                       ),
@@ -402,7 +443,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                       child: Text(
                         '20,000đ',
                         style: TextStyle(
-                          fontSize: 15.0,
+                          fontSize: 18.0,
                           color: const Color.fromRGBO(0, 175, 82, 1),
                         ),
                       ),
@@ -427,17 +468,21 @@ class _OrderInfoPage extends State<OrderInfoPage> {
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.8,
-            padding: EdgeInsets.only(bottom: 20.0),
             margin: const EdgeInsets.only(left: 20.0),
-            height: 65.0,
+
             child: StreamBuilder<String>(
               //stream: bloc.email,
               builder: (context, snapshot) => TextFormField(
                 //onChanged: bloc.emailChanged,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.multiline,
+                maxLines: 7,
                 style: TextStyle(
                   color: Colors.black,
                 ),
+                controller: noteController,
                 decoration: InputDecoration(
+                  contentPadding: new EdgeInsets.symmetric(vertical: 20.0),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
@@ -476,6 +521,14 @@ class _OrderInfoPage extends State<OrderInfoPage> {
       height: 70.0,
       child: RaisedButton(
         onPressed: () {
+          if(fullNameController.text != ""){
+            fullName = fullNameController.text;
+          }
+          if(phoneController.text != ""){
+            phoneNumber = phoneController.text;
+          }
+          note = noteController.text;
+
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) {
             return PaymentPage(list: data, total: total, storeID: storeID, timePicked: timePicked,);
