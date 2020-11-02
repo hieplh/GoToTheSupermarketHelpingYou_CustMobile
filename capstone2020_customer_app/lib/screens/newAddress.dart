@@ -1,16 +1,26 @@
 import 'package:capstone2020customerapp/api_url_constain.dart';
+import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/address.dart';
 import 'package:capstone2020customerapp/screens/orderInfo.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
 class NewAddressPage extends StatefulWidget {
+  final List<Data> list;
+  final double total;
+  final String storeID;
 
+  NewAddressPage({Key key, @required this.list, @required this.total, @required this.storeID}) : super(key: key);
   @override
-  _NewAddressPage createState() => _NewAddressPage();
+  _NewAddressPage createState() => _NewAddressPage(list, total, storeID);
 }
 
 class _NewAddressPage extends State<NewAddressPage> {
+  List<Data> data;
+  double total;
+  String storeID;
+  _NewAddressPage(this.data, this.total, this.storeID);
+
   int _value;
   int _valueWard;
   String dist;
@@ -390,11 +400,15 @@ class _NewAddressPage extends State<NewAddressPage> {
   changeThePage() async {
     Address addr = new Address("Phan Công Bình", "0123456789", "Hồ Chí Minh", districtName, wardName, streetController.text);
     address.add(addr);
-    deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
+    //deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
     //print(streetController.text);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return OrderInfoPage();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+      return OrderInfoPage(list: data, total: total, storeID: storeID,);
     }));
+//    Navigator.of(context).pushAndRemoveUntil(
+//        MaterialPageRoute(builder: (context) {
+//          return OrderInfoPage();
+//        }), ModalRoute.withName("/OrderInfoPage"));
 
   }
 

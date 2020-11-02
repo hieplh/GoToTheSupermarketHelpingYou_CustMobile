@@ -9,17 +9,19 @@ import 'dart:convert' show utf8;
 
 class DetailSupermarketPage extends StatefulWidget {
   final String marketID;
+  final String marketImage;
 
-  DetailSupermarketPage({Key key, @required this.marketID}) : super(key: key);
+  DetailSupermarketPage({Key key, @required this.marketID, @required this.marketImage}) : super(key: key);
 
 
   @override
-  _DetailSupermarketPage createState() => _DetailSupermarketPage(marketID);
+  _DetailSupermarketPage createState() => _DetailSupermarketPage(marketID, marketImage);
 }
 FocusNode myFocusNode = new FocusNode();
 class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   String marketID;
-  _DetailSupermarketPage(this.marketID);
+  String marketImage;
+  _DetailSupermarketPage(this.marketID, this.marketImage);
   String search;
   String storeID;
   TextEditingController searchController = new TextEditingController();
@@ -203,7 +205,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                 height: 150,
                 padding: EdgeInsets.only(bottom: 10.0, right: 15.0),
                 child: Image.network(
-                    'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+                    '${marketImage}',
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
@@ -226,7 +228,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
               padding: EdgeInsets.only(bottom: 10.0),
               child: ListTile(
                 leading: Image.network(
-                  'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+                  '${listStore.image}',
                   fit: BoxFit.contain,
                   height: 100.0,
                   width: 100.0,

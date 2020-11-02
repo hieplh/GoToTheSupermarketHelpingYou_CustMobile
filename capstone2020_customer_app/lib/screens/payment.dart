@@ -1,5 +1,7 @@
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/paypal/makePayment.dart';
+import 'package:capstone2020customerapp/paypal/paypalPayment.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
@@ -33,7 +35,10 @@ class _PaymentPage extends State<PaymentPage> {
           children: <Widget>[
             _buildHeader(),
             _buildBody(),
-            _buildConfirmButton(),
+            if(money >= total)
+              _buildConfirmButton(),
+            if(money < total)
+              _buildPaymentButton(),
           ],
         ),
       ),
@@ -215,7 +220,7 @@ class _PaymentPage extends State<PaymentPage> {
                   padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    'Ví Điện Tử',
+                    'Số dư tài khoản: ${money.toString().replaceAll(regex, "")}đ',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
@@ -259,6 +264,46 @@ class _PaymentPage extends State<PaymentPage> {
       ),
     );
   }
+
+  Widget _buildPaymentButton() {
+    return Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.8,
+      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      height: 70.0,
+      child: RaisedButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => PaypalPayment(
+                onFinish: (number) async {
+
+                  // payment done
+                  print('order id: '+number);
+
+                },
+              ),
+            ),
+          );
+        },
+        textColor: Colors.white,
+        color: const Color.fromRGBO(0, 175, 82, 1),
+        child: Text(
+          'Paypal',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 18.0,
+            letterSpacing: 2.0,
+            fontFamily: 'Montserrat',
+          ),
+        ),
+      ),
+    );
+  }
+
 
   changeThePage() async {
     Navigator.of(context).pushAndRemoveUntil(

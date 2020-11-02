@@ -110,12 +110,12 @@ class _HomePage extends State<HomePage> {
               List<Widget> _widgetOptions = <Widget>[
                 Card(
                     child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      _buildHomeHeader(),
-                      _buildHomeBody(),
-                    ],
-                  ),
+                      child: Column(
+                        children: <Widget>[
+                          _buildHomeHeader(),
+                          _buildHomeBody(),
+                        ],
+                      ),
                 )),
                 Card(
                   child: Column(
@@ -127,14 +127,17 @@ class _HomePage extends State<HomePage> {
                 ),
                 Card(
                     child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      _buildCartHeader(),
-                      _buildCartBody(),
-                      _buildCartSubBody(),
-                     _buildOrderButton(),
-                    ],
-                  ),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: Column(
+                          children: <Widget>[
+                            _buildCartHeader(),
+                            _buildCartBody(),
+                            _buildCartSubBody(),
+                           _buildOrderButton(),
+                          ],
+                        ),
+                      ),
                 )
 
             ),

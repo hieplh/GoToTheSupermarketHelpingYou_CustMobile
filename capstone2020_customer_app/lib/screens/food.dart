@@ -7,6 +7,8 @@ import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../api_url_constain.dart';
+
 class FoodPage extends StatefulWidget {
   final String storeID;
 
@@ -141,7 +143,7 @@ class _FoodPage extends State<FoodPage> {
                 ),
               ),
               subtitle: Text(
-                '${listFood.price}',
+                '${listFood.price.toString().replaceAll(regex, "")}đ',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 13.0,

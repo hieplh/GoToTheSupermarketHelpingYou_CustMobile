@@ -367,7 +367,7 @@ class _ProgressPage extends State<ProgressPage> {
                         padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
                         width: MediaQuery.of(context).size.width * 0.25,
                         child: Text(
-                          '${myOrder.body.totalCost}đ',
+                          '${myOrder.body.totalCost.toString().replaceAll(regex, "")}đ',
                           style: TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
@@ -401,7 +401,7 @@ class _ProgressPage extends State<ProgressPage> {
                             ),
                           ),
                           title: Text(
-                            '${utf8.decode(latin1.encode(list.food), allowMalformed: true)}',
+                            '${utf8.decode(latin1.encode(list.foodId), allowMalformed: true)}',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 17.0,
@@ -415,7 +415,7 @@ class _ProgressPage extends State<ProgressPage> {
 //                            ),
 //                          ),
                           trailing: Text(
-                            '${list.priceOriginal}đ',
+                            '${list.priceOriginal.toString().replaceAll(regex, "")}đ',
                             style: TextStyle(
                               fontSize: 17.0,
                             ),

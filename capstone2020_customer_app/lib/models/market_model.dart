@@ -6,10 +6,12 @@ part 'market_model.g.dart';
 
 @JsonSerializable()
 class Market{
+  String image;
   String name;
   String id;
 
   Market(
+      this.image,
       this.name,
       this.id,
       );

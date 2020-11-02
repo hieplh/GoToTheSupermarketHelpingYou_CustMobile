@@ -48,7 +48,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
-    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    String now = date.year.toString() + "-" + date.month.toString() + "-0" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
@@ -68,7 +68,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "details": [
             for(var list in data)
             {
-              "food": "${list.id}",
+              "foodId": "${list.id}",
               "priceOriginal": '${list.price}',
               "pricePaid": '0',
               "saleOff": '0',
@@ -78,12 +78,6 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "market": storeID,
           "note": "abcde",
           "timeDelivery": timePicked,
-          "timeTravel": {
-            "delivery": "00:30:00",
-            "going": "00:15:00",
-            "shopping": "01:15:00",
-            "traffic": "00:30:00"
-          },
           "totalCost": '${total + 20000 + 50000}'
         }));
     print('Response status: ${response.statusCode}');

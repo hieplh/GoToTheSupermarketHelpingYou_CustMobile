@@ -6,6 +6,7 @@ import 'package:capstone2020customerapp/screens/newAddress.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 import 'home.dart';
 
@@ -38,6 +39,11 @@ class _OrderInfoPage extends State<OrderInfoPage> {
     setState(() {
       time = picked;
       timePicked = time.hour.toString() + ":" + time.minute.toString() + ":00";
+      if(17 <= int.parse(time.hour.toString()) && int.parse(time.hour.toString()) <= 20){
+        deliveryFee = 50000;
+      }else{
+        deliveryFee = 20000;
+      }
     });
   }
 
@@ -112,14 +118,13 @@ class _OrderInfoPage extends State<OrderInfoPage> {
           ),
           for(var addr in address)
             Container(
-              padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-              margin: const EdgeInsets.only(left: 10.0),
-              child: Text(
-                '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  //color: const Color.fromRGBO(0, 175, 82, 1),
-                ),
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: CheckboxGroup(
+                labels: <String>[
+                  '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+                ],
+                onChange: (bool isChecked, String label, int index) => print("isChecked: $isChecked   label: $label  index: $index"),
+                onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
               ),
             ),
           Container(
@@ -134,14 +139,14 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return  NewAddressPage();
+                        return  NewAddressPage(list: data, total: total, storeID: storeID,);
                       }));
                     },
                   ),
 
                 ),
                 Container(
-                  padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Text(
                     'Thêm Địa Chỉ Mới',
@@ -441,7 +446,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0),
                       child: Text(
-                        '20,000đ',
+                        '${deliveryFee}đ',
                         style: TextStyle(
                           fontSize: 18.0,
                           color: const Color.fromRGBO(0, 175, 82, 1),

@@ -161,7 +161,7 @@ class _SupermarketPage extends State<SupermarketPage> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: ListTile(
-              leading: Image.network('https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+              leading: Image.network('${list.image}',
                 fit: BoxFit.cover,
                 height: 100.0,
                 width: 100.0,
@@ -189,7 +189,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 size: 40.0,
               ),
               onTap: (){
-                changeToDetail('${list.id}');
+                changeToDetail('${list.id}', '${list.image}');
               },
               isThreeLine: true,
             ),
@@ -215,11 +215,11 @@ class _SupermarketPage extends State<SupermarketPage> {
           return LoginPage();
         }), ModalRoute.withName('/'));
   }
-  changeToDetail(String id) async {
+  changeToDetail(String id, String image) async {
 
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) {
-          return DetailSupermarketPage(marketID: id,);
+          return DetailSupermarketPage(marketID: id, marketImage: image,);
         }));
   }
 

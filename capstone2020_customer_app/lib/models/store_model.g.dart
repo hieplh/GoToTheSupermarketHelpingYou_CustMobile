@@ -16,6 +16,7 @@ StoreModel _$StoreModelFromJson(Map<String, dynamic> json) {
     json['addr4'] as String,
     json['lat'] as String,
     json['lng'] as String,
+    json['image'] as String,
   );
 }
 
@@ -29,4 +30,5 @@ Map<String, dynamic> _$StoreModelToJson(StoreModel instance) =>
       'addr4': instance.addr4,
       'lat': instance.lat,
       'lng': instance.lng,
+      'image': instance.image,
     };

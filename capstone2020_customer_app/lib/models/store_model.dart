@@ -11,6 +11,7 @@ class StoreModel{
   String addr4;
   String lat;
   String lng;
+  String image;
 
   StoreModel(
       this.id,
@@ -21,6 +22,7 @@ class StoreModel{
       this.addr4,
       this.lat,
       this.lng,
+      this.image,
       );
 
   factory StoreModel.fromJson(Map<String, dynamic> json) =>

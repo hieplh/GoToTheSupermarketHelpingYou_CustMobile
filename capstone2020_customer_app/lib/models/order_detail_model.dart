@@ -4,7 +4,7 @@ part 'order_detail_model.g.dart';
 @JsonSerializable()
 class OrderDetail{
   String id;
-  String food;
+  String foodId;
   String image;
   double priceOriginal;
   double pricePaid;
@@ -14,7 +14,7 @@ class OrderDetail{
 
   OrderDetail(
       this.id,
-      this.food,
+      this.foodId,
       this.image,
       this.priceOriginal,
       this.pricePaid,
