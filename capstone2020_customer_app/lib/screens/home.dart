@@ -42,21 +42,23 @@ class _HomePage extends State<HomePage> {
   List<FoodModel> list;
   List<Data> listCart = new List();
   List<String> foodName = [];
+  Map<String, int> quantity = new Map();
   int _defaultValue = 1;
   var showBadge = true;
   int badgeData = 0;
-  int count = 0;
+  int cont = 0;
 
   void showToast() {
-    Fluttertoast.showToast(
-        msg: 'Thêm Thành Công',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 1,
+    setState(() {
+      Fluttertoast.showToast(
+          msg: 'Thêm Thành Công',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
 //        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
-        textColor: Colors.white
-    );
-
+          textColor: Colors.white
+      );
+    });
   }
   void showToastDelete() {
     Fluttertoast.showToast(
@@ -128,7 +130,7 @@ class _HomePage extends State<HomePage> {
                 Card(
                     child: SingleChildScrollView(
                       child: Container(
-                        height: MediaQuery.of(context).size.height,
+                        //height: MediaQuery.of(context).size.height,
                         child: Column(
                           children: <Widget>[
                             _buildCartHeader(),
@@ -518,56 +520,6 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildHomeBody() {
     return Column(children: <Widget>[
-//      Container(
-//        width: MediaQuery.of(context).size.width * 0.9,
-//        padding: EdgeInsets.only(bottom: 20.0),
-//        child: StreamBuilder<String>(
-//          //stream: bloc.email,
-//          builder: (context, snapshot) => TextFormField(
-//            //onChanged: bloc.emailChanged,
-//            style: TextStyle(
-//              color: Colors.black,
-//            ),
-//            controller: searchController,
-//            onSaved: (input) => search = input,
-//            decoration: InputDecoration(
-//              prefixIcon: Icon(
-//                Icons.search,
-//                color: const Color.fromRGBO(0, 255, 0, 1),
-//                size: 30.0,
-//              ),
-//              labelText: 'Tìm kiếm đồ ăn...',
-//              hintText: 'Nhập đồ ăn...',
-//              focusedBorder: OutlineInputBorder(
-//                borderRadius: BorderRadius.circular(30.0),
-//                borderSide: BorderSide(
-//                  color: Colors.black,
-//                ),
-//              ),
-//              enabledBorder: OutlineInputBorder(
-//                borderRadius: BorderRadius.circular(30.0),
-//                borderSide: BorderSide(
-//                  color: Colors.black,
-//                ),
-//              ),
-//              border: OutlineInputBorder(
-//                borderRadius: BorderRadius.circular(30.0),
-//                borderSide: BorderSide(
-//                  color: const Color.fromRGBO(0, 141, 177, 1),
-//                ),
-//              ),
-//              labelStyle: TextStyle(
-//                  color: myFocusNode.hasFocus
-//                      ? const Color.fromRGBO(0, 141, 177, 1)
-//                      : Colors.grey),
-//              hintStyle: TextStyle(
-//                color: Colors.grey,
-//              ),
-//              errorText: snapshot.error,
-//            ),
-//          ),
-//        ),
-//      ),
       Container(
         height: 300.0,
         alignment: Alignment.center,
@@ -984,8 +936,28 @@ class _HomePage extends State<HomePage> {
             onTap: (){
               Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${(listFood.price.toString().replaceAll(regex, ""))}', 1);
               total = total + double.parse(data.price.toString());
-              listCart.add(data);
-              badgeData++;
+//              if(listCart.length == 0){
+                listCart.add(data);
+                badgeData++;
+//              }else{
+//                for(int i = 0; i < listCart.length; i++){
+//                  if(listFood.id != listCart[i].id && cont == 0){
+//                    listCart.add(data);
+//                    badgeData++;
+//                    cont = 1;
+//                    break;
+//                  }else{
+//                    cont = 0;
+//                    if(cont == 0 && listFood.id == listCart[i].id){
+//                      listCart[i].quantity++;
+//                      break;
+//                    }
+//                  }
+//                }
+//              }
+
+              quantity.putIfAbsent(data.id, () => data.quantity);
+              print(quantity);
               print(total);
               showToast();
             },
@@ -1171,31 +1143,6 @@ class _HomePage extends State<HomePage> {
                                   ),
                                 ),
                               ),
-//                              Counter(
-//                                initialValue: _defaultValue,
-//                                minValue: 0,
-//                                maxValue: 10,
-//                                step: 1,
-//                                color: const Color.fromRGBO(0, 175, 82, 1),
-//                                decimalPlaces: 0,
-//                                onChanged: (value) { // get the latest value from here
-//                                  setState(() {
-//                                    for(var data in listCart){
-//                                      if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
-//                                        if(value > data.quantity ){
-//                                          total = total + double.parse(data.price.toString());
-//                                        }
-//                                        if(value < data.quantity){
-//                                          total = total - double.parse(data.price.toString());
-//                                        }
-//                                        data.quantity = value;
-//                                      }
-//                                    }
-//                                    print(double.parse(listOrder.price) * listOrder.quantity);
-//                                    _defaultValue = value;
-//                                  });
-//                                },
-//                              ),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.25,
                                 child: Row(
@@ -1211,11 +1158,11 @@ class _HomePage extends State<HomePage> {
                                             setState(() {
                                               for(var data in listCart){
                                                 if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
-                                                  _defaultValue--;
-                                                  if(_defaultValue < data.quantity){
+                                                  quantity.update(data.id, (value) => (quantity[data.id] - 1));
+                                                  if(quantity[data.id] < data.quantity){
                                                     total = total - double.parse(data.price.toString());
                                                   }
-                                                  data.quantity = _defaultValue;
+                                                  data.quantity = quantity[data.id];
                                                 }
                                               }
                                             });
@@ -1224,7 +1171,7 @@ class _HomePage extends State<HomePage> {
                                           backgroundColor: const Color.fromRGBO(0, 175, 82, 1)),
                                     ),
                                     Text(
-                                      '${_defaultValue}',
+                                      '${listOrder.quantity}',
                                       style: TextStyle(fontSize: 18.0),
                                     ),
                                     SizedBox(
@@ -1238,11 +1185,11 @@ class _HomePage extends State<HomePage> {
                                           setState(() {
                                             for(var data in listCart){
                                               if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
-                                                _defaultValue++;
-                                                if(_defaultValue > data.quantity ){
+                                                quantity.update(data.id, (value) => (quantity[data.id] + 1));
+                                                if(quantity[data.id] > data.quantity ){
                                                   total = total + double.parse(data.price.toString());
                                                 }
-                                                data.quantity = _defaultValue;
+                                                data.quantity = quantity[data.id];
 
                                               }
                                             }
@@ -1279,7 +1226,11 @@ class _HomePage extends State<HomePage> {
                                       color: const Color.fromRGBO(0, 175, 82, 1),
                                     ),
                                     onPressed: (){
-                                      //listCart.removeWhere(('${listOrder.id}') => '${listOrder.id}');
+                                      setState(() {
+                                        badgeData--;
+                                        listCart.removeWhere((element) => element == listOrder);
+                                        total = total - double.parse(listOrder.price.toString())*listOrder.quantity;
+                                      });
                                       showToastDelete();
                                     },
                                   ),
@@ -1310,40 +1261,6 @@ class _HomePage extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-//          Container(
-//            child: Row(
-//              children: <Widget>[
-//                Container(
-//                  padding: const EdgeInsets.only(top: 15.0),
-//                  width: MediaQuery.of(context).size.width * 0.25,
-//                  child: Text(
-//                    'Voucher\n',
-//                    style: TextStyle(
-//                      fontSize: 15.0,
-//                    ),
-//                  ),
-//                ),
-//                Container(
-//                  width: MediaQuery.of(context).size.width * 0.6,
-//                  height: 40.0,
-//                  decoration: BoxDecoration(
-//                    borderRadius: BorderRadius.circular(10.0),
-//                    border: Border(
-//                      bottom: BorderSide(width: 1.0, color: Colors.grey),
-//                      top: BorderSide(width: 1.0, color: Colors.grey),
-//                      left: BorderSide(width: 1.0, color: Colors.grey),
-//                      right: BorderSide(width: 1.0, color: Colors.grey),
-//                    ),
-//                  ),
-//                  alignment: Alignment.centerRight,
-//                  child: Icon(
-//                    Icons.arrow_forward_ios,
-//                    color: const Color.fromRGBO(0, 141, 177, 1),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
           Container(
             child: Row(
               children: <Widget>[

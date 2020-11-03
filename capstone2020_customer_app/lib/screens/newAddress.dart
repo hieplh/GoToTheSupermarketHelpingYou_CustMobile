@@ -232,6 +232,7 @@ class _NewAddressPage extends State<NewAddressPage> {
             ),
           ),
           Container(
+            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               children: <Widget>[
                 Container(
@@ -307,23 +308,22 @@ class _NewAddressPage extends State<NewAddressPage> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 20.0),
                   width: MediaQuery.of(context).size.width * 0.6,
-                  height: 65.0,
-                  padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+                  margin: const EdgeInsets.only(left: 20.0),
+                  padding: EdgeInsets.only(top: 10.0),
                   child: StreamBuilder<String>(
                     //stream: bloc.email,
                     builder: (context, snapshot) => TextFormField(
                       //onChanged: bloc.emailChanged,
+                      textAlign: TextAlign.start,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.0,
                       ),
                       controller: streetController,
-                      textAlign: TextAlign.left,
                       decoration: InputDecoration(
-                        //labelText: 'Tìm kiếm đồ ăn...',
-                        enabled: true,
+                        contentPadding: new EdgeInsets.symmetric(vertical: 20.0),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(
@@ -342,6 +342,7 @@ class _NewAddressPage extends State<NewAddressPage> {
                             color: const Color.fromRGBO(0, 175, 82, 1),
                           ),
                         ),
+                        errorText: snapshot.error,
                       ),
                     ),
                   ),
@@ -402,7 +403,7 @@ class _NewAddressPage extends State<NewAddressPage> {
     address.add(addr);
     //deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
     //print(streetController.text);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+    Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
       return OrderInfoPage(list: data, total: total, storeID: storeID,);
     }));
 //    Navigator.of(context).pushAndRemoveUntil(

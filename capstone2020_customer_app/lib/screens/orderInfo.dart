@@ -121,7 +121,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
               width: MediaQuery.of(context).size.width * 0.9,
               child: CheckboxGroup(
                 labels: <String>[
-                  '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+                  '${addr.street + ", " + addr.district + ", \n" + addr.ward + ", " + addr.city}',
                 ],
                 onChange: (bool isChecked, String label, int index) => print("isChecked: $isChecked   label: $label  index: $index"),
                 onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',

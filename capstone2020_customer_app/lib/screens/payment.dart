@@ -1,6 +1,7 @@
+import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
-import 'package:capstone2020customerapp/paypal/makePayment.dart';
+import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/paypal/paypalPayment.dart';
 import 'package:flutter/material.dart';
 
@@ -25,22 +26,43 @@ class _PaymentPage extends State<PaymentPage> {
   String timePicked;
   _PaymentPage(this.data, this.total, this.storeID, this.timePicked);
   DateTime date = DateTime.now();
+  List<FoodModel> list;
+  Future<void> getAllFood() async {
+    print('storeID' + storeID);
+    final myService = FoodApiService.create();
+    final response = await myService.getAllFood(storeID);
+    list = response.body;
+//    for (var listItem in list) {
+//      print(listItem.name);
+//    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(),
-            _buildBody(),
-            if(money >= total)
-              _buildConfirmButton(),
-            if(money < total)
-              _buildPaymentButton(),
-          ],
-        ),
+      body: FutureBuilder(
+          future: getAllFood(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    _buildHeader(),
+                    _buildBody(),
+                    if(money >= total)
+                      _buildConfirmButton(),
+                    if(money < total)
+                      _buildPaymentButton(),
+                  ],
+                ),
+              );
+            }
+          }
       ),
     );
   }

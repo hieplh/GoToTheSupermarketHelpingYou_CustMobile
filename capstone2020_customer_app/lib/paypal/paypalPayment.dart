@@ -1,6 +1,10 @@
 import 'dart:core';
+import 'package:capstone2020customerapp/screens/detailSupermarket.dart';
+import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../api_url_constain.dart';
 import 'PaypalServices.dart';
 
 class PaypalPayment extends StatefulWidget {
@@ -20,7 +24,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
   String executeUrl;
   String accessToken;
   PaypalServices services = PaypalServices();
-
+  TextEditingController moneyController = new TextEditingController();
   // you can change default currency according to your need
   Map<dynamic,dynamic> defaultCurrency = {"symbol": "USD ", "decimalDigits": 2, "symbolBeforeTheNumber": true, "currency": "USD"};
 
@@ -29,7 +33,18 @@ class PaypalPaymentState extends State<PaypalPayment> {
 
   String returnURL = 'return.example.com';
   String cancelURL= 'cancel.example.com';
-
+  void showToast() {
+    setState(() {
+      Fluttertoast.showToast(
+          msg: 'Nạp Tiền Thành Công',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+          textColor: Colors.white
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -155,30 +170,14 @@ class PaypalPaymentState extends State<PaypalPayment> {
             onTap: () => Navigator.pop(context),
           ),
         ),
-        body: WebView(
-          initialUrl: checkoutUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          navigationDelegate: (NavigationRequest request) {
-            if (request.url.contains(returnURL)) {
-              final uri = Uri.parse(request.url);
-              final payerID = uri.queryParameters['PayerID'];
-              if (payerID != null) {
-                services
-                    .executePayment(executeUrl, payerID, accessToken)
-                    .then((id) {
-                  widget.onFinish(id);
-                  Navigator.of(context).pop();
-                });
-              } else {
-                Navigator.of(context).pop();
-              }
-              Navigator.of(context).pop();
-            }
-            if (request.url.contains(cancelURL)) {
-              Navigator.of(context).pop();
-            }
-            return NavigationDecision.navigate;
-          },
+        body: Column(
+          children: <Widget>[
+            _buildInputMoney(),
+            _buildWebView(),
+
+          ],
+
+              //_buildInputMoney(),
         ),
       );
     } else {
@@ -196,5 +195,72 @@ class PaypalPaymentState extends State<PaypalPayment> {
         body: Center(child: Container(child: CircularProgressIndicator())),
       );
     }
+  }
+  Widget _buildInputMoney(){
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
+        child: StreamBuilder<String>(
+          //stream: bloc.email,
+          builder: (context, snapshot) => TextFormField(
+            //onChanged: bloc.emailChanged,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            controller: moneyController,
+
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.attach_money,
+                color: const Color.fromRGBO(0, 175, 82, 1),
+                size: 30.0,
+              ),
+              labelText: 'Nạp tiền vô ví',
+              hintText: 'Nhập số tiền',
+            ),
+          ),
+        ),
+    );
+  }
+
+  Widget _buildWebView(){
+    return Expanded(
+      child: WebView(
+        initialUrl: checkoutUrl,
+        javascriptMode: JavascriptMode.unrestricted,
+        navigationDelegate: (NavigationRequest request) {
+          money = money + double.parse(moneyController.text);
+          showToast();
+          if (request.url.contains(returnURL)) {
+            final uri = Uri.parse(request.url);
+            final payerID = uri.queryParameters['PayerID'];
+            if (payerID != null) {
+              services
+                  .executePayment(executeUrl, payerID, accessToken)
+                  .then((id) {
+                widget.onFinish(id);
+                Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+                  return PaymentPage();
+                }));
+              });
+            } else {
+              Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+                return PaymentPage();
+              }));
+            }
+            Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+              return PaymentPage();
+            }));
+          }
+          if (request.url.contains(cancelURL)) {
+            Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+              return PaymentPage();
+            }));
+          }
+          return NavigationDecision.navigate;
+        },
+
+      ),
+    );
   }
 }
