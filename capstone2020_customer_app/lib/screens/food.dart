@@ -143,7 +143,7 @@ class _FoodPage extends State<FoodPage> {
                 ),
               ),
               subtitle: Text(
-                '${listFood.price.toString().replaceAll(regex, "")}đ',
+                '${oCcy.format(listFood.price)}đ',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 13.0,

@@ -47,6 +47,65 @@ class _OrderInfoPage extends State<OrderInfoPage> {
     });
   }
 
+  showAlertDialog(BuildContext context) {
+
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("Xác Nhận"),
+      onPressed: () {
+        setState(() {
+          Navigator.pop(context);
+        });
+      },
+    );
+
+    Widget addAddr = FlatButton(
+      child: Text("Thêm địa chỉ mới"),
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) {
+          return  NewAddressPage(list: data, total: total, storeID: storeID,);
+        }));
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Chọn địa chỉ"),
+      content:Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 200,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              for(var addr in address)
+                CheckboxGroup(
+                  labels: <String>[
+                    '${addr.street + ", \n" + addr.district + ", \n" + addr.ward + ", \n" + addr.city +"\n"}',
+                  ],
+                  onChange: (bool isChecked, String label, int index) => print("isChecked: $isChecked   label: $label  index: $index"),
+                  onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+                ),
+            ],
+
+          ),
+        ),
+      ),
+      actions: [
+        okButton,
+        addAddr,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -116,15 +175,10 @@ class _OrderInfoPage extends State<OrderInfoPage> {
               ),
             ),
           ),
-          for(var addr in address)
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
-              child: CheckboxGroup(
-                labels: <String>[
-                  '${addr.street + ", " + addr.district + ", \n" + addr.ward + ", " + addr.city}',
-                ],
-                onChange: (bool isChecked, String label, int index) => print("isChecked: $isChecked   label: $label  index: $index"),
-                onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+              child: Text(
+                '${deliveryAddr}',
               ),
             ),
           Container(
@@ -137,10 +191,8 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     icon: new Icon(Icons.add_circle),
                     color: const Color.fromRGBO(0, 175, 82, 1),
                     onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return  NewAddressPage(list: data, total: total, storeID: storeID,);
-                      }));
+                      showAlertDialog(context);
+
                     },
                   ),
 
@@ -446,7 +498,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0),
                       child: Text(
-                        '${deliveryFee}đ',
+                        '${oCcy.format(deliveryFee)}đ',
                         style: TextStyle(
                           fontSize: 18.0,
                           color: const Color.fromRGBO(0, 175, 82, 1),

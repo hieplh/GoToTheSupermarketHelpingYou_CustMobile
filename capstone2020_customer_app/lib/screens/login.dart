@@ -2,6 +2,7 @@
 
 import 'dart:convert' show latin1, utf8;
 import 'package:capstone2020customerapp/api/order_api_service.dart';
+import 'package:intl/intl.dart';
 import 'package:unicode/unicode.dart' as unicode;
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';

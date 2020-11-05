@@ -242,7 +242,7 @@ class _PaymentPage extends State<PaymentPage> {
                   padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    'Số dư tài khoản: ${money.toString().replaceAll(regex, "")}đ',
+                    'Số dư tài khoản: ${oCcy.format(money)}đ',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),

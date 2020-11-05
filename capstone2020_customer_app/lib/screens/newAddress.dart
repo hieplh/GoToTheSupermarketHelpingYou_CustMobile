@@ -23,10 +23,12 @@ class _NewAddressPage extends State<NewAddressPage> {
 
   int _value;
   int _valueWard;
+  int _valueStreet;
   String dist;
   String districtName;
   String wardName;
   String street;
+  String streetName;
   List district = ["Quận 1", "Quận 2", "Quận 3", "Quận 4", "Quận 5", "Quận 6",
     "Quận 7", "Quận 8","Quận 9", "Quận 10", "Quận 11", "Quận 12", "Quận Bình Tân", "Quận Bình Thạnh",
     "Quận Gò Vấp", "Quận Phú Nhuận", "Quận Tân Bình", "Quận Tân Phú", "Quận Thủ Đức",];
@@ -34,8 +36,14 @@ class _NewAddressPage extends State<NewAddressPage> {
   List ward_1 = ["Phường Bến Nghé", "Phường Bến Thành", "Phường Cầu Kho", "Phường Ông Lãnh", "Phường Cô Giang",
     "Phường Nguyễn Cư Trinh", "Phường Nguyễn Thái Bình", "Phường Phạm Ngũ Lão", "Phường Tân Định", "Phường Đa Kao"];
 
+  List street_1 = ["Alexandre de Rhodes" , "Bà lê Chân", "Bến Chương Dương", "Bùi Thị Xuân", "Bùi Viện", "Cách Mạnh Thánh 8",
+   "Calmette", "Cao Bá Nhạ", "Cáo Bá Quát", "Cây Điệp", "Chu Mạnh Chinh", "Cô Bắc", "Cô Giang "];
+
   List ward_2 = ["Phường An Khánh", "Phường An Lợi Đông", "Phường An Phú", "Phường Bình An", "Phường Bình Khánh",
     "Phường Bình Trưng Tây", "Phường Bình Trưng Đông", "Phường Cát Lái", "Phường Thạnh Mỹ Lợi", "Phường Thảo Điền", "Phường Thủ Thiêm"];
+
+  List street_2 = ["An Phú" , "An Phú - An Khánh", "Đại lộ Đông Tây", " Đặng Hữu Đông", " Đường D2", "Võ Trường Toản",
+    "Trần Não", "Thảo Điền", "Mai Chí Thọ", "Đường số 22", "Nguyễn Tư Nghiêm", "Nguyễn Văn Cừ", "Đặng Hữu Đông"];
 
   TextEditingController streetController = new TextEditingController();
   @override
@@ -295,6 +303,7 @@ class _NewAddressPage extends State<NewAddressPage> {
             ),
           ),
           Container(
+            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               children: <Widget>[
                 Container(
@@ -302,6 +311,68 @@ class _NewAddressPage extends State<NewAddressPage> {
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text(
                     'Đường',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topRight,
+                  margin: const EdgeInsets.only(left: 20.0),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 45.0,
+                  padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(30.0) //         <--- border radius here
+                    ),
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.black,),
+                      top: BorderSide(width: 1.0, color: Colors.black,),
+                      left: BorderSide(width: 1.0, color: Colors.black,),
+                      right: BorderSide(width: 1.0, color: Colors.black,),
+                    ),
+                  ),
+                  child: DropdownButton(
+                    value: _valueStreet,
+                    items: [
+                      if(dist == "1")
+                        for(int i = 0; i < street_1.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_1[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "2")
+                        for(int i = 0; i < street_2.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_2[i].toString()),
+                            value: i + 1,
+                          ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _valueStreet = value;
+                        if(dist == "1"){
+                          streetName = street_1[value - 1];
+                        }
+                        if(dist == "2"){
+                          streetName = street_2[value - 1];
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    'Số Nhà',
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -317,7 +388,7 @@ class _NewAddressPage extends State<NewAddressPage> {
                       //onChanged: bloc.emailChanged,
                       textAlign: TextAlign.start,
                       keyboardType: TextInputType.multiline,
-                      maxLines: 2,
+                      maxLines: 1,
                       style: TextStyle(
                         color: Colors.black,
                       ),
@@ -399,7 +470,7 @@ class _NewAddressPage extends State<NewAddressPage> {
   }
 
   changeThePage() async {
-    Address addr = new Address("Phan Công Bình", "0123456789", "Hồ Chí Minh", districtName, wardName, streetController.text);
+    Address addr = new Address("Phan Công Bình", "0123456789", "Hồ Chí Minh", districtName, wardName, streetController.text + " " + streetName);
     address.add(addr);
     //deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
     //print(streetController.text);

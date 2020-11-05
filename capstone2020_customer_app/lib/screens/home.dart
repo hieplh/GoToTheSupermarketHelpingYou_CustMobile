@@ -49,7 +49,7 @@ class _HomePage extends State<HomePage> {
   int cont = 0;
 
   void showToast() {
-    setState(() {
+    //setState(() {
       Fluttertoast.showToast(
           msg: 'Thêm Thành Công',
           toastLength: Toast.LENGTH_SHORT,
@@ -58,7 +58,7 @@ class _HomePage extends State<HomePage> {
 //        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
           textColor: Colors.white
       );
-    });
+    //});
   }
   void showToastDelete() {
     Fluttertoast.showToast(
@@ -602,7 +602,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '${listFood.price.toString().replaceAll(regex, "")}đ',
+                              '${oCcy.format(listFood.price)}đ',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -922,7 +922,7 @@ class _HomePage extends State<HomePage> {
               ),
             ),
             subtitle: Text(
-              '${listFood.price.toString().replaceAll(regex, "")}đ',
+              '${oCcy.format(listFood.price)}đ',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 13.0,
@@ -934,7 +934,7 @@ class _HomePage extends State<HomePage> {
               size: 30.0,
             ),
             onTap: (){
-              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${(listFood.price.toString().replaceAll(regex, ""))}', 1);
+              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1);
               total = total + double.parse(data.price.toString());
 //              if(listCart.length == 0){
                 listCart.add(data);
@@ -1036,7 +1036,7 @@ class _HomePage extends State<HomePage> {
                                         ),
                                         Container(
                                           child: Text(
-                                            '29 Oct',
+                                            '5 Nov',
                                             style: TextStyle(
                                               fontSize: 15.0,
                                             ),
@@ -1125,7 +1125,7 @@ class _HomePage extends State<HomePage> {
                           ),
                           Container(
                             child: Text(
-                              '${listOrder.price}đ\n',
+                              '${oCcy.format(double.parse(listOrder.price))}đ\n',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -1212,7 +1212,7 @@ class _HomePage extends State<HomePage> {
                                 Container(
                                   width: MediaQuery.of(context).size.width * 0.4,
                                   child: Text(
-                                    '${(double.parse(listOrder.price) * listOrder.quantity).toString().replaceAll(regex, "")}đ',
+                                    '${oCcy.format((double.parse(listOrder.price) * listOrder.quantity))}đ',
                                     style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
@@ -1277,7 +1277,7 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${total.toString().replaceAll(regex, "")}đ',
+                    '${oCcy.format(total)}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -1355,7 +1355,7 @@ class _HomePage extends State<HomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${total.toString().replaceAll(regex, "")}đ',
+                    '${oCcy.format(total)}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

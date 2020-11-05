@@ -209,7 +209,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                         ),
                         Container(
                                 child: Text(
-                                  '${(double.parse(list.price) * list.quantity).toString().replaceAll(regex, "")}đ',
+                                  '${oCcy.format((double.parse(list.price) * list.quantity))}đ',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
@@ -248,7 +248,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${total.toString().replaceAll(regex, "")}đ',
+                    '${oCcy.format(total)}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -378,7 +378,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${(total + 20000 + 50000).toString().replaceAll(regex, "")}đ',
+                    '${oCcy.format((total + 20000 + 50000))}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

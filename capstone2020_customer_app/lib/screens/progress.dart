@@ -367,7 +367,7 @@ class _ProgressPage extends State<ProgressPage> {
                         padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
                         width: MediaQuery.of(context).size.width * 0.25,
                         child: Text(
-                          '${myOrder.body.totalCost.toString().replaceAll(regex, "")}đ',
+                          '${oCcy.format(myOrder.body.totalCost)}đ',
                           style: TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
@@ -415,7 +415,7 @@ class _ProgressPage extends State<ProgressPage> {
 //                            ),
 //                          ),
                           trailing: Text(
-                            '${list.priceOriginal.toString().replaceAll(regex, "")}đ',
+                            '${oCcy.format(list.priceOriginal)}đ',
                             style: TextStyle(
                               fontSize: 17.0,
                             ),
