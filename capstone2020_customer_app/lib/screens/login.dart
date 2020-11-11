@@ -1,12 +1,12 @@
 
 
-import 'dart:convert' show latin1, utf8;
-import 'package:capstone2020customerapp/api/order_api_service.dart';
-import 'package:intl/intl.dart';
-import 'package:unicode/unicode.dart' as unicode;
+import 'dart:convert' show json, latin1, utf8;
+import 'package:capstone2020customerapp/api/login_api_service.dart';
+import 'package:capstone2020customerapp/models/account_model.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import '../api_url_constain.dart';
@@ -21,6 +21,32 @@ FocusNode myFocusNode = new FocusNode();
 class _LoginPageState extends State<LoginPage> {
   String email, password;
   bool _isHidePassword = true;
+
+  void showSuccessToast() {
+    //setState(() {
+    Fluttertoast.showToast(
+        msg: 'Đăng Nhập Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+    //});
+  }
+
+  void showFailToast() {
+    //setState(() {
+    Fluttertoast.showToast(
+        msg: 'Wrong username or password!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+    //});
+  }
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -391,10 +417,51 @@ class _LoginPageState extends State<LoginPage> {
 
 
   changeThePage() async {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) {
-          return SupermarketPage();
-        }), ModalRoute.withName('/'));
+//    var url = API_URL_STARTPOINT + '/account/username';
+//    var response = await http.post(Uri.parse(url),
+//        headers: {
+//          'Content-type' : 'application/json',
+//          "Accept": "application/json",
+//        },
+//        body: json.encode({
+//          "password": "12345678",
+//          "role": "customer",
+//          "username": "123"
+//        }));
+//    print('Response status: ${response.statusCode}');
+//    print('Response body: ${response.body}');
+//    String acc = response.body;
+//    if (response.statusCode == 200) {
+//      // If the server did return a 200 OK response,
+//      // then parse the JSON.
+//      Map<String, dynamic> responseJson = json.decode(response.body);
+//      print(response.statusCode);
+//      print(acc);
+//
+//    } else {
+//      // If the server did not return a 200 OK response,
+//      // then throw an exception.
+//      print("false");
+//      throw Exception('Fail ');
+//    }
+    final myService2 = LoginApiService.create();
+    final response2 = await myService2.updateWallet("cust123", "100");
+    print("statussss: " + response2.statusCode.toString());
+
+    final myService = LoginApiService.create();
+    final response = await myService.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+    account = response.body;
+    if(response.statusCode == 200){
+      showSuccessToast();
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+            return SupermarketPage();
+          }), ModalRoute.withName('/'));
+    }else{
+      showFailToast();
+    }
+
+
 
   }
   

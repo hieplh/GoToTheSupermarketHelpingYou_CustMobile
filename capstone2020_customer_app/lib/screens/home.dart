@@ -2,10 +2,12 @@ import 'dart:convert';
 //import 'package:badges/badges.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
+import 'package:capstone2020customerapp/api/login_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/screens/wallet.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
 import 'package:capstone2020customerapp/screens/foodType.dart';
@@ -78,10 +80,18 @@ class _HomePage extends State<HomePage> {
     final response = await myService.getAllFood(storeID);
     list = response.body;
 
-    final myService1 = OrderApiService.create();
-    myOrder = await myService1.getOrderByID(ID);
+    if(ID != null){
+      final myService1 = OrderApiService.create();
+      myOrder = await myService1.getOrderByID(ID);
+      print("ID: " + ID);
+    }
+
+    final myService2 = LoginApiService.create();
+    final response2 = await myService2.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+    account = response2.body;
+
     //print(response1.body.id);
-    print("ID: " + ID);
+
 //    for (var listItem in list) {
 //        foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
 //      }
@@ -355,7 +365,7 @@ class _HomePage extends State<HomePage> {
                   backgroundColor: Colors.transparent,
                 ),
                 title: Text(
-                  'Phan Công Bình',
+                  '${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20.0,
@@ -443,7 +453,11 @@ class _HomePage extends State<HomePage> {
                   Icons.keyboard_arrow_right,
                   color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return WalletPage();
+                  }));
+                },
               ),
             ),
           ),
@@ -983,7 +997,8 @@ class _HomePage extends State<HomePage> {
               ),
             ),
             //for(var listHistory in listHistory)
-            GestureDetector(
+            if(myOrder != null)
+              GestureDetector(
               onTap: (){
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => ProgressPage()));

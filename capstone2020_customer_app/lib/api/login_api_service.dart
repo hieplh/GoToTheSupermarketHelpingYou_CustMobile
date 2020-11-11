@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:capstone2020customerapp/models/account_model.dart';
+import 'package:capstone2020customerapp/models/login_model.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:capstone2020customerapp/models/order_model.dart';
 import 'package:capstone2020customerapp/models/time_travel_model.dart';
@@ -7,28 +9,26 @@ import 'package:chopper/chopper.dart';
 
 import '../api_url_constain.dart';
 
-part "order_api_service.chopper.dart";
+part "login_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/order/')
-abstract class OrderApiService extends ChopperService{
+@ChopperApi(baseUrl: '/account/')
+abstract class LoginApiService extends ChopperService{
 
-  static OrderApiService create(){
+  static LoginApiService create(){
     final client = ChopperClient(
         baseUrl: API_URL_STARTPOINT,
-        services: [_$OrderApiService()],
+        services: [_$LoginApiService()],
         converter: JsonToTypeConverter({
-          Order: (jsonData) => Order.fromJson(jsonData)
+          Account: (jsonData) => Account.fromJson(jsonData)
         })
     );
-    return _$OrderApiService(client);
+    return _$LoginApiService(client);
   }
-//  @Post()
-//  Future<Response> postOrder(@Query() double costDelivery, @Query() double costShopping, @Query() String cust,
-//  @Query() String dateDelivery, @Query() List<OrderDetail> details, @Query() String market, @Query() String note,
-//  @Query() String timeDelivery, @Query() TimeTravel timeTravel, @Query() double totalCost);
-  @Get(path: "customer/{id}")
-  Future<Response<Order>> getOrderByID(@Path() String id);
+  @Post(path: "username")
+  Future<Response<Account>> postAccount(@Body() Map<String, dynamic> body);
 
+  @Get(path: "{accountId}/wallet/{amount}")
+  Future<Response> updateWallet(@Path() String accountId, @Path() String amount);
 }
 
 class JsonToTypeConverter extends JsonConverter {

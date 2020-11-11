@@ -18,7 +18,7 @@ class _$OrderApiService extends OrderApiService {
 
   @override
   Future<Response<Order>> getOrderByID(String id) {
-    final $url = '/order/$id';
+    final $url = '/order/customer/$id';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Order, Order>($request);
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:capstone2020customerapp/api/login_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
@@ -48,7 +49,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
-    String now = date.year.toString() + "-" + date.month.toString() + "-0" + date.day.toString();
+    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
@@ -89,6 +90,11 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       Map<String, dynamic> responseJson = json.decode(response.body);
       ID = responseJson["msg"];
       print(response.statusCode);
+
+//      final myService2 = LoginApiService.create();
+//      final response2 = await myService2.updateWallet(account.id, (account.wallet - total - 20000 - 50000).toString());
+//      print("statussss: " + response2.statusCode.toString());
+
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
             return HomePage(storeID: storeID,);
