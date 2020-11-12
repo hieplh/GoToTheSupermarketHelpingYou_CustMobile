@@ -5,6 +5,7 @@ import 'models/address.dart';
 
 const String API_URL_STARTPOINT = "http://smhu.ddns.net/smhu/api";
 String ID;
+String idStore;
 //RegExp regex = RegExp(r"([.]*0)(?!.*\d)");
 //format number
 final oCcy = new NumberFormat("#,##0", "en_US");

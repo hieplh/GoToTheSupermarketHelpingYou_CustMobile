@@ -61,7 +61,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "Accept": "application/json",
         },
         body: json.encode({
-          "addressDelivery": "388/4 Huỳnh Tấn Phát, quận 7, phường Bình Thuận, TP HCM",
+          "addressDelivery": "${deliveryAddr}",
           "costDelivery": '20000',
           "costShopping": '50000',
           "cust": "cust123",
@@ -77,7 +77,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             }
           ],
           "market": storeID,
-          "note": "abcde",
+          "note": "${note}",
           "timeDelivery": timePicked,
           "totalCost": '${total + 20000 + 50000}'
         }));
@@ -90,6 +90,17 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       Map<String, dynamic> responseJson = json.decode(response.body);
       ID = responseJson["msg"];
       print(response.statusCode);
+
+      var url = API_URL_STARTPOINT + '/account/';
+      var response1 = await http.put(Uri.parse(url),
+          headers: {
+            'Content-type' : 'application/json',
+            "Accept": "application/json",
+          },
+          body: json.encode({
+            "amount": (account.wallet - total - 20000 - 50000),
+            "id": "${account.id}"
+          }));
 
 //      final myService2 = LoginApiService.create();
 //      final response2 = await myService2.updateWallet(account.id, (account.wallet - total - 20000 - 50000).toString());

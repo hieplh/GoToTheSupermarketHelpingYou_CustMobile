@@ -1,4 +1,5 @@
 import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/api/login_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
@@ -27,14 +28,10 @@ class _PaymentPage extends State<PaymentPage> {
   _PaymentPage(this.data, this.total, this.storeID, this.timePicked);
   DateTime date = DateTime.now();
   List<FoodModel> list;
-  Future<void> getAllFood() async {
-    print('storeID' + storeID);
-    final myService = FoodApiService.create();
-    final response = await myService.getAllFood(storeID);
-    list = response.body;
-//    for (var listItem in list) {
-//      print(listItem.name);
-//    }
+  Future<void> getMoney() async {
+    final myService2 = LoginApiService.create();
+    final response2 = await myService2.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+
   }
 
   @override
@@ -42,7 +39,7 @@ class _PaymentPage extends State<PaymentPage> {
     // TODO: implement build
     return Scaffold(
       body: FutureBuilder(
-          future: getAllFood(),
+          future: getMoney(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -54,9 +51,9 @@ class _PaymentPage extends State<PaymentPage> {
                   children: <Widget>[
                     _buildHeader(),
                     _buildBody(),
-                    if(money >= total)
+                    if(account.wallet >= total)
                       _buildConfirmButton(),
-                    if(money < total)
+                    if(account.wallet < total)
                       _buildPaymentButton(),
                   ],
                 ),
@@ -242,7 +239,7 @@ class _PaymentPage extends State<PaymentPage> {
                   padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
                   margin: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    'Số dư tài khoản: ${oCcy.format(money)}đ',
+                    'Số dư tài khoản: ${oCcy.format(account.wallet)}đ',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),

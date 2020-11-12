@@ -5,10 +5,12 @@ import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../api_url_constain.dart';
+import 'home.dart';
 
 class ProgressPage extends StatefulWidget {
 
@@ -20,6 +22,34 @@ String img1 = "https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deli
 String img2 = "https://i.pinimg.com/736x/17/45/ec/1745ec05166a6c4a3e61c5533eb6883d.jpg";
 String img3 = "https://miro.medium.com/max/720/1*pCcEZ-0Hj6dp1jpCBZsJGg.jpeg";
 int count = 0;
+TextEditingController _textFieldController = TextEditingController();
+
+_displayDialog(BuildContext context) async {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Đơn Hàng giao thành công\nFeedback cho shipper(nếu cần)'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "FeedBack..."),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('Xác Nhận'),
+              onPressed: () {
+                ID = "";
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) {
+                      return HomePage(storeID: idStore,);
+                    }), ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      });
+}
+
 class _ProgressPage extends State<ProgressPage> {
   List<Step> steps = [
     Step(
@@ -82,6 +112,10 @@ class _ProgressPage extends State<ProgressPage> {
       img = img2;
     }else{
       img = img3;
+    }
+    if(count == 3){
+    _displayDialog(context);
+    count = 0;
     }
 
     currentStep + 1 != steps.length
@@ -263,7 +297,7 @@ class _ProgressPage extends State<ProgressPage> {
 
         ),
         Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
+          margin: const EdgeInsets.only(bottom: 5.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
                 Radius.circular(10.0) //         <--- border radius here
@@ -313,6 +347,190 @@ class _ProgressPage extends State<ProgressPage> {
 
           ),
 
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 15.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+                Radius.circular(10.0) //         <--- border radius here
+            ),
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+              top: BorderSide(width: 1.0, color: Colors.grey[300]),
+              left: BorderSide(width: 1.0, color: Colors.grey[300]),
+              right: BorderSide(width: 1.0, color: Colors.grey[300]),
+            ),
+          ),
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      '10,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      '20,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      '30,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+
+                ],
+
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      '40,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      '50,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0) //         <--- border radius here
+                      ),
+                      border: Border(
+                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      ),
+                    ),
+                    height: 40.0,
+                    width: 100.0,
+                    padding: EdgeInsets.only(top: 5.0),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      '60,000đ+',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+
+                ],
+
+              ),
+            ],
+
+          ),
         ),
         Container(
           margin: const EdgeInsets.only(bottom: 15.0),

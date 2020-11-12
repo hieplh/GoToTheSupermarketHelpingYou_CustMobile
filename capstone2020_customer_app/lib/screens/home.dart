@@ -75,6 +75,7 @@ class _HomePage extends State<HomePage> {
   }
   var myOrder;
   Future<void> getAllFood() async {
+    idStore = storeID;
     print('storeID' + storeID);
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
@@ -90,6 +91,9 @@ class _HomePage extends State<HomePage> {
     final response2 = await myService2.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
     account = response2.body;
 
+    for(var addr in account.addresses){
+      deliveryAddr = utf8.decode(latin1.encode(addr.addr1 + " " +  addr.addr2 + " " + addr.addr3 + " " + addr.addr4), allowMalformed: true);
+    }
     //print(response1.body.id);
 
 //    for (var listItem in list) {
@@ -538,7 +542,7 @@ class _HomePage extends State<HomePage> {
         height: 300.0,
         alignment: Alignment.center,
         child: Image.network(
-          'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+          'https://k9h2z2w9.stackpathcdn.com/wp-content/uploads/Mexico-Supermarket-750x375.jpg',
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
@@ -1026,7 +1030,7 @@ class _HomePage extends State<HomePage> {
                               Container(
                                 padding: EdgeInsets.only(top: 10.0,left: 10.0),
                                 child: Image.network(
-                                  'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+                                  'https://k9h2z2w9.stackpathcdn.com/wp-content/uploads/Mexico-Supermarket-750x375.jpg',
                                   fit: BoxFit.cover,
                                   height: 100.0,
                                   width: 100.0,
@@ -1051,7 +1055,7 @@ class _HomePage extends State<HomePage> {
                                         ),
                                         Container(
                                           child: Text(
-                                            '5 Nov',
+                                            '12 Nov',
                                             style: TextStyle(
                                               fontSize: 15.0,
                                             ),

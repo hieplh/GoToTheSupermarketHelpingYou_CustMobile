@@ -417,26 +417,23 @@ class _LoginPageState extends State<LoginPage> {
 
 
   changeThePage() async {
-//    var url = API_URL_STARTPOINT + '/account/username';
-//    var response = await http.post(Uri.parse(url),
+//    var url = API_URL_STARTPOINT + '/account/';
+//    var response1 = await http.put(Uri.parse(url),
 //        headers: {
 //          'Content-type' : 'application/json',
 //          "Accept": "application/json",
 //        },
 //        body: json.encode({
-//          "password": "12345678",
-//          "role": "customer",
-//          "username": "123"
+//          "amount": 10000,
+//          "id": "cust123"
 //        }));
-//    print('Response status: ${response.statusCode}');
-//    print('Response body: ${response.body}');
-//    String acc = response.body;
-//    if (response.statusCode == 200) {
+//    print('Response status: ${response1.statusCode}');
+//    print('Response body: ${response1.body}');
+//    if (response1.statusCode == 200) {
 //      // If the server did return a 200 OK response,
 //      // then parse the JSON.
-//      Map<String, dynamic> responseJson = json.decode(response.body);
-//      print(response.statusCode);
-//      print(acc);
+//      Map<String, dynamic> responseJson = json.decode(response1.body);
+//      print(response1.statusCode);
 //
 //    } else {
 //      // If the server did not return a 200 OK response,
@@ -444,12 +441,12 @@ class _LoginPageState extends State<LoginPage> {
 //      print("false");
 //      throw Exception('Fail ');
 //    }
-    final myService2 = LoginApiService.create();
-    final response2 = await myService2.updateWallet("cust123", "100");
-    print("statussss: " + response2.statusCode.toString());
+
+//    final myService2 = LoginApiService.create();
+//    final response2 = await myService2.updateWallet({"amount": "10000", "id": "cust123"});
 
     final myService = LoginApiService.create();
-    final response = await myService.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+    final response = await myService.postAccount({"password" : passwordController.text, "role" : "customer", "username" : usernameController.text},);
     account = response.body;
     if(response.statusCode == 200){
       showSuccessToast();

@@ -1,3 +1,4 @@
+import 'package:capstone2020customerapp/models/addr_model.dart';
 import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,6 +19,7 @@ class Account{
   int numSuccess;
   int numCancel;
   double wallet;
+  List<AddressModel> addresses;
 
   Account(
       this.id,
@@ -32,6 +34,7 @@ class Account{
       this.numCancel,
       this.numSuccess,
       this.wallet,
+      this.addresses,
       );
 
   factory Account.fromJson(Map<String, dynamic> json) =>

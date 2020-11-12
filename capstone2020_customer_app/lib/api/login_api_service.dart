@@ -27,8 +27,8 @@ abstract class LoginApiService extends ChopperService{
   @Post(path: "username")
   Future<Response<Account>> postAccount(@Body() Map<String, dynamic> body);
 
-  @Get(path: "{accountId}/wallet/{amount}")
-  Future<Response> updateWallet(@Path() String accountId, @Path() String amount);
+  @Put()
+  Future<Response> updateWallet(@Body() Map<String, dynamic> body);
 }
 
 class JsonToTypeConverter extends JsonConverter {

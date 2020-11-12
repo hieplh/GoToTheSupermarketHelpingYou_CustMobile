@@ -20,6 +20,10 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
     json['numCancel'] as int,
     json['numSuccess'] as int,
     (json['wallet'] as num)?.toDouble(),
+    (json['addresses'] as List)
+        ?.map((e) =>
+            e == null ? null : AddressModel.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
@@ -36,4 +40,5 @@ Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
       'numSuccess': instance.numSuccess,
       'numCancel': instance.numCancel,
       'wallet': instance.wallet,
+      'addresses': instance.addresses,
     };

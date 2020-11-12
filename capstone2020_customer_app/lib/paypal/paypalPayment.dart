@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'package:capstone2020customerapp/screens/detailSupermarket.dart';
 import 'package:capstone2020customerapp/screens/payment.dart';
@@ -6,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../api_url_constain.dart';
 import 'PaypalServices.dart';
+import 'package:http/http.dart' as http;
 
 class PaypalPayment extends StatefulWidget {
   final Function onFinish;
@@ -225,42 +227,52 @@ class PaypalPaymentState extends State<PaypalPayment> {
 
   Widget _buildWebView(){
     return Expanded(
-      child: WebView(
-        initialUrl: checkoutUrl,
-        javascriptMode: JavascriptMode.unrestricted,
-        navigationDelegate: (NavigationRequest request) {
-          money = money + double.parse(moneyController.text);
-          showToast();
-          if (request.url.contains(returnURL)) {
-            final uri = Uri.parse(request.url);
-            final payerID = uri.queryParameters['PayerID'];
-            if (payerID != null) {
-              services
-                  .executePayment(executeUrl, payerID, accessToken)
-                  .then((id) {
-                widget.onFinish(id);
+          child: WebView(
+            initialUrl: checkoutUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            navigationDelegate: (NavigationRequest request) async {
+              money = money + double.parse(moneyController.text);
+              var url = API_URL_STARTPOINT + '/account/';
+              var response1 = await http.put(Uri.parse(url),
+                  headers: {
+                    'Content-type' : 'application/json',
+                    "Accept": "application/json",
+                  },
+                  body: json.encode({
+                    "amount": (account.wallet + double.parse(moneyController.text)),
+                    "id": "${account.id}"
+                  }));
+              showToast();
+              if (request.url.contains(returnURL)) {
+                final uri = Uri.parse(request.url);
+                final payerID = uri.queryParameters['PayerID'];
+                if (payerID != null) {
+                  services
+                      .executePayment(executeUrl, payerID, accessToken)
+                      .then((id) {
+                    widget.onFinish(id);
+                    Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+                      return PaymentPage();
+                    }));
+                  });
+                } else {
+                  Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+                    return PaymentPage();
+                  }));
+                }
                 Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
                   return PaymentPage();
                 }));
-              });
-            } else {
-              Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
-                return PaymentPage();
-              }));
-            }
-            Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
-              return PaymentPage();
-            }));
-          }
-          if (request.url.contains(cancelURL)) {
-            Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
-              return PaymentPage();
-            }));
-          }
-          return NavigationDecision.navigate;
-        },
+              }
+              if (request.url.contains(cancelURL)) {
+                Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+                  return PaymentPage();
+                }));
+              }
+              return NavigationDecision.navigate;
+            },
 
-      ),
+          ),
     );
   }
 }
