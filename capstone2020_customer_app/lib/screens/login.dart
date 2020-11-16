@@ -444,7 +444,8 @@ class _LoginPageState extends State<LoginPage> {
 
 //    final myService2 = LoginApiService.create();
 //    final response2 = await myService2.updateWallet({"amount": "10000", "id": "cust123"});
-
+  customer = usernameController.text;
+  pass = passwordController.text;
     final myService = LoginApiService.create();
     final response = await myService.postAccount({"password" : passwordController.text, "role" : "customer", "username" : usernameController.text},);
     account = response.body;

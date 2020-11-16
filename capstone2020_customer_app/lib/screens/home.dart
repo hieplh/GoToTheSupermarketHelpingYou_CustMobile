@@ -87,8 +87,9 @@ class _HomePage extends State<HomePage> {
       print("ID: " + ID);
     }
 
+
     final myService2 = LoginApiService.create();
-    final response2 = await myService2.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+    final response2 = await myService2.postAccount({"password" : pass, "role" : "customer", "username" : customer},);
     account = response2.body;
 
     for(var addr in account.addresses){

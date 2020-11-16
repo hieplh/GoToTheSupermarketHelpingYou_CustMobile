@@ -64,7 +64,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "addressDelivery": "${deliveryAddr}",
           "costDelivery": '20000',
           "costShopping": '50000',
-          "cust": "cust123",
+          "cust": "${account.id}",
           "dateDelivery": now,
           "details": [
             for(var list in data)
@@ -87,6 +87,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
+      status = 12;
       Map<String, dynamic> responseJson = json.decode(response.body);
       ID = responseJson["msg"];
       print(response.statusCode);
