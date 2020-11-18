@@ -7,6 +7,7 @@ import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 
 import '../api_url_constain.dart';
@@ -444,6 +445,7 @@ class _LoginPageState extends State<LoginPage> {
 
 //    final myService2 = LoginApiService.create();
 //    final response2 = await myService2.updateWallet({"amount": "10000", "id": "cust123"});
+
   customer = usernameController.text;
   pass = passwordController.text;
     final myService = LoginApiService.create();

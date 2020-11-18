@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 
 import 'models/account_model.dart';
 import 'models/address.dart';
 
-const String API_URL_STARTPOINT = "http://172.16.191.80:1234/smhu/api";
+const String API_URL_STARTPOINT = "http://192.168.1.32:8084/smhu/api";
 String ID;
 String idStore;
 //RegExp regex = RegExp(r"([.]*0)(?!.*\d)");
@@ -11,8 +13,8 @@ String idStore;
 final oCcy = new NumberFormat("#,##0", "en_US");
 List<Address> address = new List();
 String deliveryAddr = "";
-String phoneNumber = "0123456789";
-String fullName = "Phan Công Bình";
+String phoneNumber = "${account.phone}";
+String fullName = "${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}";
 String note;
 int status = 12;
 int deliveryFee = 20000;

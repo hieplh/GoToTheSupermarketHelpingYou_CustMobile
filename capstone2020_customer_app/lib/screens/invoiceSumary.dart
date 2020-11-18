@@ -92,16 +92,16 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       ID = responseJson["msg"];
       print(response.statusCode);
 
-      var url = API_URL_STARTPOINT + '/account/';
-      var response1 = await http.put(Uri.parse(url),
-          headers: {
-            'Content-type' : 'application/json',
-            "Accept": "application/json",
-          },
-          body: json.encode({
-            "amount": (account.wallet - total - 20000 - 50000),
-            "id": "${account.id}"
-          }));
+//      var url = API_URL_STARTPOINT + '/account/';
+//      var response1 = await http.put(Uri.parse(url),
+//          headers: {
+//            'Content-type' : 'application/json',
+//            "Accept": "application/json",
+//          },
+//          body: json.encode({
+//            "amount": (total + 20000 + 50000),
+//            "id": "${account.id}"
+//          }));
 
 //      final myService2 = LoginApiService.create();
 //      final response2 = await myService2.updateWallet(account.id, (account.wallet - total - 20000 - 50000).toString());

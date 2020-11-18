@@ -239,7 +239,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
                     "Accept": "application/json",
                   },
                   body: json.encode({
-                    "amount": (account.wallet + double.parse(moneyController.text)),
+                    "amount": double.parse(moneyController.text),
                     "id": "${account.id}"
                   }));
               showToast();

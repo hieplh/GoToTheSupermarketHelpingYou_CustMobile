@@ -1286,7 +1286,7 @@ class _HomePage extends State<HomePage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.65,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Giá trị đơn hàng\n',
                     style: TextStyle(
@@ -1364,7 +1364,7 @@ class _HomePage extends State<HomePage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.65,
+                  width: MediaQuery.of(context).size.width * 0.55,
                   child: Text(
                     'Thành tiền\n',
                     style: TextStyle(

@@ -30,7 +30,7 @@ class _PaymentPage extends State<PaymentPage> {
   List<FoodModel> list;
   Future<void> getMoney() async {
     final myService2 = LoginApiService.create();
-    final response2 = await myService2.postAccount({"password" : "12345678", "role" : "customer", "username" : "123"},);
+    final response2 = await myService2.postAccount({"password" : "${pass}", "role" : "customer", "username" : "${customer}"},);
     account = response2.body;
   }
 

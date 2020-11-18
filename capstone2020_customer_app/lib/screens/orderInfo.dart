@@ -251,7 +251,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
                   enabled: true,
-                  hintText: '0123456789',
+                  hintText: '${account.phone}',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
@@ -311,7 +311,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
                   enabled: true,
-                  hintText: 'Phan Công Bình',
+                  hintText: '${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(

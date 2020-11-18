@@ -11,7 +11,9 @@ import 'package:capstone2020customerapp/models/pin_pill_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -32,8 +34,9 @@ int count = 0;
 TextEditingController _textFieldController = TextEditingController();
 
 const double CAMERA_ZOOM = 11;
-const LatLng SOURCE_LOCATION = LatLng(10.850519, 106.751692);
-const LatLng DEST_LOCATION = LatLng(10.786785, 106.746027);
+LatLng MARKET_LOCATION = LatLng(10.841608, 106.746225);
+LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
+LatLng DEST_LOCATION = LatLng(10.784523, 106.746328);
 
 Completer<GoogleMapController> _controller = Completer();
 Set<Marker> _markers = Set<Marker>();
@@ -64,64 +67,75 @@ PinInformation destinationPinInfo;
 
 
 
-void setSourceAndDestinationIcons() async {
-  BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(devicePixelRatio: 2.0), 'assets/driving_pin.png')
-      .then((onValue) {
-    sourceIcon = onValue;
-  });
-
-  BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.0),
-      'assets/destination_map_marker.png')
-      .then((onValue) {
-    destinationIcon = onValue;
-  });
-}
-
-void setInitialLocation() async {
-  // set the initial location by pulling the user's
-  // current location from the location's getLocation()
-  currentLocation = await location.getLocation();
-
-  // hard-coded destination for this example
-  destinationLocation = LocationData.fromMap({
-    "latitude": DEST_LOCATION.latitude,
-    "longitude": DEST_LOCATION.longitude
-  });
-}
-
-_displayDialog(BuildContext context) async {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Đơn Hàng giao thành công\nFeedback cho shipper(nếu cần)'),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: InputDecoration(hintText: "FeedBack..."),
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text('Xác Nhận'),
-              onPressed: () {
-                img = img0;
-                ID = null;
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) {
-                      return HomePage(storeID: idStore,);
-                    }), ModalRoute.withName('/'));
-              },
-            )
-          ],
-        );
-      });
-}
 
 class _ProgressPage extends State<ProgressPage> {
 
   int num = 12;
   var myOrder;
   List<OrderDetail> order;
+  Future<void> getMyOrder() async {
+
+
+    final myService1 = OrderApiService.create();
+    final mySth = await myService1.getOrderByID(ID);
+    myOrder = mySth;
+    order = mySth.body.details;
+    final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
+    var addresses = await Geocoder.local.findAddressesFromQuery(query);
+    var first = addresses.first;
+
+    DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+    print(DEST_LOCATION);
+    print("${first.featureName} : ${first.coordinates}");
+
+    if(status == 12){
+      Timer(const Duration(seconds: 10), () => getMyOrder());
+      status = mySth.body.status;
+      print(status);
+      if(status == num){
+        status = 12;
+      }
+    }
+    if(status == 21){
+      num = 21;
+      img = img1;
+      showOnWayToast(context);
+      setState(() {
+        status = 12;
+      });
+
+      print(status);
+    }
+    if(status == 22){
+      num = 22;
+      img = img2;
+      showOnShoppingToast(context);
+      setState(() {
+        status = 12;
+      });
+
+      print(status);
+    }
+    if(status == 23){
+      num = 23;
+      showOnDeliveryToast(context);
+      setState(() {
+        status = 12;
+      });
+
+      print(status);
+    }
+    if(status == 24){
+      num = 24;
+      _displayDialog(context);
+      setState(() {
+        status = 0;
+      });
+
+      print(status);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -142,61 +156,329 @@ class _ProgressPage extends State<ProgressPage> {
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
-    setInitialLocation();
+    if(num == 23){
+      setInitialLocation();
+    }
+
   }
 
-  Future<void> getMyOrder() async {
 
-    final myService1 = OrderApiService.create();
-    final mySth = await myService1.getOrderByID(ID);
-    myOrder = mySth;
-    order = mySth.body.details;
+  void setSourceAndDestinationIcons() async {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.0), 'assets/driving_pin.png')
+        .then((onValue) {
+      sourceIcon = onValue;
+    });
 
-    if(status == 12){
-      Timer(const Duration(seconds: 10), () => getMyOrder());
-      status = mySth.body.status;
-      print(status);
-      if(status == num){
-        status = 12;
-      }
-    }
-    if(status == 21){
-      num = 21;
-      img = img1;
-      setState(() {
-        status = 12;
-      });
-
-      print(status);
-    }
-    if(status == 22){
-      num = 22;
-      img = img2;
-      setState(() {
-        status = 12;
-      });
-
-      print(status);
-    }
-    if(status == 23){
-      num = 23;
-      setState(() {
-        status = 12;
-      });
-
-      print(status);
-    }
-    if(status == 24){
-      num = 24;
-      _displayDialog(context);
-      setState(() {
-        status = 0;
-      });
-
-      print(status);
-    }
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.0),
+        'assets/destination_map_marker.png')
+        .then((onValue) {
+      destinationIcon = onValue;
+    });
   }
 
+  void setInitialLocation() async {
+    // set the initial location by pulling the user's
+    // current location from the location's getLocation()
+    currentLocation = await location.getLocation();
+
+    // hard-coded destination for this example
+    destinationLocation = LocationData.fromMap({
+      "latitude": DEST_LOCATION.latitude,
+      "longitude": DEST_LOCATION.longitude
+    });
+  }
+
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Image.network(
+                    'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png',
+                    fit: BoxFit.cover,
+                    height: 100.0,
+                    width: 100.0,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Hãy đánh giá chất lượng",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    "dịch vụ giao hàng của shipper",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: RatingBar(
+                    initialRating: 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                      top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                    ),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                        child: Text(
+                          'Tổng Tiền',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                        child: Text(
+                          '${oCcy.format(myOrder.body.totalCost)}đ',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+
+                    ],
+
+                  ),
+                ),
+              ],
+            ),
+
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () {
+                  img = img0;
+                  ID = null;
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                        return HomePage(storeID: idStore,);
+                      }), ModalRoute.withName('/'));
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  showOnWayToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+                    ),
+                  ),
+                  margin: EdgeInsets.only(bottom: 10.0),
+
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                    ),
+                    title: Text(
+                      'Phan Công Bình',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Jupiter Yamaha - 72C1-79945',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 14.0,
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Shipper đã nhận đơn và đang trên đường tới siêu thị ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
+  }
+
+  showOnShoppingToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+                    ),
+                  ),
+                  margin: EdgeInsets.only(bottom: 10.0),
+
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                    ),
+                    title: Text(
+                      'Phan Công Bình',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Jupiter Yamaha - 72C1-79945',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 14.0,
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Shipper đã tới siêu thị. Hãy luôn giữ điện thoại sẵn sàng để shipper có thể liên lạc với bạn khi cần thiết trong quá trình mua hàng nếu sản phẩm hết hàng hoặc thay đổi về số lượng.",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
+  }
+
+  showOnDeliveryToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+                    ),
+                  ),
+                  margin: EdgeInsets.only(bottom: 10.0),
+
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                    ),
+                    title: Text(
+                      'Phan Công Bình',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Jupiter Yamaha - 72C1-79945',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 14.0,
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Shipper đã mua hàng hoàn tất và sắp giao đơn hàng từ ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)} đến cho bạn. Hãy luôn giữ điện thoại sẵn sàng liên lạc nhé!",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -305,7 +587,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã nhận đơn",
+                          "Shipper đã nhận đơn",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.black
@@ -330,7 +612,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã tới siêu thị",
+                          "Shipper đang mua hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -355,7 +637,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đang giao hàng",
+                          "Shipper đang giao hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -383,7 +665,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã nhận đơn",
+                          "Shipper đã nhận đơn",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -408,7 +690,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã tới siêu thị",
+                          "Shipper đang mua hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.black
@@ -433,7 +715,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đang giao hàng",
+                          "Shipper đang giao hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -461,7 +743,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã nhận đơn",
+                          "Shipper đã nhận đơn",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -486,7 +768,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đã tới siêu thị",
+                          "Shipper đang mua hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey
@@ -511,7 +793,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                       Container(
                         child: Text(
-                          "Người giao hàng đang giao hàng",
+                          "Shipper đang giao hàng",
                           style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.black,
@@ -627,7 +909,7 @@ class _ProgressPage extends State<ProgressPage> {
           ),
 
         ),
-        if(num == 21)
+        if(num != 12)
           Container(
           margin: const EdgeInsets.only(bottom: 5.0),
           decoration: BoxDecoration(
@@ -886,7 +1168,7 @@ class _ProgressPage extends State<ProgressPage> {
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
                 child: Text(
-                  '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
+                  'Đơn hàng của bạn tại ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
