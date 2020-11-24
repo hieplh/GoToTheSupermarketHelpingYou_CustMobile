@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'models/account_model.dart';
 import 'models/address.dart';
 
-const String API_URL_STARTPOINT = "http://192.168.1.32:8084/smhu/api";
+const String API_URL_STARTPOINT = "http://smhu.ddns.net:8084/smhu/api";
 String ID;
 String idStore;
 //RegExp regex = RegExp(r"([.]*0)(?!.*\d)");

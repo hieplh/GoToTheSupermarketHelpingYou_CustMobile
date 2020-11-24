@@ -2,12 +2,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:capstone2020customerapp/api/account_api_service.dart';
+import 'package:capstone2020customerapp/api/market_detail_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/components/map_pin_pill.dart';
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:capstone2020customerapp/models/pin_pill_info.dart';
+import 'package:capstone2020customerapp/models/shipper_model.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -21,9 +25,12 @@ import '../api_url_constain.dart';
 import 'home.dart';
 
 class ProgressPage extends StatefulWidget {
+  final String storeID;
+
+  ProgressPage({Key key, @required this.storeID}) : super(key: key);
 
   @override
-  _ProgressPage createState() => _ProgressPage();
+  _ProgressPage createState() => _ProgressPage(storeID);
 }
 String img = img0;
 String img0 = "https://media.istockphoto.com/vectors/hourglass-icon-simple-flat-style-sandglass-illustration-vector-id1039032938";
@@ -34,8 +41,7 @@ int count = 0;
 TextEditingController _textFieldController = TextEditingController();
 
 const double CAMERA_ZOOM = 11;
-LatLng MARKET_LOCATION = LatLng(10.841608, 106.746225);
-LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
+const LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
 LatLng DEST_LOCATION = LatLng(10.784523, 106.746328);
 
 Completer<GoogleMapController> _controller = Completer();
@@ -69,17 +75,36 @@ PinInformation destinationPinInfo;
 
 
 class _ProgressPage extends State<ProgressPage> {
+  String storeID;
+  _ProgressPage(this.storeID);
 
   int num = 12;
   var myOrder;
+  String shipper = "Trần Thảo Linh";
   List<OrderDetail> order;
+  StoreModel market;
+  Shipper ship;
   Future<void> getMyOrder() async {
-
-
     final myService1 = OrderApiService.create();
     final mySth = await myService1.getOrderByID(ID);
     myOrder = mySth;
     order = mySth.body.details;
+
+    final myService2 = MarketDetailApiService.create();
+    final response = await myService2.getStoreByID(storeID);
+    market = response.body;
+
+//    if(num != 12){
+//      print(myOrder.body.shipper);
+//      final myService2 = AccountApiService.create();
+//      final response2 = await myService2.getShipperByID(myOrder.body.shipper);
+//      ship = response2.body;
+//      shipper = "${utf8.decode(latin1.encode(ship.lastName), allowMalformed: true)}" + " " +
+//          "${utf8.decode(latin1.encode(ship.middleName), allowMalformed: true)}" + " " +
+//          "${utf8.decode(latin1.encode(ship.firstName), allowMalformed: true)}";
+//      print(shipper);
+//    }
+
     final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
     var addresses = await Geocoder.local.findAddressesFromQuery(query);
     var first = addresses.first;
@@ -209,10 +234,20 @@ class _ProgressPage extends State<ProgressPage> {
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.only(top:10.0, bottom: 10.0),
+                  child: Text(
+                    "Giao hàng hoàn tất",
+                    style: TextStyle(
+                      fontSize: 19.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
                   child: Text(
                     "Hãy đánh giá chất lượng",
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -222,7 +257,7 @@ class _ProgressPage extends State<ProgressPage> {
                   child: Text(
                     "dịch vụ giao hàng của shipper",
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -324,7 +359,7 @@ class _ProgressPage extends State<ProgressPage> {
                       backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      'Phan Công Bình',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -343,7 +378,7 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
                 Container(
                   child: Text(
-                    "Shipper đã nhận đơn và đang trên đường tới siêu thị ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}",
+                    "Shipper đã nhận đơn và đang trên đường tới siêu thị ${utf8.decode(latin1.encode(market.name), allowMalformed: true)}",
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.normal,
@@ -383,7 +418,7 @@ class _ProgressPage extends State<ProgressPage> {
                       backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      'Phan Công Bình',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -442,7 +477,7 @@ class _ProgressPage extends State<ProgressPage> {
                       backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      'Phan Công Bình',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -461,7 +496,7 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
                 Container(
                   child: Text(
-                    "Shipper đã mua hàng hoàn tất và sắp giao đơn hàng từ ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)} đến cho bạn. Hãy luôn giữ điện thoại sẵn sàng liên lạc nhé!",
+                    "Shipper đã mua hàng hoàn tất và sắp giao đơn hàng từ ${utf8.decode(latin1.encode(market.name), allowMalformed: true)} đến cho bạn. Hãy luôn giữ điện thoại sẵn sàng liên lạc nhé!",
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.normal,
@@ -564,6 +599,8 @@ class _ProgressPage extends State<ProgressPage> {
         children: <Widget>[
           if(num == 12)
             Container(
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Text(
                 'Processing...',
                 style: TextStyle(
@@ -933,7 +970,7 @@ class _ProgressPage extends State<ProgressPage> {
                   backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                 ),
                 title: Text(
-                  'Phan Công Bình',
+                  '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20.0,
@@ -1168,7 +1205,10 @@ class _ProgressPage extends State<ProgressPage> {
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
                 child: Text(
-                  'Đơn hàng của bạn tại ${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}',
+                  "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
+                  + "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" + " "
+                  + "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" + " "
+                  + "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -1335,7 +1375,7 @@ class _ProgressPage extends State<ProgressPage> {
                     margin: const EdgeInsets.only(left: 10.0),
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
                       style: TextStyle(
                         fontSize: 16.0,
                       ),

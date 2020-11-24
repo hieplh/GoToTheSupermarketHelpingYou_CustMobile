@@ -1,8 +1,10 @@
 
 
 import 'dart:convert' show json, latin1, utf8;
+import 'package:capstone2020customerapp/api/account_api_service.dart';
 import 'package:capstone2020customerapp/api/login_api_service.dart';
 import 'package:capstone2020customerapp/models/account_model.dart';
+import 'package:capstone2020customerapp/models/shipper_model.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
@@ -443,8 +445,9 @@ class _LoginPageState extends State<LoginPage> {
 //      throw Exception('Fail ');
 //    }
 
-//    final myService2 = LoginApiService.create();
-//    final response2 = await myService2.updateWallet({"amount": "10000", "id": "cust123"});
+//    final myService2 = AccountApiService.create();
+//    final response2 = await myService2.getShipperByID("shipper123");
+//    print(response2.body.firstName);
 
   customer = usernameController.text;
   pass = passwordController.text;

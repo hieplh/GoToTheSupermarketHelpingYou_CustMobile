@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/api/login_api_service.dart';
+import 'package:capstone2020customerapp/api/market_detail_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/screens/wallet.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
@@ -49,7 +51,7 @@ class _HomePage extends State<HomePage> {
   var showBadge = true;
   int badgeData = 0;
   int cont = 0;
-
+  StoreModel market;
   void showToast() {
     //setState(() {
       Fluttertoast.showToast(
@@ -74,6 +76,7 @@ class _HomePage extends State<HomePage> {
 
   }
   var myOrder;
+
   Future<void> getAllFood() async {
     idStore = storeID;
     print('storeID' + storeID);
@@ -95,6 +98,11 @@ class _HomePage extends State<HomePage> {
     for(var addr in account.addresses){
       deliveryAddr = utf8.decode(latin1.encode(addr.addr1 + " " +  addr.addr2 + " " + addr.addr3 + " " + addr.addr4), allowMalformed: true);
     }
+
+    final myService3 = MarketDetailApiService.create();
+    final response3 = await myService3.getStoreByID(storeID);
+    market = response3.body;
+
     //print(response1.body.id);
 
 //    for (var listItem in list) {
@@ -367,7 +375,7 @@ class _HomePage extends State<HomePage> {
               child: ListTile(
                 leading: CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                 ),
                 title: Text(
                   '${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}',
@@ -543,7 +551,7 @@ class _HomePage extends State<HomePage> {
         height: 300.0,
         alignment: Alignment.center,
         child: Image.network(
-          'https://k9h2z2w9.stackpathcdn.com/wp-content/uploads/Mexico-Supermarket-750x375.jpg',
+          '${market.image}',
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
@@ -1006,7 +1014,7 @@ class _HomePage extends State<HomePage> {
               GestureDetector(
               onTap: (){
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ProgressPage()));
+                    context, MaterialPageRoute(builder: (context) => ProgressPage(storeID: storeID,)));
               },
                 child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -1031,7 +1039,7 @@ class _HomePage extends State<HomePage> {
                               Container(
                                 padding: EdgeInsets.only(top: 10.0,left: 10.0),
                                 child: Image.network(
-                                  'https://k9h2z2w9.stackpathcdn.com/wp-content/uploads/Mexico-Supermarket-750x375.jpg',
+                                  '${market.image}',
                                   fit: BoxFit.cover,
                                   height: 100.0,
                                   width: 100.0,
@@ -1045,31 +1053,34 @@ class _HomePage extends State<HomePage> {
                                     Row(
                                       children: <Widget>[
                                         Container(
-                                          width: MediaQuery.of(context).size.width * 0.4,
+                                          width: MediaQuery.of(context).size.width * 0.5,
                                           child: Text(
-                                            '${utf8.decode(latin1.encode(myOrder.body.market), allowMalformed: true)}',
+                                            '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
                                             style: TextStyle(
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          child: Text(
-                                            '12 Nov',
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ),
+
                                       ],
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.5,
+                                      child: Text(
+                                        'Thời gian giao: ${myOrder.body.timeDelivery}',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
                                     ),
                                     Container(
                                       width: MediaQuery.of(context).size.width * 0.5,
                                       child: Text(
                                         '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
                                         style: TextStyle(
-                                          fontSize: 18.0,
+                                          fontSize: 16.0,
+                                          color: Colors.grey[700],
                                         ),
                                       ),
                                     ),
@@ -1082,7 +1093,7 @@ class _HomePage extends State<HomePage> {
                             width: MediaQuery.of(context).size.width * 0.3,
                             padding: EdgeInsets.only(top: 10.0),
                             child: Text(
-                              'Reorder',
+                              'Processing...',
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
