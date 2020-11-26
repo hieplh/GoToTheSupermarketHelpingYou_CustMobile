@@ -11,6 +11,8 @@ class History{
   String shipper;
   String createDate;
   String createTime;
+  String receiveTime;
+  String deliveryTime;
   double costShopping;
   double costDelivery;
   double totalCost;
@@ -25,6 +27,8 @@ class History{
       this.shipper,
       this.createDate,
       this.createTime,
+      this.receiveTime,
+      this.deliveryTime,
       this.costShopping,
       this.costDelivery,
       this.totalCost,

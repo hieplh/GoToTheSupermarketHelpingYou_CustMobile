@@ -3,8 +3,12 @@ import 'dart:convert';
 
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
+import 'package:capstone2020customerapp/screens/historyDetail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../api_url_constain.dart';
 
 class HistoryPage extends StatefulWidget {
 
@@ -15,22 +19,12 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPage extends State<HistoryPage> {
 
   List<History> listHistory;
-
-  void showToast() {
-    Fluttertoast.showToast(
-        msg: 'Thêm Thành Công',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 1,
-//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
-        textColor: Colors.white
-    );
-
-  }
+  History historyDetail;
 
   Future<void> getAllFood() async {
+
     final myService1 = HistoryApiService.create();
-    final response1 = await myService1.getAllHistory();
+    final response1 = await myService1.getAllHistory("${account.id}");
     listHistory = response1.body;
 
 //    for(var list in listHistory){
@@ -110,77 +104,88 @@ class _HistoryPage extends State<HistoryPage> {
           //width: MediaQuery.of(context).size.width * 0.9,
           child: Column(
             children: <Widget>[
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(top: 10.0,left: 10.0),
-                          child: Image.network(
-                            'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
-                            fit: BoxFit.cover,
-                            height: 100.0,
-                            width: 100.0,
-                            alignment: Alignment.center,
+              GestureDetector(
+                onTap: (){
+                  historyDetail = listHistory;
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => HistoryDetailPage(historyDetail: historyDetail,)));
+                },
+                child: Container(
+                  
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(top: 10.0,left: 10.0),
+                            child: Image.network(
+                              'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+                              fit: BoxFit.cover,
+                              height: 100.0,
+                              width: 100.0,
+                              alignment: Alignment.center,
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(left: 20.0),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * 0.45,
-                                    child: Text(
-                                      '${utf8.decode(latin1.encode(listHistory.marketName), allowMalformed: true)}',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
+                          Container(
+                            padding: EdgeInsets.only(left: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      width: MediaQuery.of(context).size.width * 0.4,
+                                      child: Text(
+                                        '${utf8.decode(latin1.encode(listHistory.marketName), allowMalformed: true)}',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      '${utf8.decode(latin1.encode(listHistory.createDate), allowMalformed: true)}',
-                                      style: TextStyle(
-                                        fontSize: 15.0,
+                                    Container(
+                                      child: Text(
+                                        '${utf8.decode(latin1.encode(listHistory.createDate), allowMalformed: true)}',
+                                        style: TextStyle(
+                                          fontSize: 15.0,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(right: 50.0),
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                child: Text(
-                                  '${utf8.decode(latin1.encode(listHistory.addressDelivery), allowMalformed: true)}',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey[700],
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 5.0),
+                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    '${utf8.decode(latin1.encode(listHistory.addressDelivery), allowMalformed: true)}',
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.grey[700],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(top: 20.0),
-                                margin: EdgeInsets.only(right: 200.0),
-                                child: Text(
-                                  'Reorder',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: const Color.fromRGBO(0, 175, 82, 1),
+                                Container(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: Text(
+                                    'Đơn hàng hoàn tất',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: const Color.fromRGBO(0, 175, 82, 1),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
-                  ],
+                    ],
 
+                  ),
                 ),
               ),
 

@@ -285,9 +285,10 @@ class _HomePage extends State<HomePage> {
         ),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.8,
+
             alignment: Alignment.centerLeft,
             child: Text(
               'My Activity',

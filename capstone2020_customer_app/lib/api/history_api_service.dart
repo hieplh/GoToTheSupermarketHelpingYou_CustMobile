@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:capstone2020customerapp/models/history_model.dart';
+import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:capstone2020customerapp/models/order_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:chopper/chopper.dart';
@@ -9,7 +10,7 @@ import '../api_url_constain.dart';
 
 part "history_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/histories/customer/cust123/page/1')
+@ChopperApi(baseUrl: '')
 abstract class HistoryApiService extends ChopperService{
 
   static HistoryApiService create(){
@@ -17,14 +18,16 @@ abstract class HistoryApiService extends ChopperService{
         baseUrl: API_URL_STARTPOINT,
         services: [_$HistoryApiService()],
         converter: JsonToTypeConverter({
-          History: (jsonData) => History.fromJson(jsonData)
+          History: (jsonData) => History.fromJson(jsonData),
+          OrderDetail: (jsonData) => OrderDetail.fromJson(jsonData)
         })
     );
     return _$HistoryApiService(client);
   }
-  @Get()
-  Future<Response<List<History>>> getAllHistory();
-
+  @Get(path: "/histories/customer/{cust_id}/page/1")
+  Future<Response<List<History>>> getAllHistory(@Path() String cust_id);
+  @Get(path: "/history/{order_id}")
+  Future<Response<List<OrderDetail>>> getHistoryDetail(@Path() String order_id);
 
 }
 

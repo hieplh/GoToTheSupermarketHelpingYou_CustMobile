@@ -42,7 +42,7 @@ TextEditingController _textFieldController = TextEditingController();
 
 const double CAMERA_ZOOM = 11;
 const LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
-LatLng DEST_LOCATION = LatLng(10.784523, 106.746328);
+const LatLng DEST_LOCATION = LatLng(10.784523, 106.746328);
 
 Completer<GoogleMapController> _controller = Completer();
 Set<Marker> _markers = Set<Marker>();
@@ -105,13 +105,13 @@ class _ProgressPage extends State<ProgressPage> {
 //      print(shipper);
 //    }
 
-    final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
-    var addresses = await Geocoder.local.findAddressesFromQuery(query);
-    var first = addresses.first;
+//    final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
+//    var addresses = await Geocoder.local.findAddressesFromQuery(query);
+//    var first = addresses.first;
 
-    DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
-    print(DEST_LOCATION);
-    print("${first.featureName} : ${first.coordinates}");
+//    DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+//    print(DEST_LOCATION);
+//    print("${first.featureName} : ${first.coordinates}");
 
     if(status == 12){
       Timer(const Duration(seconds: 10), () => getMyOrder());
@@ -159,6 +159,16 @@ class _ProgressPage extends State<ProgressPage> {
 
       print(status);
     }
+
+    if(status == -21 || status == -22 || status == -23 || status == -24 || status == -31){
+      num = 0;
+      showOnCancelFromShipperToast(context);
+      setState(() {
+        status = 0;
+      });
+
+      print(status);
+    }
   }
 
   @override
@@ -181,9 +191,9 @@ class _ProgressPage extends State<ProgressPage> {
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
-    if(num == 23){
-      setInitialLocation();
-    }
+    //if(num == 23){
+    setInitialLocation();
+    //}
 
   }
 
@@ -320,7 +330,17 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
               ],
             ),
-
+            content: TextFormField(
+              decoration: const InputDecoration(
+                //icon: Icon(Icons.feedback),
+                hintText: 'Feedback...',
+                //labelText: 'Name *',
+              ),
+              onSaved: (String value) {
+                // This optional block of code can be used to run
+                // code when the user saves the form.
+              },
+            ),
             actions: <Widget>[
               new FlatButton(
                 child: new Text('Xác Nhận'),
@@ -509,6 +529,55 @@ class _ProgressPage extends State<ProgressPage> {
               new FlatButton(
                 child: new Text('Xác Nhận'),
                 onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
+  }
+
+  showOnCancelFromShipperToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+
+                  margin: EdgeInsets.only(bottom: 10.0),
+
+                  child: Container(
+                    height: 70.0,
+                    width: 70.0,
+                    child: Image.network("https://st2.depositphotos.com/5266903/8456/v/950/depositphotos_84568968-stock-illustration-cancel-flat-red-color-icon.jpg",
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                      alignment: Alignment.center,),
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Opps đơn hàng của bạn tại ${utf8.decode(latin1.encode(market.name), allowMalformed: true)} đã bị hủy. Số tiền sẽ được hoàn lại vào tài khoản của bạn, vui lòng đặt lại đơn khác. Chúng tôi rất xin lỗi vì sự bất tiện này",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () {
+                  img = img0;
+                  ID = null;
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                        return HomePage(storeID: idStore,);
+                      }), ModalRoute.withName('/'));
+                },
               )
             ],
           );
