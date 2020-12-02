@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'models/account_model.dart';
 import 'models/address.dart';
 import 'models/history_model.dart';
 
-const String API_URL_STARTPOINT = "http://192.168.1.32:8084/smhu/api";
+const String API_URL_STARTPOINT = "http://smhu.ddns.net/smhu/api";
 String ID;
 String idStore;
 //RegExp regex = RegExp(r"([.]*0)(?!.*\d)");
@@ -23,4 +24,6 @@ double money = 1000000;
 Account account;
 String customer;
 String pass;
-
+int mapCount = 23;
+LatLng DEST_LOCATION;
+LatLng SOURCE_LOCATION;

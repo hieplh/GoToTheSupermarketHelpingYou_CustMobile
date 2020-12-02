@@ -3,8 +3,11 @@
 import 'dart:convert' show json, latin1, utf8;
 import 'package:capstone2020customerapp/api/account_api_service.dart';
 import 'package:capstone2020customerapp/api/login_api_service.dart';
+import 'package:capstone2020customerapp/api/tracking_api_service.dart';
 import 'package:capstone2020customerapp/models/account_model.dart';
 import 'package:capstone2020customerapp/models/shipper_model.dart';
+import 'package:capstone2020customerapp/models/tracking_model.dart';
+import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
@@ -444,10 +447,13 @@ class _LoginPageState extends State<LoginPage> {
 //      print("false");
 //      throw Exception('Fail ');
 //    }
+//  Tracking trac;
+//    final myService2 = TrackingApiService.create();
+//    final response2 = await myService2.getTracking("cust1232020122104913");
+//    trac = response2.body;
+//    print(trac.lat);
+//  print(trac.lng);
 
-//    final myService2 = AccountApiService.create();
-//    final response2 = await myService2.getShipperByID("shipper123");
-//    print(response2.body.firstName);
 
   customer = usernameController.text;
   pass = passwordController.text;
@@ -456,10 +462,22 @@ class _LoginPageState extends State<LoginPage> {
     account = response.body;
     if(response.statusCode == 200){
       showSuccessToast();
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-            return SupermarketPage();
-          }), ModalRoute.withName('/'));
+      if(account.addresses != ""){
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+              return HomePage(storeID: "BHX-KHAVANCAN",);
+            }), ModalRoute.withName('/'));
+      }else{
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+              return SupermarketPage();
+            }), ModalRoute.withName('/'));
+      }
+//      Navigator.of(context).pushAndRemoveUntil(
+//          MaterialPageRoute(builder: (context) {
+//            return SupermarketPage();
+//          }), ModalRoute.withName('/'));
+
     }else{
       showFailToast();
     }

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:capstone2020customerapp/api/account_api_service.dart';
 import 'package:capstone2020customerapp/api/market_detail_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
+import 'package:capstone2020customerapp/api/tracking_api_service.dart';
 import 'package:capstone2020customerapp/components/map_pin_pill.dart';
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
@@ -12,6 +13,7 @@ import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:capstone2020customerapp/models/pin_pill_info.dart';
 import 'package:capstone2020customerapp/models/shipper_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
+import 'package:capstone2020customerapp/models/tracking_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -40,9 +42,9 @@ String img3 = "https://miro.medium.com/max/720/1*pCcEZ-0Hj6dp1jpCBZsJGg.jpeg";
 int count = 0;
 TextEditingController _textFieldController = TextEditingController();
 
-const double CAMERA_ZOOM = 11;
-const LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
-const LatLng DEST_LOCATION = LatLng(10.784523, 106.746328);
+const double CAMERA_ZOOM = 12;
+//const LatLng SOURCE_LOCATION = LatLng(10.839358, 106.748592);
+//LatLng DEST_LOCATION = LatLng(10.829964, 106.727500);
 
 Completer<GoogleMapController> _controller = Completer();
 Set<Marker> _markers = Set<Marker>();
@@ -84,6 +86,7 @@ class _ProgressPage extends State<ProgressPage> {
   List<OrderDetail> order;
   StoreModel market;
   Shipper ship;
+  Tracking trac;
   Future<void> getMyOrder() async {
     final myService1 = OrderApiService.create();
     final mySth = await myService1.getOrderByID(ID);
@@ -93,6 +96,17 @@ class _ProgressPage extends State<ProgressPage> {
     final myService2 = MarketDetailApiService.create();
     final response = await myService2.getStoreByID(storeID);
     market = response.body;
+
+    if(mySth.body.status != 12){
+      final myService3 = TrackingApiService.create();
+      final response3 = await myService3.getTracking(ID);
+      trac = response3.body;
+      print(response3.body.lng);
+      print(response3.body.lat);
+      SOURCE_LOCATION = LatLng(double.parse(trac.lat) , double.parse(trac.lng));
+      print(SOURCE_LOCATION);
+    }
+
 
 //    if(num != 12){
 //      print(myOrder.body.shipper);
@@ -108,19 +122,41 @@ class _ProgressPage extends State<ProgressPage> {
 //    final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
 //    var addresses = await Geocoder.local.findAddressesFromQuery(query);
 //    var first = addresses.first;
-
+//
 //    DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
 //    print(DEST_LOCATION);
 //    print("${first.featureName} : ${first.coordinates}");
+//
+//    final query1 = "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
+//        + "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" + " "
+//        + "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" + " "
+//        + "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}";
+//    var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
+//    var first1 = addresses1.first;
+//
+//    SOURCE_LOCATION = LatLng(first1.coordinates.latitude, first1.coordinates.longitude);
+//    print(SOURCE_LOCATION);
+//    print("${first1.featureName} : ${first1.coordinates}");
 
     if(status == 12){
       Timer(const Duration(seconds: 10), () => getMyOrder());
       status = mySth.body.status;
       print(status);
       if(status == num){
-        status = 12;
+          status = 12;
       }
     }
+
+    if(status == 13){
+      if(mySth.body.status != 24){
+        Timer(const Duration(seconds: 20), () =>
+            showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng)),
+        );
+      }else{
+        status = 24;
+      }
+    }
+
     if(status == 21){
       num = 21;
       img = img1;
@@ -145,7 +181,8 @@ class _ProgressPage extends State<ProgressPage> {
       num = 23;
       showOnDeliveryToast(context);
       setState(() {
-        status = 12;
+        createMap(double.parse(trac.lat), double.parse(trac.lng));
+        status = 13;
       });
 
       print(status);
@@ -171,14 +208,39 @@ class _ProgressPage extends State<ProgressPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
+//  @override
+//  void initState() {
+//    super.initState();
+//
+//    // create an instance of Location
+//    location = new Location();
+//    polylinePoints = PolylinePoints();
+//    // subscribe to changes in the user's location
+//    // by "listening" to the location's onLocationChanged event
+////      location.onLocationChanged().listen((LocationData cLoc) {
+////        // cLoc contains the lat and long of the
+////        // current user's position in real time,
+////        // so we're holding on to it
+////        currentLocation = cLoc;
+////        updatePinOnMap();
+////
+////      });
+//
+//    // set custom marker pins
+//    setSourceAndDestinationIcons();
+//    // set the initial location
+//    //if(num == 23){
+//    setInitialLocation();
+//    //}
+
+//  }
+
+  void createMap(double lat, double lng) {
+    //super.initState();
 
     // create an instance of Location
     location = new Location();
     polylinePoints = PolylinePoints();
-
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
 //    location.onLocationChanged().listen((LocationData cLoc) {
@@ -186,7 +248,7 @@ class _ProgressPage extends State<ProgressPage> {
 //      // current user's position in real time,
 //      // so we're holding on to it
 //      currentLocation = cLoc;
-//      updatePinOnMap();
+     //updatePinOnMap(lat, lng);
 //    });
     // set custom marker pins
     setSourceAndDestinationIcons();
@@ -622,7 +684,7 @@ class _ProgressPage extends State<ProgressPage> {
         target: SOURCE_LOCATION);
     if (currentLocation != null) {
       initialCameraPosition = CameraPosition(
-        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        target: LatLng(double.parse(trac.lat), double.parse(trac.lng)),
         zoom: CAMERA_ZOOM,
       );
     }
@@ -645,7 +707,7 @@ class _ProgressPage extends State<ProgressPage> {
                   _controller.complete(controller);
                   // my map has completed being created;
                   // i'm ready to show the pins on the map
-                  showPinsOnMap();
+                  showPinsOnMap(double.parse(trac.lat) , double.parse(trac.lng));
                 }
                 ),
           ),
@@ -1493,11 +1555,11 @@ class _ProgressPage extends State<ProgressPage> {
     );
   }
 
-  void showPinsOnMap() {
+  void showPinsOnMap(double lat, double lng) {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition =
-    LatLng(currentLocation.latitude, currentLocation.longitude);
+    LatLng(lat, lng);
     // get a LatLng out of the LocationData object
     var destPosition =
     LatLng(destinationLocation.latitude, destinationLocation.longitude);
@@ -1521,10 +1583,10 @@ class _ProgressPage extends State<ProgressPage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         onTap: () {
-          setState(() {
+          //setState(() {
             currentlySelectedPin = sourcePinInfo;
             pinPillPosition = 0;
-          });
+          //});
         },
         icon: sourceIcon));
     // destination pin
@@ -1532,56 +1594,59 @@ class _ProgressPage extends State<ProgressPage> {
         markerId: MarkerId('destPin'),
         position: destPosition,
         onTap: () {
-          setState(() {
+          //setState(() {
             currentlySelectedPin = destinationPinInfo;
             pinPillPosition = 0;
-          });
+          //});
         },
         icon: destinationIcon));
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
-    setPolylines();
+    setPolylines(lat, lng);
+    updatePinOnMap(lat, lng);
   }
 
-  void setPolylines() async {
+  void setPolylines(double lat, double lng) async {
     List<PointLatLng> result = await polylinePoints.getRouteBetweenCoordinates(
         googleAPIKey,
-        currentLocation.latitude,
-        currentLocation.longitude,
+        lat,
+        lng,
         destinationLocation.latitude,
         destinationLocation.longitude);
+    polylineCoordinates.clear();
 
     if (result.isNotEmpty) {
       result.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
 
-      setState(() {
+      //setState(() {
         _polylines.add(Polyline(
             width: 2, // set the width of the polylines
             polylineId: PolylineId("poly"),
             color: Color.fromARGB(255, 40, 122, 198),
             points: polylineCoordinates));
-      });
+      //});
     }
   }
 
-  void updatePinOnMap() async {
+  void updatePinOnMap(double lat, double lng) async {
     // create a new CameraPosition instance
     // every time the location changes, so the camera
     // follows the pin as it moves with an animation
     CameraPosition cPosition = CameraPosition(
       zoom: CAMERA_ZOOM,
-      target: LatLng(currentLocation.latitude, currentLocation.longitude),
+      target: LatLng(lat, lng),
     );
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     // do this inside the setState() so Flutter gets notified
     // that a widget update is due
+
     setState(() {
       // updated position
       var pinPosition =
-      LatLng(currentLocation.latitude, currentLocation.longitude);
+      LatLng(lat, lng);
 
       sourcePinInfo.location = pinPosition;
 

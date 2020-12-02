@@ -49,7 +49,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
-    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    String now = date.year.toString() + "-" + date.month.toString() + "-0" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);

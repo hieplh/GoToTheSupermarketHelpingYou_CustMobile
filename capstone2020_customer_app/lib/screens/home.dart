@@ -20,6 +20,8 @@ import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'search.dart';
 
@@ -76,20 +78,13 @@ class _HomePage extends State<HomePage> {
 
   }
   var myOrder;
-
+  StoreModel marketPlace;
   Future<void> getAllFood() async {
     idStore = storeID;
     print('storeID' + storeID);
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
     list = response.body;
-
-    if(ID != null){
-      final myService1 = OrderApiService.create();
-      myOrder = await myService1.getOrderByID(ID);
-      print("ID: " + ID);
-    }
-
 
     final myService2 = LoginApiService.create();
     final response2 = await myService2.postAccount({"password" : pass, "role" : "customer", "username" : customer},);
@@ -109,6 +104,33 @@ class _HomePage extends State<HomePage> {
 //        foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
 //      }
 
+    if(ID != null){
+      final myService1 = OrderApiService.create();
+      myOrder = await myService1.getOrderByID(ID);
+
+      print("ID: " + ID);
+      final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
+      var addresses = await Geocoder.local.findAddressesFromQuery(query);
+      var first = addresses.first;
+
+      DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+      print(DEST_LOCATION);
+      print("${first.featureName} : ${first.coordinates}");
+
+      final myService4 = MarketDetailApiService.create();
+      final response4 = await myService4.getStoreByID(storeID);
+      marketPlace = response4.body;
+      final query1 = "${utf8.decode(latin1.encode(marketPlace.addr1), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(marketPlace.addr2), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(marketPlace.addr3), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(marketPlace.addr4), allowMalformed: true)}";
+      var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
+      var first1 = addresses1.first;
+
+      SOURCE_LOCATION = LatLng(first1.coordinates.latitude, first1.coordinates.longitude);
+      print(SOURCE_LOCATION);
+      print("${first1.featureName} : ${first1.coordinates}");
+    }
   }
 
 
