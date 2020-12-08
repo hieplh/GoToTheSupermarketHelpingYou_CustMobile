@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'package:badges/badges.dart';
+import 'package:capstone2020customerapp/api/convert_address_api_service.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
 import 'package:capstone2020customerapp/api/login_api_service.dart';
@@ -9,6 +10,7 @@ import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
+import 'package:capstone2020customerapp/models/tracking_model.dart';
 import 'package:capstone2020customerapp/screens/wallet.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
@@ -79,6 +81,8 @@ class _HomePage extends State<HomePage> {
   }
   var myOrder;
   StoreModel marketPlace;
+  Tracking convertDestLatLng;
+  Tracking convertSourceLatLng;
   Future<void> getAllFood() async {
     idStore = storeID;
     print('storeID' + storeID);
@@ -109,27 +113,33 @@ class _HomePage extends State<HomePage> {
       myOrder = await myService1.getOrderByID(ID);
 
       print("ID: " + ID);
-      final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
-      var addresses = await Geocoder.local.findAddressesFromQuery(query);
-      var first = addresses.first;
 
-      DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
-      print(DEST_LOCATION);
-      print("${first.featureName} : ${first.coordinates}");
+      final myService2 = ConvertAddressApiService.create();
+      var response2 = await myService2.getLatLng("${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}");
+      convertDestLatLng = response2.body;
+//      final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
+//      var addresses = await Geocoder.local.findAddressesFromQuery(query);
+//      var first = addresses.first;
 
-      final myService4 = MarketDetailApiService.create();
-      final response4 = await myService4.getStoreByID(storeID);
-      marketPlace = response4.body;
-      final query1 = "${utf8.decode(latin1.encode(marketPlace.addr1), allowMalformed: true)}" + " "
-          + "${utf8.decode(latin1.encode(marketPlace.addr2), allowMalformed: true)}" + " "
-          + "${utf8.decode(latin1.encode(marketPlace.addr3), allowMalformed: true)}" + " "
-          + "${utf8.decode(latin1.encode(marketPlace.addr4), allowMalformed: true)}";
-      var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
-      var first1 = addresses1.first;
+      DEST_LOCATION = LatLng(double.parse(convertDestLatLng.lat), double.parse(convertDestLatLng.lat));
+      print("dest location : ${DEST_LOCATION}");
+//      print("${first.featureName} : ${first.coordinates}");
+      final query1 = "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" + " "
+          + "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}";
+      print(query1);
+      final myService4 = ConvertAddressApiService.create();
+      final response4 = await myService4.getLatLng(query1);
+      print(response4.statusCode);
+      convertSourceLatLng = response4.body;
 
-      SOURCE_LOCATION = LatLng(first1.coordinates.latitude, first1.coordinates.longitude);
-      print(SOURCE_LOCATION);
-      print("${first1.featureName} : ${first1.coordinates}");
+//      var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
+//      var first1 = addresses1.first;
+
+      SOURCE_LOCATION = LatLng(double.parse(convertSourceLatLng.lat), double.parse(convertSourceLatLng.lat));
+      print("source location : ${SOURCE_LOCATION}");
+//      print("${first1.featureName} : ${first1.coordinates}");
     }
   }
 

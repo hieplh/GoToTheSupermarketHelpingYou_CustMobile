@@ -7,7 +7,7 @@ import 'models/account_model.dart';
 import 'models/address.dart';
 import 'models/history_model.dart';
 
-const String API_URL_STARTPOINT = "http://smhu.ddns.net/smhu/api";
+const String API_URL_STARTPOINT = "http://10.1.130.181:1234/shm4/api/";
 String ID;
 String idStore;
 //RegExp regex = RegExp(r"([.]*0)(?!.*\d)");
@@ -25,5 +25,5 @@ Account account;
 String customer;
 String pass;
 int mapCount = 23;
-LatLng DEST_LOCATION;
-LatLng SOURCE_LOCATION;
+LatLng DEST_LOCATION = LatLng(10.805046003444534, 106.7367919390238);
+LatLng SOURCE_LOCATION = LatLng(10.847790308969985, 106.7520011120352);

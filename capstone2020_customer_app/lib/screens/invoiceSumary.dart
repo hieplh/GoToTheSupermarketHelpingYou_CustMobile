@@ -70,6 +70,9 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             for(var list in data)
             {
               "foodId": "${list.id}",
+              "foodName": "${utf8.decode(latin1.encode(list.name), allowMalformed: true)}",
+              "id": "${list.id}",
+              "image": "${list.image}",
               "priceOriginal": '${list.price}',
               "pricePaid": '0',
               "saleOff": '0',

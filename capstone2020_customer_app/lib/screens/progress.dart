@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -26,6 +25,7 @@ import 'package:location/location.dart';
 import '../api_url_constain.dart';
 import 'home.dart';
 
+
 class ProgressPage extends StatefulWidget {
   final String storeID;
 
@@ -34,10 +34,14 @@ class ProgressPage extends StatefulWidget {
   @override
   _ProgressPage createState() => _ProgressPage(storeID);
 }
+
 String img = img0;
-String img0 = "https://media.istockphoto.com/vectors/hourglass-icon-simple-flat-style-sandglass-illustration-vector-id1039032938";
-String img1 = "https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deliveryTruck_5.1539672900.png";
-String img2 = "https://i.pinimg.com/736x/17/45/ec/1745ec05166a6c4a3e61c5533eb6883d.jpg";
+String img0 =
+    "https://media.istockphoto.com/vectors/hourglass-icon-simple-flat-style-sandglass-illustration-vector-id1039032938";
+String img1 =
+    "https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deliveryTruck_5.1539672900.png";
+String img2 =
+    "https://i.pinimg.com/736x/17/45/ec/1745ec05166a6c4a3e61c5533eb6883d.jpg";
 String img3 = "https://miro.medium.com/max/720/1*pCcEZ-0Hj6dp1jpCBZsJGg.jpeg";
 int count = 0;
 TextEditingController _textFieldController = TextEditingController();
@@ -73,9 +77,6 @@ PinInformation currentlySelectedPin = PinInformation(
 PinInformation sourcePinInfo;
 PinInformation destinationPinInfo;
 
-
-
-
 class _ProgressPage extends State<ProgressPage> {
   String storeID;
   _ProgressPage(this.storeID);
@@ -87,6 +88,7 @@ class _ProgressPage extends State<ProgressPage> {
   StoreModel market;
   Shipper ship;
   Tracking trac;
+  Timer getLatLg;
   Future<void> getMyOrder() async {
     final myService1 = OrderApiService.create();
     final mySth = await myService1.getOrderByID(ID);
@@ -97,16 +99,18 @@ class _ProgressPage extends State<ProgressPage> {
     final response = await myService2.getStoreByID(storeID);
     market = response.body;
 
-    if(mySth.body.status != 12){
+    if (mySth.body.status == 23) {
       final myService3 = TrackingApiService.create();
       final response3 = await myService3.getTracking(ID);
       trac = response3.body;
       print(response3.body.lng);
       print(response3.body.lat);
-      SOURCE_LOCATION = LatLng(double.parse(trac.lat) , double.parse(trac.lng));
+      SOURCE_LOCATION = LatLng(double.parse(trac.lat), double.parse(trac.lng));
       print(SOURCE_LOCATION);
+//      if (trac == null) {
+//        trac = new Tracking("10.847790308969985", "106.7520011120352");
+//      }
     }
-
 
 //    if(num != 12){
 //      print(myOrder.body.shipper);
@@ -138,26 +142,33 @@ class _ProgressPage extends State<ProgressPage> {
 //    print(SOURCE_LOCATION);
 //    print("${first1.featureName} : ${first1.coordinates}");
 
-    if(status == 12){
+    if (status == 12) {
       Timer(const Duration(seconds: 10), () => getMyOrder());
       status = mySth.body.status;
       print(status);
-      if(status == num){
-          status = 12;
+      if (status == num) {
+        status = 12;
       }
     }
 
-    if(status == 13){
-      if(mySth.body.status != 24){
-        Timer(const Duration(seconds: 20), () =>
-            showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng)),
+    if (status == 13) {
+      if (mySth.body.status != 24) {
+        print("Status != 24: ${mySth.body.status}");
+        getLatLg = Timer(const Duration(seconds: 20), () =>
+              showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng)),
         );
-      }else{
-        status = 24;
       }
+      if (mySth.body.status == 24) {
+        getLatLg.cancel();
+        status = 12;
+        print("Status == 24: ${mySth.body.status}");
+        print("Status : ${status}");
+//        getLatLg.cancel();
+
+    }
     }
 
-    if(status == 21){
+    if (status == 21) {
       num = 21;
       img = img1;
       showOnWayToast(context);
@@ -167,7 +178,7 @@ class _ProgressPage extends State<ProgressPage> {
 
       print(status);
     }
-    if(status == 22){
+    if (status == 22) {
       num = 22;
       img = img2;
       showOnShoppingToast(context);
@@ -177,7 +188,7 @@ class _ProgressPage extends State<ProgressPage> {
 
       print(status);
     }
-    if(status == 23){
+    if (status == 23) {
       num = 23;
       showOnDeliveryToast(context);
       setState(() {
@@ -187,7 +198,7 @@ class _ProgressPage extends State<ProgressPage> {
 
       print(status);
     }
-    if(status == 24){
+    if (status == 24) {
       num = 24;
       _displayDialog(context);
       setState(() {
@@ -197,7 +208,11 @@ class _ProgressPage extends State<ProgressPage> {
       print(status);
     }
 
-    if(status == -21 || status == -22 || status == -23 || status == -24 || status == -31){
+    if (status == -21 ||
+        status == -22 ||
+        status == -23 ||
+        status == -24 ||
+        status == -31) {
       num = 0;
       showOnCancelFromShipperToast(context);
       setState(() {
@@ -207,6 +222,7 @@ class _ProgressPage extends State<ProgressPage> {
       print(status);
     }
   }
+
 
 //  @override
 //  void initState() {
@@ -248,7 +264,7 @@ class _ProgressPage extends State<ProgressPage> {
 //      // current user's position in real time,
 //      // so we're holding on to it
 //      currentLocation = cLoc;
-     //updatePinOnMap(lat, lng);
+    //updatePinOnMap(lat, lng);
 //    });
     // set custom marker pins
     setSourceAndDestinationIcons();
@@ -256,19 +272,17 @@ class _ProgressPage extends State<ProgressPage> {
     //if(num == 23){
     setInitialLocation();
     //}
-
   }
-
 
   void setSourceAndDestinationIcons() async {
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.0), 'assets/driving_pin.png')
+            ImageConfiguration(devicePixelRatio: 2.0), 'assets/driving_pin.png')
         .then((onValue) {
       sourceIcon = onValue;
     });
 
     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.0),
-        'assets/destination_map_marker.png')
+            'assets/destination_map_marker.png')
         .then((onValue) {
       destinationIcon = onValue;
     });
@@ -285,7 +299,6 @@ class _ProgressPage extends State<ProgressPage> {
       "longitude": DEST_LOCATION.longitude
     });
   }
-
 
   _displayDialog(BuildContext context) async {
     return showDialog(
@@ -306,7 +319,7 @@ class _ProgressPage extends State<ProgressPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top:10.0, bottom: 10.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: Text(
                     "Giao hàng hoàn tất",
                     style: TextStyle(
@@ -385,9 +398,7 @@ class _ProgressPage extends State<ProgressPage> {
                           ),
                         ),
                       ),
-
                     ],
-
                   ),
                 ),
               ],
@@ -411,8 +422,10 @@ class _ProgressPage extends State<ProgressPage> {
                   ID = null;
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) {
-                        return HomePage(storeID: idStore,);
-                      }), ModalRoute.withName('/'));
+                    return HomePage(
+                      storeID: idStore,
+                    );
+                  }), ModalRoute.withName('/'));
                 },
               )
             ],
@@ -434,11 +447,11 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                   margin: EdgeInsets.only(bottom: 10.0),
-
                   child: ListTile(
                     leading: CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                      backgroundImage: NetworkImage(
+                          "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
                       '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
@@ -455,7 +468,6 @@ class _ProgressPage extends State<ProgressPage> {
                         fontSize: 14.0,
                       ),
                     ),
-
                   ),
                 ),
                 Container(
@@ -493,11 +505,11 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                   margin: EdgeInsets.only(bottom: 10.0),
-
                   child: ListTile(
                     leading: CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                      backgroundImage: NetworkImage(
+                          "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
                       '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
@@ -514,7 +526,6 @@ class _ProgressPage extends State<ProgressPage> {
                         fontSize: 14.0,
                       ),
                     ),
-
                   ),
                 ),
                 Container(
@@ -552,11 +563,11 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                   margin: EdgeInsets.only(bottom: 10.0),
-
                   child: ListTile(
                     leading: CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                      backgroundImage: NetworkImage(
+                          "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
                       '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
@@ -573,7 +584,6 @@ class _ProgressPage extends State<ProgressPage> {
                         fontSize: 14.0,
                       ),
                     ),
-
                   ),
                 ),
                 Container(
@@ -605,17 +615,17 @@ class _ProgressPage extends State<ProgressPage> {
             title: Column(
               children: <Widget>[
                 Container(
-
                   margin: EdgeInsets.only(bottom: 10.0),
-
                   child: Container(
                     height: 70.0,
                     width: 70.0,
-                    child: Image.network("https://st2.depositphotos.com/5266903/8456/v/950/depositphotos_84568968-stock-illustration-cancel-flat-red-color-icon.jpg",
+                    child: Image.network(
+                      "https://st2.depositphotos.com/5266903/8456/v/950/depositphotos_84568968-stock-illustration-cancel-flat-red-color-icon.jpg",
                       fit: BoxFit.cover,
                       height: double.infinity,
                       width: double.infinity,
-                      alignment: Alignment.center,),
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
                 Container(
@@ -637,17 +647,19 @@ class _ProgressPage extends State<ProgressPage> {
                   ID = null;
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) {
-                        return HomePage(storeID: idStore,);
-                      }), ModalRoute.withName('/'));
+                    return HomePage(
+                      storeID: idStore,
+                    );
+                  }), ModalRoute.withName('/'));
                 },
               )
             ],
           );
         });
   }
+
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
@@ -668,20 +680,17 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
               );
             }
-          }
-      ),
+          }),
 //      floatingActionButton: FloatingActionButton(
 //        child: Icon(Icons.list),
 //        onPressed: switchStepType,
 //      ),
-
     );
   }
 
-  Widget _buildMap(){
-    CameraPosition initialCameraPosition = CameraPosition(
-        zoom: CAMERA_ZOOM,
-        target: SOURCE_LOCATION);
+  Widget _buildMap() {
+    CameraPosition initialCameraPosition =
+        CameraPosition(zoom: CAMERA_ZOOM, target: SOURCE_LOCATION);
     if (currentLocation != null) {
       initialCameraPosition = CameraPosition(
         target: LatLng(double.parse(trac.lat), double.parse(trac.lng)),
@@ -689,36 +698,35 @@ class _ProgressPage extends State<ProgressPage> {
       );
     }
     return Stack(
-        children: <Widget>[
-          Container(
-            height: 300.0,
-            child: GoogleMap(
-                myLocationEnabled: true,
-                compassEnabled: true,
-                tiltGesturesEnabled: false,
-                markers: _markers,
-                polylines: _polylines,
-                mapType: MapType.normal,
-                initialCameraPosition: initialCameraPosition,
-                onTap: (LatLng loc) {
-                  pinPillPosition = -100;
-                },
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                  // my map has completed being created;
-                  // i'm ready to show the pins on the map
-                  showPinsOnMap(double.parse(trac.lat) , double.parse(trac.lng));
-                }
-                ),
-          ),
-          MapPinPillComponent(
-              pinPillPosition: pinPillPosition,
-              currentlySelectedPin: currentlySelectedPin)
-        ],
+      children: <Widget>[
+        Container(
+          height: 300.0,
+          child: GoogleMap(
+              myLocationEnabled: true,
+              compassEnabled: true,
+              tiltGesturesEnabled: false,
+              markers: _markers,
+              polylines: _polylines,
+              mapType: MapType.normal,
+              initialCameraPosition: initialCameraPosition,
+              onTap: (LatLng loc) {
+                pinPillPosition = -100;
+              },
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                // my map has completed being created;
+                // i'm ready to show the pins on the map
+                //showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng));
+              }),
+        ),
+        MapPinPillComponent(
+            pinPillPosition: pinPillPosition,
+            currentlySelectedPin: currentlySelectedPin)
+      ],
     );
   }
 
-  Widget _buildProgress(){
+  Widget _buildProgress() {
     return Container(
       margin: const EdgeInsets.only(left: 10.0, right: 10.0),
       decoration: BoxDecoration(
@@ -728,7 +736,7 @@ class _ProgressPage extends State<ProgressPage> {
       ),
       child: Column(
         children: <Widget>[
-          if(num == 12)
+          if (num == 12)
             Container(
               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
               width: MediaQuery.of(context).size.width * 0.9,
@@ -740,7 +748,7 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
               ),
             ),
-          if(num == 21)
+          if (num == 21)
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -756,10 +764,7 @@ class _ProgressPage extends State<ProgressPage> {
                       Container(
                         child: Text(
                           "Shipper đã nhận đơn",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black
-                          ),
+                          style: TextStyle(fontSize: 18.0, color: Colors.black),
                         ),
                       ),
                     ],
@@ -781,88 +786,7 @@ class _ProgressPage extends State<ProgressPage> {
                       Container(
                         child: Text(
                           "Shipper đang mua hàng",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 3.0,
-                    height: 15.0,
-                    color: Colors.grey,
-                    margin: EdgeInsets.only(left: 10.0),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(
-                          Icons.brightness_1,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Shipper đang giao hàng",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-              ),
-            ),
-          if(num == 22)
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(
-                          Icons.brightness_1,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Shipper đã nhận đơn",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 3.0,
-                    height: 15.0,
-                    color: const Color.fromRGBO(0, 175, 82, 1),
-                    margin: EdgeInsets.only(left: 10.0),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(
-                          Icons.brightness_1,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Shipper đang mua hàng",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black
-                          ),
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -884,19 +808,15 @@ class _ProgressPage extends State<ProgressPage> {
                       Container(
                         child: Text(
                           "Shipper đang giao hàng",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
                         ),
                       ),
                     ],
                   ),
                 ],
-
               ),
             ),
-          if(num == 23)
+          if (num == 22)
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -912,10 +832,7 @@ class _ProgressPage extends State<ProgressPage> {
                       Container(
                         child: Text(
                           "Shipper đã nhận đơn",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -937,10 +854,75 @@ class _ProgressPage extends State<ProgressPage> {
                       Container(
                         child: Text(
                           "Shipper đang mua hàng",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey
-                          ),
+                          style: TextStyle(fontSize: 18.0, color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 3.0,
+                    height: 15.0,
+                    color: Colors.grey,
+                    margin: EdgeInsets.only(left: 10.0),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đang giao hàng",
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (num == 23)
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đã nhận đơn",
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 3.0,
+                    height: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                    margin: EdgeInsets.only(left: 10.0),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đang mua hàng",
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -963,22 +945,21 @@ class _ProgressPage extends State<ProgressPage> {
                         child: Text(
                           "Shipper đang giao hàng",
                           style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black,
+                            fontSize: 18.0,
+                            color: Colors.black,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ],
-
               ),
             ),
-
         ],
       ),
     );
   }
+
   Widget _buildHeader() {
     return Container(
       decoration: BoxDecoration(
@@ -1015,30 +996,29 @@ class _ProgressPage extends State<ProgressPage> {
       ),
     );
   }
-  Widget _buildBody(){
+
+  Widget _buildBody() {
     return Column(
       children: <Widget>[
-        if(num == 23)
-          _buildMap(),
-        if(num != 23)
+        if (num == 23) _buildMap(),
+        if (num != 23)
           Container(
-          height: 300.0,
-          alignment: Alignment.center,
-          child: Image.network(
-            img,
-            fit: BoxFit.cover,
-            height: double.infinity,
-            width: double.infinity,
+            height: 300.0,
             alignment: Alignment.center,
+            child: Image.network(
+              img,
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+              alignment: Alignment.center,
+            ),
           ),
-        ),
-
         Container(
           margin: const EdgeInsets.only(bottom: 15.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
                 Radius.circular(10.0) //         <--- border radius here
-            ),
+                ),
             border: Border(
               bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
               top: BorderSide(width: 1.0, color: Colors.grey[300]),
@@ -1073,254 +1053,257 @@ class _ProgressPage extends State<ProgressPage> {
               ),
               _buildProgress()
             ],
-
           ),
-
         ),
-        if(num != 12)
+        if (num != 12)
           Container(
-          margin: const EdgeInsets.only(bottom: 5.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
-            ),
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-              top: BorderSide(width: 1.0, color: Colors.grey[300]),
-              left: BorderSide(width: 1.0, color: Colors.grey[300]),
-              right: BorderSide(width: 1.0, color: Colors.grey[300]),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
-                ),
-                title: Text(
-                  '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+            margin: const EdgeInsets.only(bottom: 5.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(10.0) //         <--- border radius here
                   ),
-                ),
-                subtitle: Text(
-                  'Jupiter Yamaha - 72C1-79945',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 15.0,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.star,
-                  color: Colors.yellowAccent,
-                  size: 40.0,
-                ),
-                onTap: () {
-                  //Navigator.pop(context);
-                },
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                right: BorderSide(width: 1.0, color: Colors.grey[300]),
               ),
-
-            ],
-
+            ),
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                  ),
+                  title: Text(
+                    '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Jupiter Yamaha - 72C1-79945',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 15.0,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.star,
+                    color: Colors.yellowAccent,
+                    size: 40.0,
+                  ),
+                  onTap: () {
+                    //Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
-
-        ),
-        if(num == 21)
+        if (num == 21)
           Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
+            margin: const EdgeInsets.only(bottom: 15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(10.0) //         <--- border radius here
+                  ),
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                right: BorderSide(width: 1.0, color: Colors.grey[300]),
+              ),
             ),
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-              top: BorderSide(width: 1.0, color: Colors.grey[300]),
-              left: BorderSide(width: 1.0, color: Colors.grey[300]),
-              right: BorderSide(width: 1.0, color: Colors.grey[300]),
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text(
+                        '10,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text(
+                        '20,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text(
+                        '30,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: Text(
+                        '40,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: Text(
+                        '50,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                10.0) //         <--- border radius here
+                            ),
+                        border: Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                          right:
+                              BorderSide(width: 1.0, color: Colors.grey[300]),
+                        ),
+                      ),
+                      height: 40.0,
+                      width: 100.0,
+                      padding: EdgeInsets.only(top: 5.0),
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: Text(
+                        '60,000đ+',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Text(
-                      '10,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Text(
-                      '20,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Text(
-                      '30,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-
-                ],
-
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      '40,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      '50,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(10.0) //         <--- border radius here
-                      ),
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                        right: BorderSide(width: 1.0, color: Colors.grey[300]),
-                      ),
-                    ),
-                    height: 40.0,
-                    width: 100.0,
-                    padding: EdgeInsets.only(top: 5.0),
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      '60,000đ+',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[800],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-
-                ],
-
-              ),
-            ],
-
-          ),
-        ),
         Container(
           margin: const EdgeInsets.only(bottom: 15.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
                 Radius.circular(10.0) //         <--- border radius here
-            ),
+                ),
             border: Border(
               bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
               top: BorderSide(width: 1.0, color: Colors.grey[300]),
@@ -1336,17 +1319,19 @@ class _ProgressPage extends State<ProgressPage> {
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
                 child: Text(
-                  "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
-                  + "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" + " "
-                  + "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" + " "
-                  + "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}",
+                  "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" +
+                      " " +
+                      "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" +
+                      " " +
+                      "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" +
+                      " " +
+                      "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-
               Row(
                 children: <Widget>[
                   Container(
@@ -1381,9 +1366,7 @@ class _ProgressPage extends State<ProgressPage> {
                     ],
                   ),
                 ],
-
               ),
-
               Container(
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 decoration: BoxDecoration(
@@ -1427,7 +1410,6 @@ class _ProgressPage extends State<ProgressPage> {
                         ),
                       ),
                   ],
-
                 ),
               ),
               Container(
@@ -1470,16 +1452,14 @@ class _ProgressPage extends State<ProgressPage> {
                 ),
               ),
             ],
-
           ),
-
         ),
         Container(
           margin: const EdgeInsets.only(bottom: 15.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
                 Radius.circular(10.0) //         <--- border radius here
-            ),
+                ),
             border: Border(
               bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
               top: BorderSide(width: 1.0, color: Colors.grey[300]),
@@ -1513,12 +1493,11 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                 ],
-
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10.0),
                 child: Icon(
-                    Icons.more_vert,
+                  Icons.more_vert,
                   color: Colors.grey[400],
                 ),
               ),
@@ -1542,27 +1521,21 @@ class _ProgressPage extends State<ProgressPage> {
                     ),
                   ),
                 ],
-
               ),
-
             ],
-
           ),
-
         ),
       ],
-
     );
   }
 
   void showPinsOnMap(double lat, double lng) {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
-    var pinPosition =
-    LatLng(lat, lng);
+    var pinPosition = LatLng(lat, lng);
     // get a LatLng out of the LocationData object
     var destPosition =
-    LatLng(destinationLocation.latitude, destinationLocation.longitude);
+        LatLng(destinationLocation.latitude, destinationLocation.longitude);
 
     sourcePinInfo = PinInformation(
         locationName: "Start Location",
@@ -1584,8 +1557,8 @@ class _ProgressPage extends State<ProgressPage> {
         position: pinPosition,
         onTap: () {
           //setState(() {
-            currentlySelectedPin = sourcePinInfo;
-            pinPillPosition = 0;
+          currentlySelectedPin = sourcePinInfo;
+          pinPillPosition = 0;
           //});
         },
         icon: sourceIcon));
@@ -1595,8 +1568,8 @@ class _ProgressPage extends State<ProgressPage> {
         position: destPosition,
         onTap: () {
           //setState(() {
-            currentlySelectedPin = destinationPinInfo;
-            pinPillPosition = 0;
+          currentlySelectedPin = destinationPinInfo;
+          pinPillPosition = 0;
           //});
         },
         icon: destinationIcon));
@@ -1621,11 +1594,11 @@ class _ProgressPage extends State<ProgressPage> {
       });
 
       //setState(() {
-        _polylines.add(Polyline(
-            width: 2, // set the width of the polylines
-            polylineId: PolylineId("poly"),
-            color: Color.fromARGB(255, 40, 122, 198),
-            points: polylineCoordinates));
+      _polylines.add(Polyline(
+          width: 2, // set the width of the polylines
+          polylineId: PolylineId("poly"),
+          color: Color.fromARGB(255, 40, 122, 198),
+          points: polylineCoordinates));
       //});
     }
   }
@@ -1645,8 +1618,7 @@ class _ProgressPage extends State<ProgressPage> {
 
     setState(() {
       // updated position
-      var pinPosition =
-      LatLng(lat, lng);
+      var pinPosition = LatLng(lat, lng);
 
       sourcePinInfo.location = pinPosition;
 
@@ -1656,14 +1628,13 @@ class _ProgressPage extends State<ProgressPage> {
       _markers.add(Marker(
           markerId: MarkerId('sourcePin'),
           onTap: () {
-            setState(() {
-              currentlySelectedPin = sourcePinInfo;
-              pinPillPosition = 0;
-            });
+            //setState(() {
+            currentlySelectedPin = sourcePinInfo;
+            pinPillPosition = 0;
+            //});
           },
           position: pinPosition, // updated position
           icon: sourceIcon));
     });
   }
-
 }
