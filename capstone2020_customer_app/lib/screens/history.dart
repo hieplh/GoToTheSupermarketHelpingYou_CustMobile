@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'package:capstone2020customerapp/models/history_model.dart';
 import 'package:capstone2020customerapp/api/history_api_service.dart';
+
 import 'package:capstone2020customerapp/screens/historyDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 import '../api_url_constain.dart';
 
@@ -24,7 +25,7 @@ class _HistoryPage extends State<HistoryPage> {
   Future<void> getAllFood() async {
 
     final myService1 = HistoryApiService.create();
-    final response1 = await myService1.getAllHistory("${account.id}");
+    final response1 = await myService1.getAllHistory("${account.username}");
     listHistory = response1.body;
 
 //    for(var list in listHistory){
@@ -119,7 +120,7 @@ class _HistoryPage extends State<HistoryPage> {
                           Container(
                             padding: EdgeInsets.only(top: 10.0,left: 10.0),
                             child: Image.network(
-                              'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
+                              'https://cdn2.iconfinder.com/data/icons/shopping-e-commerce-3/512/store-512.png',
                               fit: BoxFit.cover,
                               height: 100.0,
                               width: 100.0,
@@ -167,7 +168,8 @@ class _HistoryPage extends State<HistoryPage> {
                                     ),
                                   ),
                                 ),
-                                Container(
+                                if(listHistory.status == 24)
+                                  Container(
                                   padding: EdgeInsets.only(top: 20.0),
                                   child: Text(
                                     'Đơn hàng hoàn tất',
@@ -177,6 +179,17 @@ class _HistoryPage extends State<HistoryPage> {
                                     ),
                                   ),
                                 ),
+                                if(listHistory.status != 24)
+                                  Container(
+                                    padding: EdgeInsets.only(top: 20.0),
+                                    child: Text(
+                                      'Đơn hàng đã hủy',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),

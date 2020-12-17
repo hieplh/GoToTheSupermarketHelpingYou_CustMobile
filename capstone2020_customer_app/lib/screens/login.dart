@@ -11,6 +11,7 @@ import 'package:capstone2020customerapp/models/tracking_model.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
@@ -67,38 +68,33 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement build
     return Scaffold(
       //backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
-      body: Form(
-        child: Column(
-          children: <Widget>[
-            _buildLogo(),
-            _buildUsernameInput(),
-            _buildPasswordInput(),
-            _buildLoginButton(),
-            _buildTextOR(),
-            _buildText(),
-            _buildFacebookAndGoogleLoginButton(),
-            _buildRegisterButton(),
-
-          ],
+      body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildLogo(),
+              _buildUsernameInput(),
+              _buildPasswordInput(),
+              _buildLoginButton(),
+              _buildTextOR(),
+              _buildText(),
+              _buildFacebookAndGoogleLoginButton(),
+              _buildRegisterButton(),
+            ],
         ),
       ),
     );
   }
   Widget _buildLogo(){
-    return Expanded(
-      flex: 2,
-      child: Container(
+    return Container(
+      padding: EdgeInsets.only(top: 100.0),
         alignment: Alignment.center,
         child: Image(
           image: AssetImage('assets/apple-touch-icon-120x120.png'),
         ),
-      ),
     );
   }
   Widget _buildUsernameInput(){
-    return Expanded(
-      flex: 0,
-      child: Container(
+    return Container(
         width: MediaQuery.of(context).size.width * 0.8,
         padding: EdgeInsets.only(bottom: 20.0),
         child: StreamBuilder<String>(
@@ -151,13 +147,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
     );
   }
   Widget _buildPasswordInput(){
-    return Expanded(
-      flex: 0,
-      child: Container(
+    return Container(
         width: MediaQuery.of(context).size.width * 0.8,
         padding: EdgeInsets.only(bottom: 20.0),
         child: StreamBuilder<String>(
@@ -223,13 +216,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
     );
   }
   Widget _buildLoginButton(){
-    return Expanded(
-      flex: 0,
-      child: Container(
+    return Container(
 //        width: MediaQuery.of(context).size.width * 0.8,
 //        padding: EdgeInsets.only(bottom: 10.0),
 //        height: 60.0,
@@ -267,13 +257,10 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.white,
           ),
         ),
-      ),
     );
   }
   Widget _buildTextOR(){
-    return Expanded(
-      flex: 0,
-      child: Container(
+    return Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: EdgeInsets.only(bottom: 10.0, top: 20.0),
         height: 60.0,
@@ -287,13 +274,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           textAlign: TextAlign.center,
         ),
-      ),
     );
   }
   Widget _buildText(){
-    return Expanded(
-      flex: 0,
-      child: Container(
+    return Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
         height: 60.0,
@@ -307,12 +291,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           textAlign: TextAlign.center,
         ),
-      ),
     );
   }
   Widget _buildFacebookAndGoogleLoginButton(){
-    return Expanded(
-      flex: 0,
+    return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -389,9 +371,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
   Widget _buildRegisterButton(){
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
+    return GestureDetector(
         onTap: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => RegisterPage()));
@@ -418,7 +398,6 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
-      ),
     );
   }
 

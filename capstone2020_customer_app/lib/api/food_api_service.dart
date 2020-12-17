@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:capstone2020customerapp/models/category_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:chopper/chopper.dart';
@@ -8,7 +9,7 @@ import '../api_url_constain.dart';
 
 part "food_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/foods/')
+@ChopperApi(baseUrl: '')
 abstract class FoodApiService extends ChopperService{
 
   static FoodApiService create(){
@@ -16,13 +17,17 @@ abstract class FoodApiService extends ChopperService{
         baseUrl: API_URL_STARTPOINT,
         services: [_$FoodApiService()],
         converter: JsonToTypeConverter({
+          CategoryModel: (jsonData) => CategoryModel.fromJson(jsonData),
           FoodModel: (jsonData) => FoodModel.fromJson(jsonData)
         })
     );
     return _$FoodApiService(client);
   }
-  @Get(path: "{store_id}")
-  Future<Response<List<FoodModel>>> getAllFood(@Path() String store_id);
+  @Get(path: "/foods/{store_id}")
+  Future<Response<List<CategoryModel>>> getAllFood(@Path() String store_id);
+
+  @Get(path: "/food/{food_id}")
+  Future<Response<FoodModel>> getFoodDetail(@Path() String food_id);
 }
 
 class JsonToTypeConverter extends JsonConverter {

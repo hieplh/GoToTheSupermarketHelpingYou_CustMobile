@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 //import 'package:badges/badges.dart';
 import 'package:capstone2020customerapp/api/convert_address_api_service.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
@@ -8,9 +9,11 @@ import 'package:capstone2020customerapp/api/market_detail_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/models/category_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/models/tracking_model.dart';
+import 'package:capstone2020customerapp/screens/profile.dart';
 import 'package:capstone2020customerapp/screens/wallet.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
@@ -25,6 +28,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'foodDetail.dart';
 import 'search.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,7 +51,8 @@ class _HomePage extends State<HomePage> {
   int _selectedIndex = 0;
   String search;
   TextEditingController searchController = new TextEditingController();
-  List<FoodModel> list;
+  List<CategoryModel> category;
+  List<FoodModel> list = new List();
   List<Data> listCart = new List();
   List<String> foodName = [];
   Map<String, int> quantity = new Map();
@@ -56,6 +61,7 @@ class _HomePage extends State<HomePage> {
   int badgeData = 0;
   int cont = 0;
   StoreModel market;
+
   void showToast() {
     //setState(() {
       Fluttertoast.showToast(
@@ -88,7 +94,48 @@ class _HomePage extends State<HomePage> {
     print('storeID' + storeID);
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
-    list = response.body;
+    category = response.body;
+
+    if(list.length == 0){
+      for(var cate in category){
+        list += cate.foods;
+      }
+    }
+
+
+
+    if(listExample.length == 0){
+      for (var listFood in list) {
+        listExample.add(utf8.decode(latin1.encode(listFood.name), allowMalformed: true));
+        //listExample.add(listFood.id);
+      }
+    }
+
+    if(beef.length == 0){
+      if(chicken.length == 0){
+        if(pig.length == 0){
+          if(fish.length == 0){
+            if(vegetable.length == 0){
+              for(var cate in category){
+                if(cate.id == "THITBO"){
+                  beef += cate.foods;
+                }else if(cate.id == "THITGA"){
+                  chicken += cate.foods;
+                }else if(cate.id == "THITHEO"){
+                  pig += cate.foods;
+                }else if(cate.id == "CA"){
+                  fish += cate.foods;
+                }else{
+                  vegetable += cate.foods;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+
 
     final myService2 = LoginApiService.create();
     final response2 = await myService2.postAccount({"password" : pass, "role" : "customer", "username" : customer},);
@@ -154,7 +201,7 @@ class _HomePage extends State<HomePage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-//      backgroundColor: const Color.fromRGBO(0, 141, 177, 1)
+//     backgroundColor: Colors.white,
       body: FutureBuilder(
           future: getAllFood(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -188,10 +235,16 @@ class _HomePage extends State<HomePage> {
                         //height: MediaQuery.of(context).size.height,
                         child: Column(
                           children: <Widget>[
-                            _buildCartHeader(),
-                            _buildCartBody(),
-                            _buildCartSubBody(),
-                           _buildOrderButton(),
+                            if(listCart.length != 0)
+                              _buildCartHeader(),
+                            if(listCart.length != 0)
+                              _buildCartBody(),
+                            if(listCart.length != 0)
+                              _buildCartSubBody(),
+                            if(listCart.length != 0)
+                              _buildOrderButton(),
+                            if(listCart.length == 0)
+                              _buildEmpty(),
                           ],
                         ),
                       ),
@@ -286,7 +339,7 @@ class _HomePage extends State<HomePage> {
 //          width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
           child: Text(
-            '${storeID}',
+            '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
             style: TextStyle(
               fontSize: 20.0,
               fontFamily: 'Montserrat',
@@ -431,7 +484,8 @@ class _HomePage extends State<HomePage> {
                   size: 40.0,
                 ),
                 onTap: () {
-                  //Navigator.pop(context);
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => ProfilePage()));
                 },
               ),
             ),
@@ -631,45 +685,55 @@ class _HomePage extends State<HomePage> {
         child: Row(
           children: <Widget>[
             for (var listFood in list)
-              Container(
-                margin: const EdgeInsets.only(left: 10.0),
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey[600])),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 100.0,
-                      height: 100.0,
-                      child: Image.network(
-                          '${listFood.image}'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 10.0, left: 10.0),
-                      width: 100.0,
-                      height: 70.0,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return FoodDetailPage(foodID: "${listFood.id}",);
+                  }));
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10.0),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.grey[600])),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 100.0,
+                        height: 100.0,
+                        child: Image.network(
+                            '${listFood.image}'),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+                        width: 100.0,
+                        height: 70.0,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              width: 100.0,
+                              height: 40.0,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              '${oCcy.format(listFood.price)}đ',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              width: 100.0,
+                              height: 20.0,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${oCcy.format(listFood.price)}đ',
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
 //                          Container(
 //                            alignment: Alignment.center,
 //                            child: Text(
@@ -681,10 +745,11 @@ class _HomePage extends State<HomePage> {
 //                              ),
 //                            ),
 //                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
           ],
@@ -705,17 +770,17 @@ class _HomePage extends State<HomePage> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: Text(
-                'Xem tất cả',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  color: const Color.fromRGBO(0, 175, 82, 1),
-                ),
-              ),
-            ),
+//            Container(
+//              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+//              child: Text(
+//                'Xem tất cả',
+//                style: TextStyle(
+//                  fontWeight: FontWeight.bold,
+//                  fontSize: 16.0,
+//                  color: const Color.fromRGBO(0, 175, 82, 1),
+//                ),
+//              ),
+//            ),
           ],
         ),
       ),
@@ -727,7 +792,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage();
+                  return FoodTypePage(image: 'https://cdnmedia.eurofins.com/apac/media/603979/kiem-nghiem-chat-luong-thit-tuoi.jpg?width=480.5764411027569&height=500', type: 'Thịt Heo', foods: pig, quantity: pig.length,);
                 }));
               },
               child: Container(
@@ -761,7 +826,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '53 loại',
+                              '${pig.length} loại',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -780,7 +845,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage();
+                  return FoodTypePage(image: 'https://fohlabeef.vn/wp-content/uploads/2019/05/th%C4%83n-n%E1%BB%99i-b%C3%B2-%C3%BAc-Tenderloin.png', type: 'Thịt Bò', foods: beef, quantity: beef.length,);
                 }));
               },
               child: Container(
@@ -814,7 +879,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '42 loại',
+                              '${beef.length} loại',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -833,7 +898,60 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage();
+                  return FoodTypePage(image: 'https://www.thespruceeats.com/thmb/u91gwhnYG4kP40OkswDDM1VQjQA=/3648x3648/smart/filters:no_upscale()/roasted-chicken-legs-521968290-5888fd773df78caebc737427.jpg', type: 'Thịt Gà', foods: chicken, quantity: chicken.length,);
+                }));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(left: 10.0),
+                decoration:
+                BoxDecoration(border: Border.all(color: Colors.grey[600])),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 100.0,
+                      height: 100.0,
+                      child: Image.network(
+                          'https://www.thespruceeats.com/thmb/u91gwhnYG4kP40OkswDDM1VQjQA=/3648x3648/smart/filters:no_upscale()/roasted-chicken-legs-521968290-5888fd773df78caebc737427.jpg'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      width: 100.0,
+                      height: 60.0,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Thịt Gà',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              '${chicken.length} loại',
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            new GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return FoodTypePage(image: 'https://vinmec-prod.s3.amazonaws.com/images/20200708_040238_836115_15639394169.max-800x800.jpg', type: 'Cá', foods: fish, quantity: fish.length,);
                 }));
               },
               child: Container(
@@ -867,7 +985,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '21 loại',
+                              '${fish.length} loại',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -886,7 +1004,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage();
+                  return FoodTypePage(image: 'https://xachtaynhat.net/wp-content/uploads/2018/06/rau-cu-fancl-300x300.jpg', type: 'Rau Củ Tươi', foods: vegetable, quantity: vegetable.length,);
                 }));
               },
               child: Container(
@@ -920,7 +1038,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              '28 loại',
+                              '${vegetable.length} loại',
                               style: TextStyle(
                                 fontSize: 13.0,
                                 color: Colors.grey,
@@ -988,14 +1106,15 @@ class _HomePage extends State<HomePage> {
                 fontSize: 13.0,
               ),
             ),
-            trailing: Icon(
-              Icons.add_circle_outline,
-              color: const Color.fromRGBO(0, 175, 82, 1),
-              size: 30.0,
-            ),
-            onTap: (){
-              Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1);
-              total = total + double.parse(data.price.toString());
+            trailing: IconButton(
+              icon: Icon(
+                Icons.add_circle_outline,
+                color: const Color.fromRGBO(0, 175, 82, 1),
+                size: 30.0,
+              ),
+              onPressed: (){
+                Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1);
+                total = total + double.parse(data.price.toString());
 //              if(listCart.length == 0){
                 listCart.add(data);
                 badgeData++;
@@ -1016,10 +1135,17 @@ class _HomePage extends State<HomePage> {
 //                }
 //              }
 
-              quantity.putIfAbsent(data.id, () => data.quantity);
-              print(quantity);
-              print(total);
-              showToast();
+                quantity.putIfAbsent(data.id, () => data.quantity);
+                print(quantity);
+                print(total);
+                showToast();
+              },
+            ),
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return FoodDetailPage(foodID: "${listFood.id}",);
+              }));
+
             },
           ),
         ),
@@ -1457,6 +1583,19 @@ class _HomePage extends State<HomePage> {
             letterSpacing: 2.0,
             fontFamily: 'Montserrat',
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmpty(){
+    return Container(
+      child: Text(
+        "Không có gì trong giỏ hàng",
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[600]
         ),
       ),
     );

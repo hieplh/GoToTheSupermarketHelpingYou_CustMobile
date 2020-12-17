@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/bloc/cart_items_bloc.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/models/category_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../api_url_constain.dart';
+import 'foodDetail.dart';
 
 class FoodPage extends StatefulWidget {
   final String storeID;
@@ -22,7 +24,8 @@ class _FoodPage extends State<FoodPage> {
 
   _FoodPage(this.storeID);
   CartItemsBloc cart = new CartItemsBloc();
-  List<FoodModel> list;
+  List<CategoryModel> category;
+  List<FoodModel> list = new List();
   List<Data> listCart = new List();
   void showToast() {
     Fluttertoast.showToast(
@@ -40,7 +43,11 @@ class _FoodPage extends State<FoodPage> {
     print('storeID' + storeID);
     final myService = FoodApiService.create();
     final response = await myService.getAllFood(storeID);
-    list = response.body;
+    category = response.body;
+
+    for(var cate in category){
+      list += cate.foods;
+    }
 //    for (var listItem in list) {
 //      print(listItem.name);
 //    }
@@ -149,18 +156,23 @@ class _FoodPage extends State<FoodPage> {
                   fontSize: 13.0,
                 ),
               ),
-              trailing: Icon(
-                Icons.add_circle_outline,
-                color: const Color.fromRGBO(0, 175, 82, 1),
-                size: 30.0,
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: const Color.fromRGBO(0, 175, 82, 1),
+                  size: 30.0,
+                ),
+                onPressed: (){
+                  cart.addToCart("${listFood.id}");
+                  print(cart.addItems);
+                  showToast();
+                },
               ),
               onTap: (){
-//                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//                  return FoodDetailPage();
-//                }));
-                cart.addToCart("${listFood.id}");
-                print(cart.addItems);
-                showToast();
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return FoodDetailPage(foodID: "${listFood.id}",);
+                }));
+
               },
             ),
           ),

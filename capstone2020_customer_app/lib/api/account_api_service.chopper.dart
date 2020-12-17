@@ -22,4 +22,11 @@ class _$AccountApiService extends AccountApiService {
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Shipper, Shipper>($request);
   }
+
+  @override
+  Future<Response<Customer>> getCustomerByID(String accountId) {
+    final $url = '/account/$accountId/customer';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<Customer, Customer>($request);
+  }
 }

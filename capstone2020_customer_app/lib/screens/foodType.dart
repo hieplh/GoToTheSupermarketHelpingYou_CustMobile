@@ -1,12 +1,28 @@
+import 'dart:convert';
+
+import 'package:capstone2020customerapp/api_url_constain.dart';
+import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/screens/foodDetail.dart';
 import 'package:flutter/material.dart';
 
 class FoodTypePage extends StatefulWidget {
+  final String image;
+  final String type;
+  final List<FoodModel> foods;
+  final int quantity;
+
+  FoodTypePage({Key key, @required this.image, @required this.type, @required this.foods, @required this.quantity}) : super(key: key);
   @override
-  _FoodTypePage createState() => _FoodTypePage();
+  _FoodTypePage createState() => _FoodTypePage(image, type, foods, quantity);
 }
 
 class _FoodTypePage extends State<FoodTypePage> {
+  String image;
+  String type;
+  List<FoodModel> foods;
+  int quantity;
+  _FoodTypePage(this.image, this.type, this.foods, this.quantity);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -25,7 +41,7 @@ class _FoodTypePage extends State<FoodTypePage> {
     return Container(
       height: 300.0,
       child: Image.network(
-          'https://cdnmedia.eurofins.com/apac/media/603979/kiem-nghiem-chat-luong-thit-tuoi.jpg?width=480.5764411027569&height=500',
+          '${image}',
         fit: BoxFit.cover,
         height: double.infinity,
         width: double.infinity,
@@ -41,6 +57,7 @@ class _FoodTypePage extends State<FoodTypePage> {
           color: Colors.grey[200],
           child: Column(
             children: <Widget>[
+              if(type == "Thịt Heo")
               Container(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Text(
@@ -51,11 +68,55 @@ class _FoodTypePage extends State<FoodTypePage> {
                   ),
                 ),
               ),
+              if(type == "Thịt Bò")
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Thịt Bò',
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              if(type == "Thịt Gà")
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Thịt Gà',
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              if(type == "Cá")
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Cá',
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              if(type == "Rau Củ Tươi")
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Rau Củ Tươi',
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
               Container(
                 padding: const EdgeInsets.only(top: 5.0),
                 alignment: Alignment.center,
                 child: Text(
-                  '53 loại',
+                  '${quantity} loại',
                   style: TextStyle(
                     fontSize: 13.0,
                     color: Colors.grey,
@@ -63,11 +124,22 @@ class _FoodTypePage extends State<FoodTypePage> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
-        for (var i = 0; i < 8; i++)
+        if(foods.length == 0)
+          Container(
+            padding: EdgeInsets.only(top: 100.0),
+            child: Text(
+              'Không Còn Sản Phẩm',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                color: Colors.grey[500],
+              ),
+            ),
+          ),
+        for(var listFood in foods)
           Container(
             padding: EdgeInsets.only(bottom: 10.0),
             decoration: BoxDecoration(
@@ -80,9 +152,12 @@ class _FoodTypePage extends State<FoodTypePage> {
             ),
             child: ListTile(
               leading: Image.network(
-                  'https://vitafood.org/wp-content/uploads/2019/12/thit-nac-vai.jpg'),
+                  '${listFood.image}',fit: BoxFit.cover,
+                  height: 100.0,
+                  width: 100.0,
+                  alignment: Alignment.center),
               title: Text(
-                'Thịt vai heo - 450g',
+                '${utf8.decode(latin1.encode(listFood.name), allowMalformed: true)}',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 18.0,
@@ -91,7 +166,7 @@ class _FoodTypePage extends State<FoodTypePage> {
               ),
               subtitle: Text(
                 'Số Lượng: 23\n\n'
-                    '67,000đ',
+                    '${oCcy.format(listFood.price)}đ',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 13.0,
@@ -104,7 +179,7 @@ class _FoodTypePage extends State<FoodTypePage> {
               ),
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return FoodDetailPage();
+                  return FoodDetailPage(foodID: listFood.id,);
                 }));
               },
             ),

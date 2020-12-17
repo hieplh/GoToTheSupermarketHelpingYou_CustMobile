@@ -1,40 +1,77 @@
+import 'dart:convert';
+
+import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/models/category_model.dart';
+import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:flutter/material.dart';
 
+import '../api_url_constain.dart';
+
 class FoodDetailPage extends StatefulWidget {
+  final String foodID;
+
+  FoodDetailPage({Key key, @required this.foodID}) : super(key: key);
   @override
-  _FoodDetailPage createState() => _FoodDetailPage();
+  _FoodDetailPage createState() => _FoodDetailPage(foodID);
 }
 
 FocusNode myFocusNode = new FocusNode();
 
 class _FoodDetailPage extends State<FoodDetailPage> {
-//  int _n = 0;
+  String foodID;
+  _FoodDetailPage(this.foodID);
 
-//  void add() {
-//    setState(() {
-//      _n++;
-//    });
-//  }
-//
-//  void minus() {
-//    setState(() {
-//      if (_n != 0) _n--;
-//    });
-//  }
+  FoodModel food;
+  List<CategoryModel> category;
+  List<FoodModel> foodList = new List();
+  Future<void> getFoodDetail() async {
+    print('foodID: ' + foodID);
+    if(foodID.contains(" ") == false){
+      final myService = FoodApiService.create();
+      final response = await myService.getFoodDetail(foodID);
+
+      food = response.body;
+    }else{
+      final myService1 = FoodApiService.create();
+      final response1 = await myService1.getAllFood(idStore);
+      category = response1.body;
+
+      for(var cate in category){
+        foodList += cate.foods;
+      }
+      for(var list in foodList){
+        if(utf8.decode(latin1.encode(list.name), allowMalformed: true) == foodID){
+          food = list;
+        }
+      }
+    }
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(),
-            _buildBody(),
-            //_buildQuantity(),
-            _buildOrderButton(),
-          ],
-        ),
+      body: FutureBuilder(
+          future: getFoodDetail(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    _buildHeader(),
+                    _buildBody(),
+                    _buildOrderButton(),
+                  ],
+                ),
+              );
+            }
+          }
       ),
     );
   }
@@ -43,7 +80,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
     return Container(
       height: 300.0,
       child: Image.network(
-        'https://vitafood.org/wp-content/uploads/2019/12/thit-nac-vai.jpg',
+        '${food.image}',
         fit: BoxFit.cover,
         height: double.infinity,
         width: double.infinity,
@@ -63,7 +100,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
               Container(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Text(
-                  'Thịt vai heo 450g - 67,000đ',
+                  '${utf8.decode(latin1.encode(food.name), allowMalformed: true)} - ${oCcy.format(food.price)}đ',
                   style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -177,7 +214,9 @@ class _FoodDetailPage extends State<FoodDetailPage> {
       padding: EdgeInsets.only(top: 10.0),
       height: 60.0,
       child: RaisedButton(
-        onPressed: () {},
+        onPressed: () {
+          print(foodID);
+        },
         textColor: Colors.white,
         color: const Color.fromRGBO(0, 175, 82, 1),
           child: Text(

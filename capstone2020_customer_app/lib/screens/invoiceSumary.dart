@@ -49,7 +49,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
-    String now = date.year.toString() + "-" + date.month.toString() + "-0" + date.day.toString();
+    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
@@ -62,9 +62,9 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
         },
         body: json.encode({
           "addressDelivery": "${deliveryAddr}",
-          "costDelivery": '20000',
-          "costShopping": '50000',
-          "cust": "${account.id}",
+          "costDelivery": '${deliveryFee}',
+          "costShopping": '${shoppingFee}',
+          "cust": "${account.username}",
           "dateDelivery": now,
           "details": [
             for(var list in data)
@@ -82,7 +82,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "market": storeID,
           "note": "${note}",
           "timeDelivery": timePicked,
-          "totalCost": '${total + 20000 + 50000}'
+          "totalCost": '${total + deliveryFee + shoppingFee}'
         }));
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
@@ -347,7 +347,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '20,000đ',
+                    '${oCcy.format(deliveryFee)}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -373,7 +373,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '50,000đ',
+                    '${oCcy.format(shoppingFee)}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -399,7 +399,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Text(
-                    '${oCcy.format((total + 20000 + 50000))}đ',
+                    '${oCcy.format((total + deliveryFee + shoppingFee))}đ',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

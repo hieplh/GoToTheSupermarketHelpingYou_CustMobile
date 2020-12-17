@@ -9,20 +9,20 @@ import 'package:flutter/material.dart';
 
 import '../api_url_constain.dart';
 
-class HistoryDetailPage extends StatefulWidget {
+class OrderDetailPage extends StatefulWidget {
   final History historyDetail;
 
-  HistoryDetailPage({Key key, @required this.historyDetail}) : super(key: key);
+  OrderDetailPage({Key key, @required this.historyDetail}) : super(key: key);
 
   @override
-  _HistoryDetailPage createState() => _HistoryDetailPage(historyDetail);
+  _OrderDetailPage createState() => _OrderDetailPage(historyDetail);
 }
 
-class _HistoryDetailPage extends State<HistoryDetailPage> {
+class _OrderDetailPage extends State<OrderDetailPage> {
 
   History historyDetail;
 
-  _HistoryDetailPage(this.historyDetail);
+  _OrderDetailPage(this.historyDetail);
 
   List<OrderDetail> listOrderHistory;
 
@@ -116,8 +116,8 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                   child: Text(
                     "Booking ID",
                     style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.grey[700]
+                        fontSize: 15.0,
+                        color: Colors.grey[700]
                     ),
                   ),
                 ),
@@ -142,7 +142,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                 Container(
                   padding: EdgeInsets.only(top: 10.0,left: 10.0),
                   child: Image.network(
-                    'https://cdn2.iconfinder.com/data/icons/shopping-e-commerce-3/512/store-512.png',
+                    'https://www.supermarketnews.com/sites/supermarketnews.com/files/styles/article_featured_retina/public/Aldi%20store_produce%20area.jpg?itok=EIbPYvCA',
                     fit: BoxFit.cover,
                     height: 50.0,
                     width: 50.0,
@@ -324,8 +324,8 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                   child: Text(
                     'Tổng Tiền',
                     style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                 ),
@@ -357,7 +357,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
             color: Colors.grey[200],
             height: 10.0,
           ),
-          if(historyDetail.note == null)
+          if(historyDetail.note == "")
             Container(
               width: MediaQuery.of(context).size.width ,
               padding: const EdgeInsets.only(left: 10.0),
@@ -369,8 +369,8 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                     child: Text(
                       'Không có yêu cầu gì',
                       style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold
                       ),
                     ),
                   ),
@@ -379,14 +379,14 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                     child: Text(
                       'Cám ơn vì đã sử dụng dịch vụ của chúng tôi!',
                       style: TextStyle(
-                          fontSize: 15.0,
+                        fontSize: 15.0,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          if(historyDetail.note != null)
+          if(historyDetail.note != "")
             Container(
               width: MediaQuery.of(context).size.width ,
               padding: const EdgeInsets.only(left: 10.0),

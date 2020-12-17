@@ -663,8 +663,8 @@ class _ProgressPage extends State<ProgressPage> {
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder(
-          future: getMyOrder(),
+      body: StreamBuilder(
+          stream: getMyOrder().asStream(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -1412,45 +1412,45 @@ class _ProgressPage extends State<ProgressPage> {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                ),
-                child: ListTile(
-                  leading: Text(
-                    'Xem Chi Tiết',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(0, 175, 82, 1),
-                    ),
-                  ),
-//                  title: Text(
-//                    'Thịt Ba Chỉ Heo',
-//                    style: TextStyle(
-//                      fontFamily: 'Montserrat',
-//                      fontSize: 17.0,
+//              Container(
+//                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+//                decoration: BoxDecoration(
+//                  border: Border(
+//                    top: BorderSide(
+//                      width: 1.0,
+//                      color: Colors.grey[400],
 //                    ),
 //                  ),
-//                          subtitle: Text(
-//                            '${listFood.price}',
-//                            style: TextStyle(
-//                              fontFamily: 'Montserrat',
-//                              fontSize: 13.0,
-//                            ),
-//                          ),
-                  trailing: Icon(
-                    Icons.keyboard_arrow_right,
-                    color: const Color.fromRGBO(0, 175, 82, 1),
-                  ),
-                ),
-              ),
+//                ),
+//                child: ListTile(
+//                  leading: Text(
+//                    'Xem Chi Tiết',
+//                    style: TextStyle(
+//                      fontSize: 16.0,
+//                      fontWeight: FontWeight.bold,
+//                      color: const Color.fromRGBO(0, 175, 82, 1),
+//                    ),
+//                  ),
+////                  title: Text(
+////                    'Thịt Ba Chỉ Heo',
+////                    style: TextStyle(
+////                      fontFamily: 'Montserrat',
+////                      fontSize: 17.0,
+////                    ),
+////                  ),
+////                          subtitle: Text(
+////                            '${listFood.price}',
+////                            style: TextStyle(
+////                              fontFamily: 'Montserrat',
+////                              fontSize: 13.0,
+////                            ),
+////                          ),
+//                  trailing: Icon(
+//                    Icons.keyboard_arrow_right,
+//                    color: const Color.fromRGBO(0, 175, 82, 1),
+//                  ),
+//                ),
+//              ),
             ],
           ),
         ),
@@ -1523,6 +1523,29 @@ class _ProgressPage extends State<ProgressPage> {
                 ],
               ),
             ],
+          ),
+        ),
+        if(num == 12)
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.only(bottom: 10.0),
+          height: 50.0,
+          child: RaisedButton(
+            onPressed: () {
+              print("Hủy đơn hàng");
+            },
+            textColor: Colors.white,
+            color: Colors.red,
+            child: Text(
+              'Hủy Đơn',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 18.0,
+                letterSpacing: 2.0,
+                fontFamily: 'Montserrat',
+              ),
+            ),
           ),
         ),
       ],

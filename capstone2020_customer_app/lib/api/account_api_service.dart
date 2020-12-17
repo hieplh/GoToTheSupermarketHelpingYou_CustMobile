@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:capstone2020customerapp/api_url_constain.dart';
+import 'package:capstone2020customerapp/models/customer_model.dart';
 import 'package:capstone2020customerapp/models/shipper_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:chopper/chopper.dart';
@@ -15,13 +16,17 @@ abstract class AccountApiService extends ChopperService{
         baseUrl: API_URL_STARTPOINT,
         services: [_$AccountApiService()],
         converter: JsonToTypeConverter({
-          Shipper: (jsonData) => Shipper.fromJson(jsonData)
+          Shipper: (jsonData) => Shipper.fromJson(jsonData),
+          Customer: (jsonData) => Customer.fromJson(jsonData),
         })
     );
     return _$AccountApiService(client);
   }
   @Get(path: "{accountId}/shipper")
   Future<Response<Shipper>> getShipperByID(@Path() String accountId);
+
+  @Get(path: "{accountId}/customer")
+  Future<Response<Customer>> getCustomerByID(@Path() String accountId);
 
 }
 

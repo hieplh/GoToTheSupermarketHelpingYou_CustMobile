@@ -1,6 +1,8 @@
 import 'package:capstone2020customerapp/screens/foodDetail.dart';
 import 'package:flutter/material.dart';
 
+import '../api_url_constain.dart';
+
 class Search extends SearchDelegate{
 
   @override
@@ -37,9 +39,8 @@ class Search extends SearchDelegate{
     );
   }
 
-  final List<String> listExample;
-  Search(this.listExample);
-  List<String> recentList = ["Thằn Bò", "Đùi Gà"];
+  Search(listExample);
+  List<String> recentList = ["Thăn Bò", "Đùi Gà"];
 
 
   @override
@@ -64,7 +65,7 @@ class Search extends SearchDelegate{
             selectedResult = suggestionList[index];
 //            showResults(context);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FoodDetailPage()));
+                context, MaterialPageRoute(builder: (context) => FoodDetailPage(foodID: selectedResult,)));
           },
         );
       },

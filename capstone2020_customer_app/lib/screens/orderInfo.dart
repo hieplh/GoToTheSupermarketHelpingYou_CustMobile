@@ -8,6 +8,7 @@ import 'package:capstone2020customerapp/screens/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:intl/intl.dart';
 
 import 'home.dart';
 
@@ -32,20 +33,117 @@ class _OrderInfoPage extends State<OrderInfoPage> {
   TextEditingController phoneController = new TextEditingController();
   TextEditingController fullNameController = new TextEditingController();
   TextEditingController noteController = new TextEditingController();
+
   TimeOfDay time = TimeOfDay.now();
+  TimeOfDay timeNow = TimeOfDay.now();
   TimeOfDay picked;
   Future<Null> selectTime(BuildContext context) async{
     picked = await showTimePicker(context: context, initialTime: time);
 
     setState(() {
       time = picked;
-      timePicked = time.hour.toString() + ":" + time.minute.toString() + ":00";
-      if(17 <= int.parse(time.hour.toString()) && int.parse(time.hour.toString()) <= 20){
-        deliveryFee = 50000;
+      double _doubleYourTime = time.hour.toDouble() +
+          (time.minute.toDouble() / 60);
+      double _doubleNowTime = timeNow.hour.toDouble() +
+          (timeNow.minute.toDouble() / 60);
+
+      double _timeDiff = _doubleYourTime - _doubleNowTime;
+      print(_timeDiff);
+      if(_timeDiff >= 3){
+        timePicked = time.hour.toString() + ":" + time.minute.toString() + ":00";
+        if(17 <= int.parse(time.hour.toString()) && int.parse(time.hour.toString()) <= 20){
+          deliveryFee = 50000;
+        }else{
+          deliveryFee = 20000;
+        }
       }else{
-        deliveryFee = 20000;
+        showOnIllegalTimeToast(context);
+        timePicked = "00:00:00";
       }
+
     });
+  }
+  showOnIllegalTimeToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    height: 70.0,
+                    width: 70.0,
+                    child: Image.network(
+                      "https://st2.depositphotos.com/5266903/8456/v/950/depositphotos_84568968-stock-illustration-cancel-flat-red-color-icon.jpg",
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Opps!!! Thời gian giao của bạn không hợp lệ, vui lòng nhập thời gian giao cách giờ hiện tại 3 tiếng để shipper có đủ thời gian chuẩn bị đơn hàng để giao cho bạn",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
+  }
+  showOnErrorTimeToast(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    height: 70.0,
+                    width: 70.0,
+                    child: Image.network(
+                      "https://st2.depositphotos.com/5266903/8456/v/950/depositphotos_84568968-stock-illustration-cancel-flat-red-color-icon.jpg",
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    "Opps!!! Vui lòng nhập thời gian giao hàng đúng",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Xác Nhận'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
   }
 
   showAlertDialog(BuildContext context) {
@@ -63,6 +161,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
     Widget addAddr = FlatButton(
       child: Text("Thêm địa chỉ mới"),
       onPressed: () {
+        Navigator.pop(context);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) {
           return  NewAddressPage(list: data, total: total, storeID: storeID,);
@@ -458,6 +557,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
@@ -472,6 +572,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+                      margin: const EdgeInsets.only(right: 20.0),
                       child: Text(
                         '50,000đ',
                         style: TextStyle(
@@ -484,6 +585,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
 
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0),
@@ -498,6 +600,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(bottom: 15.0),
+                      margin: const EdgeInsets.only(right: 20.0),
                       child: Text(
                         '${oCcy.format(deliveryFee)}đ',
                         style: TextStyle(
@@ -586,11 +689,15 @@ class _OrderInfoPage extends State<OrderInfoPage> {
             phoneNumber = phoneController.text;
           }
           note = noteController.text;
+          if(timePicked == "00:00:00"){
+            showOnErrorTimeToast(context);
+          }else{
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return PaymentPage(list: data, total: total, storeID: storeID, timePicked: timePicked,);
+            }));
+          }
 
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) {
-            return PaymentPage(list: data, total: total, storeID: storeID, timePicked: timePicked,);
-          }));
         },
         textColor: Colors.white,
         color: const Color.fromRGBO(0, 175, 82, 1),

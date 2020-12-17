@@ -472,7 +472,7 @@ class _NewAddressPage extends State<NewAddressPage> {
   changeThePage() async {
     Address addr = new Address("Phan Công Bình", "0123456789", "Hồ Chí Minh", districtName, wardName, streetController.text + " " + streetName);
     address.add(addr);
-    //deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
+    deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
     //print(streetController.text);
     Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
       return OrderInfoPage(list: data, total: total, storeID: storeID,);

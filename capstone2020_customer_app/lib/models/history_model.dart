@@ -9,6 +9,7 @@ class History{
   String marketName;
   String note;
   String shipper;
+  int status;
   String createDate;
   String createTime;
   String receiveTime;
@@ -25,6 +26,7 @@ class History{
       this.marketName,
       this.note,
       this.shipper,
+      this.status,
       this.createDate,
       this.createTime,
       this.receiveTime,
