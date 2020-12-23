@@ -7,21 +7,25 @@ import 'package:capstone2020customerapp/screens/supermarket.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' show utf8;
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class DetailSupermarketPage extends StatefulWidget {
   final String marketID;
   final String marketImage;
+  final String marketName;
 
-  DetailSupermarketPage({Key key, @required this.marketID, @required this.marketImage}) : super(key: key);
+  DetailSupermarketPage({Key key, @required this.marketID, @required this.marketImage, @required this.marketName}) : super(key: key);
 
 
   @override
-  _DetailSupermarketPage createState() => _DetailSupermarketPage(marketID, marketImage);
+  _DetailSupermarketPage createState() => _DetailSupermarketPage(marketID, marketImage, marketName);
 }
 FocusNode myFocusNode = new FocusNode();
 class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   String marketID;
   String marketImage;
-  _DetailSupermarketPage(this.marketID, this.marketImage);
+  String marketName;
+  _DetailSupermarketPage(this.marketID, this.marketImage, this.marketName);
   String search;
   String storeID;
   TextEditingController searchController = new TextEditingController();
@@ -95,56 +99,6 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   Widget _buildBody() {
     return Column(
         children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: StreamBuilder<String>(
-              //stream: bloc.email,
-              builder: (context, snapshot) => TextFormField(
-                //onChanged: bloc.emailChanged,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                controller: searchController,
-                onSaved: (input) => search = input,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: const Color.fromRGBO(0, 175, 82, 1),
-                    size: 30.0,
-                  ),
-                  labelText: 'Tìm kiếm địa chỉ Siêu Thị',
-                  hintText: 'Nhập địa chỉ siêu thị',
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: const Color.fromRGBO(0, 141, 177, 1),
-                    ),
-                  ),
-                  labelStyle: TextStyle(
-                      color: myFocusNode.hasFocus
-                          ? const Color.fromRGBO(0, 141, 177, 1)
-                          : Colors.black),
-                  hintStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  errorText: snapshot.error,
-                ),
-              ),
-            ),
-          ),
           Row(
             children: <Widget>[
               Column(
@@ -165,7 +119,7 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
                     width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.only(left: 15.0),
                     child: Text(
-                      '$marketID',
+                      '${utf8.decode(latin1.encode(marketName))}',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -273,6 +227,13 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
     );
   }
 
+
+  Future<String> _save(String storeID) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'my_int_key';
+    prefs.setString(key, storeID);
+    return "Success";
+  }
   changeThePage() async {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
@@ -281,8 +242,9 @@ class _DetailSupermarketPage extends State<DetailSupermarketPage> {
   }
 
   goToHomePage(String storeID) async {
-    Navigator.push(
+    _save(storeID).then((value) => Navigator.push(
         context, MaterialPageRoute(
-        builder: (context) => HomePage(storeID: storeID)));
+        builder: (context) => HomePage(storeID: storeID))),);
+
   }
 }

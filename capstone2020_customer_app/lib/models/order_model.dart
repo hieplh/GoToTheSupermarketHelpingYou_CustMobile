@@ -1,5 +1,8 @@
+import 'package:capstone2020customerapp/models/shipper_model.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/models/time_travel_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobx/mobx.dart';
 
 import 'order_detail_model.dart';
 part 'order_model.g.dart';
@@ -10,8 +13,8 @@ class Order{
   String cust;
   String addressDelivery;
   String note;
-  String market;
-  String shipper;
+  StoreModel market;
+  Shipper shipper;
   String createDate;
   String createTime;
   int status;

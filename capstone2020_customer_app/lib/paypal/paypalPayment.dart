@@ -174,9 +174,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
         ),
         body: Column(
           children: <Widget>[
-            _buildInputMoney(),
             _buildWebView(),
-
+            _buildInputMoney(),
           ],
 
               //_buildInputMoney(),
@@ -232,7 +231,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
             javascriptMode: JavascriptMode.unrestricted,
             navigationDelegate: (NavigationRequest request) async {
               money = money + double.parse(moneyController.text);
-              var url = API_URL_STARTPOINT + '/account/';
+              var url = API_URL_STARTPOINT + '/account/wallet';
               var response1 = await http.put(Uri.parse(url),
                   headers: {
                     'Content-type' : 'application/json',
@@ -240,7 +239,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
                   },
                   body: json.encode({
                     "amount": double.parse(moneyController.text),
-                    "id": "${account.id}"
+                    "role": "customer",
+                    "username": "${account.username}"
                   }));
               showToast();
               if (request.url.contains(returnURL)) {

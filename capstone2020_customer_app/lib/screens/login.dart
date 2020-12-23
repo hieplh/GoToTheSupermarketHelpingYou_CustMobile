@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_url_constain.dart';
 
@@ -29,7 +30,7 @@ FocusNode myFocusNode = new FocusNode();
 class _LoginPageState extends State<LoginPage> {
   String email, password;
   bool _isHidePassword = true;
-
+  String IDSTORE;
   void showSuccessToast() {
     //setState(() {
     Fluttertoast.showToast(
@@ -75,9 +76,9 @@ class _LoginPageState extends State<LoginPage> {
               _buildUsernameInput(),
               _buildPasswordInput(),
               _buildLoginButton(),
-              _buildTextOR(),
-              _buildText(),
-              _buildFacebookAndGoogleLoginButton(),
+//              _buildTextOR(),
+//              _buildText(),
+//              _buildFacebookAndGoogleLoginButton(),
               _buildRegisterButton(),
             ],
         ),
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
   }
   Widget _buildLogo(){
     return Container(
-      padding: EdgeInsets.only(top: 100.0),
+      padding: EdgeInsets.only(top: 60.0),
         alignment: Alignment.center,
         child: Image(
           image: AssetImage('assets/apple-touch-icon-120x120.png'),
@@ -221,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton(){
     return Container(
 //        width: MediaQuery.of(context).size.width * 0.8,
-//        padding: EdgeInsets.only(bottom: 10.0),
+        padding: EdgeInsets.only(bottom: 10.0),
 //        height: 60.0,
         child: StreamBuilder<bool>(
           //stream: bloc.submitCheck,
@@ -401,39 +402,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
+  _read() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'my_int_key';
+    final value = prefs.getString(key) ?? null;
+    print('read: $value');
+    IDSTORE = value;
+  }
   changeThePage() async {
-//    var url = API_URL_STARTPOINT + '/account/';
-//    var response1 = await http.put(Uri.parse(url),
-//        headers: {
-//          'Content-type' : 'application/json',
-//          "Accept": "application/json",
-//        },
-//        body: json.encode({
-//          "amount": 10000,
-//          "id": "cust123"
-//        }));
-//    print('Response status: ${response1.statusCode}');
-//    print('Response body: ${response1.body}');
-//    if (response1.statusCode == 200) {
-//      // If the server did return a 200 OK response,
-//      // then parse the JSON.
-//      Map<String, dynamic> responseJson = json.decode(response1.body);
-//      print(response1.statusCode);
-//
-//    } else {
-//      // If the server did not return a 200 OK response,
-//      // then throw an exception.
-//      print("false");
-//      throw Exception('Fail ');
-//    }
-//  Tracking trac;
-//    final myService2 = TrackingApiService.create();
-//    final response2 = await myService2.getTracking("cust1232020122104913");
-//    trac = response2.body;
-//    print(trac.lat);
-//  print(trac.lng);
-
+  _read();
   customer = usernameController.text;
   pass = passwordController.text;
     final myService = LoginApiService.create();
@@ -441,10 +418,10 @@ class _LoginPageState extends State<LoginPage> {
     account = response.body;
     if(response.statusCode == 200){
       showSuccessToast();
-      if(account.addresses != ""){
+      if(IDSTORE != null){
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-              return HomePage(storeID: "BHX-KHAVANCAN",);
+              return HomePage(storeID: IDSTORE,);
             }), ModalRoute.withName('/'));
       }else{
         Navigator.of(context).pushAndRemoveUntil(

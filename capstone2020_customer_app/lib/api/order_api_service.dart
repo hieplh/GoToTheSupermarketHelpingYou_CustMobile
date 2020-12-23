@@ -9,7 +9,7 @@ import '../api_url_constain.dart';
 
 part "order_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/order/')
+@ChopperApi(baseUrl: '')
 abstract class OrderApiService extends ChopperService{
 
   static OrderApiService create(){
@@ -26,8 +26,11 @@ abstract class OrderApiService extends ChopperService{
 //  Future<Response> postOrder(@Query() double costDelivery, @Query() double costShopping, @Query() String cust,
 //  @Query() String dateDelivery, @Query() List<OrderDetail> details, @Query() String market, @Query() String note,
 //  @Query() String timeDelivery, @Query() TimeTravel timeTravel, @Query() double totalCost);
-  @Get(path: "customer/{id}")
+  @Get(path: "/order/customer/{id}")
   Future<Response<Order>> getOrderByID(@Path() String id);
+  @Delete(path: "/delete/{order_id}/customer/{id}")
+  Future<Response<Order>> deleteOrder(@Path() String order_id, @Path() String id);
+
 
 }
 

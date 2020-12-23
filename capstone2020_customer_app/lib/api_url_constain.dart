@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'models/account_model.dart';
+import 'models/addToCart.dart';
 import 'models/address.dart';
 import 'models/food_model.dart';
 import 'models/history_model.dart';
@@ -35,3 +36,7 @@ List<FoodModel> fish = new List();
 List<FoodModel> chicken = new List();
 List<FoodModel> vegetable = new List();
 List<String> listExample = [];
+List<Data> listCart = new List();
+int badgeData = 0;
+double total = 0;
+Map<String, int> quantity = new Map();

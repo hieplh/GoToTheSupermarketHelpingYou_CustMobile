@@ -1,33 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:capstone2020customerapp/models/category_model.dart';
-import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
+import 'package:capstone2020customerapp/models/tracking_model.dart';
 import 'package:chopper/chopper.dart';
 
-import '../api_url_constain.dart';
+part "feedback_api_service.chopper.dart";
 
-part "food_api_service.chopper.dart";
+@ChopperApi(baseUrl: '/feedback/')
+abstract class FeedbackApiService extends ChopperService{
 
-@ChopperApi(baseUrl: '')
-abstract class FoodApiService extends ChopperService{
-
-  static FoodApiService create(){
+  static FeedbackApiService create(){
     final client = ChopperClient(
         baseUrl: API_URL_STARTPOINT,
-        services: [_$FoodApiService()],
-        converter: JsonToTypeConverter({
-          CategoryModel: (jsonData) => CategoryModel.fromJson(jsonData),
-          FoodModel: (jsonData) => FoodModel.fromJson(jsonData)
-        })
-    );
-    return _$FoodApiService(client);
-  }
-  @Get(path: "/foods/{store_id}")
-  Future<Response<List<CategoryModel>>> getAllFood(@Path() String store_id);
+        services: [_$FeedbackApiService()],
 
-  @Get(path: "/food/{store_id}/{food_id}")
-  Future<Response<FoodModel>> getFoodDetail(@Path() String store_id, @Path() String food_id);
+    );
+    return _$FeedbackApiService(client);
+  }
+  @Get(path: "{order_id}/{content}/{rating}")
+  Future<Response> getFeedback(@Path() String order_id, @Path() String content, @Path() String rating);
+
 }
 
 class JsonToTypeConverter extends JsonConverter {

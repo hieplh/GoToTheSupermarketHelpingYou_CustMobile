@@ -25,7 +25,6 @@ import 'package:location/location.dart';
 import '../api_url_constain.dart';
 import 'home.dart';
 
-
 class ProgressPage extends StatefulWidget {
   final String storeID;
 
@@ -42,7 +41,7 @@ String img1 =
     "https://cdn1.everten.com.au/media/wysiwyg/deliveryinfoimages/deliveryTruck_5.1539672900.png";
 String img2 =
     "https://i.pinimg.com/736x/17/45/ec/1745ec05166a6c4a3e61c5533eb6883d.jpg";
-String img3 = "https://miro.medium.com/max/720/1*pCcEZ-0Hj6dp1jpCBZsJGg.jpeg";
+String img3 = "https://i.pinimg.com/736x/21/4d/18/214d18461bd0ed9c6fd5c7d50b1a310a.jpg";
 int count = 0;
 TextEditingController _textFieldController = TextEditingController();
 
@@ -77,74 +76,59 @@ PinInformation currentlySelectedPin = PinInformation(
 PinInformation sourcePinInfo;
 PinInformation destinationPinInfo;
 
+
 class _ProgressPage extends State<ProgressPage> {
   String storeID;
   _ProgressPage(this.storeID);
 
   int num = 12;
   var myOrder;
-  String shipper = "Trần Thảo Linh";
   List<OrderDetail> order;
   StoreModel market;
-  Shipper ship;
   Tracking trac;
   Timer getLatLg;
-  Future<void> getMyOrder() async {
+  String data = "wait";
+  void initState() {
+    super.initState();
+    getMyOrder().then((data) {
+      setState(() {
+        this.data = data;
+      });
+    });
+  }
+
+  Future<String> getMyOrder() async {
+
     final myService1 = OrderApiService.create();
     final mySth = await myService1.getOrderByID(ID);
-    myOrder = mySth;
-    order = mySth.body.details;
 
-    final myService2 = MarketDetailApiService.create();
+    myOrder =  mySth;
+    order =  mySth.body.details;
+
+    final myService2 =  MarketDetailApiService.create();
     final response = await myService2.getStoreByID(storeID);
-    market = response.body;
+    market =  response.body;
 
     if (mySth.body.status == 23) {
-      final myService3 = TrackingApiService.create();
+      final myService3 =  TrackingApiService.create();
       final response3 = await myService3.getTracking(ID);
-      trac = response3.body;
+      trac =  response3.body;
       print(response3.body.lng);
       print(response3.body.lat);
-      SOURCE_LOCATION = LatLng(double.parse(trac.lat), double.parse(trac.lng));
-      print(SOURCE_LOCATION);
-//      if (trac == null) {
-//        trac = new Tracking("10.847790308969985", "106.7520011120352");
-//      }
+      if (trac.lat == null || trac.lng == null) {
+        status = 24;
+      }else{
+        SOURCE_LOCATION =
+            LatLng(double.parse(trac.lat), double.parse(trac.lng));
+        print(SOURCE_LOCATION);
+      }
+
+
     }
 
-//    if(num != 12){
-//      print(myOrder.body.shipper);
-//      final myService2 = AccountApiService.create();
-//      final response2 = await myService2.getShipperByID(myOrder.body.shipper);
-//      ship = response2.body;
-//      shipper = "${utf8.decode(latin1.encode(ship.lastName), allowMalformed: true)}" + " " +
-//          "${utf8.decode(latin1.encode(ship.middleName), allowMalformed: true)}" + " " +
-//          "${utf8.decode(latin1.encode(ship.firstName), allowMalformed: true)}";
-//      print(shipper);
-//    }
-
-//    final query = "${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}";
-//    var addresses = await Geocoder.local.findAddressesFromQuery(query);
-//    var first = addresses.first;
-//
-//    DEST_LOCATION = LatLng(first.coordinates.latitude, first.coordinates.longitude);
-//    print(DEST_LOCATION);
-//    print("${first.featureName} : ${first.coordinates}");
-//
-//    final query1 = "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
-//        + "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" + " "
-//        + "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" + " "
-//        + "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}";
-//    var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
-//    var first1 = addresses1.first;
-//
-//    SOURCE_LOCATION = LatLng(first1.coordinates.latitude, first1.coordinates.longitude);
-//    print(SOURCE_LOCATION);
-//    print("${first1.featureName} : ${first1.coordinates}");
-
     if (status == 12) {
-      Timer(const Duration(seconds: 10), () => getMyOrder());
-      status = mySth.body.status;
+      Timer(const Duration(seconds: 10), () async => await getMyOrder());
+      status =  mySth.body.status;
       print(status);
       if (status == num) {
         status = 12;
@@ -152,20 +136,23 @@ class _ProgressPage extends State<ProgressPage> {
     }
 
     if (status == 13) {
-      if (mySth.body.status != 24) {
+      if (mySth.body.status == 23) {
         print("Status != 24: ${mySth.body.status}");
-        getLatLg = Timer(const Duration(seconds: 20), () =>
-              showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng)),
+        getLatLg = Timer(
+          const Duration(seconds: 5),
+          () =>  updatePinOnMap(
+                  double.parse(trac.lat), double.parse(trac.lng))
+              .then((value) => getMyOrder()),
         );
       }
       if (mySth.body.status == 24) {
         getLatLg.cancel();
-        status = 12;
+        status = 24;
         print("Status == 24: ${mySth.body.status}");
         print("Status : ${status}");
 //        getLatLg.cancel();
 
-    }
+      }
     }
 
     if (status == 21) {
@@ -200,6 +187,7 @@ class _ProgressPage extends State<ProgressPage> {
     }
     if (status == 24) {
       num = 24;
+      img = img3;
       _displayDialog(context);
       setState(() {
         status = 0;
@@ -221,34 +209,13 @@ class _ProgressPage extends State<ProgressPage> {
 
       print(status);
     }
+    return "Success";
   }
-
 
 //  @override
 //  void initState() {
 //    super.initState();
-//
-//    // create an instance of Location
-//    location = new Location();
-//    polylinePoints = PolylinePoints();
-//    // subscribe to changes in the user's location
-//    // by "listening" to the location's onLocationChanged event
-////      location.onLocationChanged().listen((LocationData cLoc) {
-////        // cLoc contains the lat and long of the
-////        // current user's position in real time,
-////        // so we're holding on to it
-////        currentLocation = cLoc;
-////        updatePinOnMap();
-////
-////      });
-//
-//    // set custom marker pins
-//    setSourceAndDestinationIcons();
-//    // set the initial location
-//    //if(num == 23){
-//    setInitialLocation();
-//    //}
-
+//    _getMyOrder = getMyOrder();
 //  }
 
   void createMap(double lat, double lng) {
@@ -298,6 +265,23 @@ class _ProgressPage extends State<ProgressPage> {
       "latitude": DEST_LOCATION.latitude,
       "longitude": DEST_LOCATION.longitude
     });
+  }
+
+  void showToastDelete() {
+    Fluttertoast.showToast(
+        msg: 'Hủy Đơn Hàng Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white);
+    ID = null;
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+      return HomePage(
+        storeID: idStore,
+      );
+    }), ModalRoute.withName('/'));
   }
 
   _displayDialog(BuildContext context) async {
@@ -454,7 +438,9 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -462,7 +448,7 @@ class _ProgressPage extends State<ProgressPage> {
                       ),
                     ),
                     subtitle: Text(
-                      'Jupiter Yamaha - 72C1-79945',
+                      '${myOrder.body.shipper.vin}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 14.0,
@@ -512,7 +498,9 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -570,7 +558,9 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -658,33 +648,48 @@ class _ProgressPage extends State<ProgressPage> {
         });
   }
 
+//  @override
+//  Widget build(BuildContext context) {
+//    // TODO: implement build
+//    return Scaffold(
+//      backgroundColor: Colors.white,
+//      body: FutureBuilder(
+//          future: getMyOrder(),
+//          builder: (BuildContext context, AsyncSnapshot snapshot) {
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(
+//                child: CircularProgressIndicator(),
+//              );
+//            } else {
+//              return SingleChildScrollView(
+//                child: Column(
+//                  children: <Widget>[
+//                    _buildHeader(),
+//                    _buildBody(),
+//                  ],
+//                ),
+//              );
+//            }
+//          }),
+////      floatingActionButton: FloatingActionButton(
+////        child: Icon(Icons.list),
+////        onPressed: switchStepType,
+////      ),
+//    );
+//  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StreamBuilder(
-          stream: getMyOrder().asStream(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    _buildHeader(),
-                    _buildBody(),
-                  ],
-                ),
-              );
-            }
-          }),
-//      floatingActionButton: FloatingActionButton(
-//        child: Icon(Icons.list),
-//        onPressed: switchStepType,
-//      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _buildHeader(),
+            _buildBody(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -716,7 +721,7 @@ class _ProgressPage extends State<ProgressPage> {
                 _controller.complete(controller);
                 // my map has completed being created;
                 // i'm ready to show the pins on the map
-                //showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng));
+                showPinsOnMap(double.parse(trac.lat), double.parse(trac.lng));
               }),
         ),
         MapPinPillComponent(
@@ -955,6 +960,77 @@ class _ProgressPage extends State<ProgressPage> {
                 ],
               ),
             ),
+          if (num == 24)
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đã nhận đơn",
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 3.0,
+                    height: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                    margin: EdgeInsets.only(left: 10.0),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đang mua hàng",
+                          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 3.0,
+                    height: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                    margin: EdgeInsets.only(left: 10.0),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(
+                          Icons.brightness_1,
+                          color: const Color.fromRGBO(0, 175, 82, 1),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Shipper đang giao hàng",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -998,70 +1074,31 @@ class _ProgressPage extends State<ProgressPage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        if (num == 23) _buildMap(),
-        if (num != 23)
-          Container(
-            height: 300.0,
-            alignment: Alignment.center,
-            child: Image.network(
-              img,
-              fit: BoxFit.cover,
-              height: double.infinity,
-              width: double.infinity,
+    if (data == "wait") {
+      getMyOrder();
+      return Column();
+    } else {
+      return Column(
+        children: <Widget>[
+          if (num == 23) _buildMap(),
+          if (num != 23)
+            Container(
+              height: 300.0,
               alignment: Alignment.center,
-            ),
-          ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
-                ),
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-              top: BorderSide(width: 1.0, color: Colors.grey[300]),
-              left: BorderSide(width: 1.0, color: Colors.grey[300]),
-              right: BorderSide(width: 1.0, color: Colors.grey[300]),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(left: 10.0),
-                padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
-                child: Text(
-                  'Thời Gian Dự Kiến Giao',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
+              child: Image.network(
+                img,
+                fit: BoxFit.cover,
+                height: double.infinity,
+                width: double.infinity,
+                alignment: Alignment.center,
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 10.0),
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: Text(
-                  '${utf8.decode(latin1.encode(myOrder.body.timeDelivery), allowMalformed: true)}',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              _buildProgress()
-            ],
-          ),
-        ),
-        if (num != 12)
+            ),
           Container(
-            margin: const EdgeInsets.only(bottom: 5.0),
+            margin: const EdgeInsets.only(bottom: 15.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
                   Radius.circular(10.0) //         <--- border radius here
-                  ),
+              ),
               border: Border(
                 bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
                 top: BorderSide(width: 1.0, color: Colors.grey[300]),
@@ -1073,46 +1110,294 @@ class _ProgressPage extends State<ProgressPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                        "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
-                  ),
-                  title: Text(
-                    '${utf8.decode(latin1.encode(myOrder.body.shipper), allowMalformed: true)}',
+                Container(
+                  margin: const EdgeInsets.only(left: 10.0),
+                  padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+                  child: Text(
+                    'Thời Gian Dự Kiến Giao',
                     style: TextStyle(
-                      fontFamily: 'Montserrat',
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10.0),
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Text(
+                    '${utf8.decode(latin1.encode(myOrder.body.timeDelivery), allowMalformed: true)}',
+                    style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text(
-                    'Jupiter Yamaha - 72C1-79945',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15.0,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.star,
-                    color: Colors.yellowAccent,
-                    size: 40.0,
-                  ),
-                  onTap: () {
-                    //Navigator.pop(context);
-                  },
                 ),
+                _buildProgress()
               ],
             ),
           ),
-        if (num == 21)
+          if (num != 12)
+            Container(
+              margin: const EdgeInsets.only(bottom: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(10.0) //         <--- border radius here
+                ),
+                border: Border(
+                  bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                  top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                  left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                  right: BorderSide(width: 1.0, color: Colors.grey[300]),
+                ),
+              ),
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
+                    ),
+                    title: Text(
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
+                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${myOrder.body.shipper.vin}',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.star,
+                      color: Colors.yellowAccent,
+                      size: 40.0,
+                    ),
+                    onTap: () {
+                      //Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+//          if (num == 21)
+//            Container(
+//              margin: const EdgeInsets.only(bottom: 15.0),
+//              decoration: BoxDecoration(
+//                borderRadius: BorderRadius.all(
+//                    Radius.circular(10.0) //         <--- border radius here
+//                ),
+//                border: Border(
+//                  bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+//                  top: BorderSide(width: 1.0, color: Colors.grey[300]),
+//                  left: BorderSide(width: 1.0, color: Colors.grey[300]),
+//                  right: BorderSide(width: 1.0, color: Colors.grey[300]),
+//                ),
+//              ),
+//              width: MediaQuery.of(context).size.width * 0.9,
+//              child: Column(
+//                children: <Widget>[
+//                  Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                    children: <Widget>[
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+//                        child: Text(
+//                          '10,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      ),
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+//                        child: Text(
+//                          '20,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      ),
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+//                        child: Text(
+//                          '30,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      )
+//                    ],
+//                  ),
+//                  Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                    children: <Widget>[
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(bottom: 10.0),
+//                        child: Text(
+//                          '40,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      ),
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(bottom: 10.0),
+//                        child: Text(
+//                          '50,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      ),
+//                      Container(
+//                        decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(
+//                              10.0) //         <--- border radius here
+//                          ),
+//                          border: Border(
+//                            bottom: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            top: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            left: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                            right: BorderSide(
+//                                width: 1.0, color: Colors.grey[300]),
+//                          ),
+//                        ),
+//                        height: 40.0,
+//                        width: 100.0,
+//                        padding: EdgeInsets.only(top: 5.0),
+//                        margin: EdgeInsets.only(bottom: 10.0),
+//                        child: Text(
+//                          '60,000đ+',
+//                          style: TextStyle(
+//                            fontSize: 20.0,
+//                            color: Colors.grey[800],
+//                          ),
+//                          textAlign: TextAlign.center,
+//                        ),
+//                      )
+//                    ],
+//                  ),
+//                ],
+//              ),
+//            ),
           Container(
             margin: const EdgeInsets.only(bottom: 15.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
                   Radius.circular(10.0) //         <--- border radius here
-                  ),
+              ),
               border: Border(
                 bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
                 top: BorderSide(width: 1.0, color: Colors.grey[300]),
@@ -1122,278 +1407,88 @@ class _ProgressPage extends State<ProgressPage> {
             ),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Text(
-                        '10,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Text(
-                        '20,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Text(
-                        '30,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(
-                        '40,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(
-                        '50,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                10.0) //         <--- border radius here
-                            ),
-                        border: Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                          top: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          left: BorderSide(width: 1.0, color: Colors.grey[300]),
-                          right:
-                              BorderSide(width: 1.0, color: Colors.grey[300]),
-                        ),
-                      ),
-                      height: 40.0,
-                      width: 100.0,
-                      padding: EdgeInsets.only(top: 5.0),
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(
-                        '60,000đ+',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey[800],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
-                ),
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-              top: BorderSide(width: 1.0, color: Colors.grey[300]),
-              left: BorderSide(width: 1.0, color: Colors.grey[300]),
-              right: BorderSide(width: 1.0, color: Colors.grey[300]),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
-                child: Text(
-                  "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" +
-                      " " +
-                      "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" +
-                      " " +
-                      "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" +
-                      " " +
-                      "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(left: 10.0),
-                    width: MediaQuery.of(context).size.width * 0.55,
-                    padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
-                    child: Text(
-                      'Tổng Tiền',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+                  child: Text(
+                    "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" +
+                        " " +
+                        "${utf8.decode(latin1.encode(market.addr2), allowMalformed: true)}" +
+                        " " +
+                        "${utf8.decode(latin1.encode(market.addr3), allowMalformed: true)}" +
+                        " " +
+                        "${utf8.decode(latin1.encode(market.addr4), allowMalformed: true)}",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(
-                          Icons.credit_card,
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                      child: Text(
+                        'Tổng Tiền',
+                        style: TextStyle(
+                          fontSize: 16.0,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text(
-                          '${oCcy.format(myOrder.body.totalCost)}đ',
-                          style: TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          child: Icon(
+                            Icons.credit_card,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(width: 1.0, color: Colors.grey[400]),
-                  ),
-                ),
-                //height: MediaQuery.of(context).size.width ,
-                child: Column(
-                  children: <Widget>[
-                    for (var list in order)
-                      Container(
-                        child: ListTile(
-                          leading: Text(
-                            '1x',
+                        Container(
+                          padding:
+                          const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          child: Text(
+                            '${oCcy.format(myOrder.body.totalCost)}đ',
                             style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 17.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          title: Text(
-                            '${utf8.decode(latin1.encode(list.foodId), allowMalformed: true)}',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 17.0,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(width: 1.0, color: Colors.grey[400]),
+                    ),
+                  ),
+                  //height: MediaQuery.of(context).size.width ,
+                  child: Column(
+                    children: <Widget>[
+                      for (var list in order)
+                        Container(
+                          child: ListTile(
+                            leading: Text(
+                              '1x',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                            title: Text(
+                              '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 17.0,
+                              ),
+                            ),
 //                          subtitle: Text(
 //                            '${listFood.price}',
 //                            style: TextStyle(
@@ -1401,17 +1496,17 @@ class _ProgressPage extends State<ProgressPage> {
 //                              fontSize: 13.0,
 //                            ),
 //                          ),
-                          trailing: Text(
-                            '${oCcy.format(list.priceOriginal)}đ',
-                            style: TextStyle(
-                              fontSize: 17.0,
+                            trailing: Text(
+                              '${oCcy.format(list.priceOriginal)}đ',
+                              style: TextStyle(
+                                fontSize: 17.0,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 //              Container(
 //                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
 //                decoration: BoxDecoration(
@@ -1451,114 +1546,118 @@ class _ProgressPage extends State<ProgressPage> {
 //                  ),
 //                ),
 //              ),
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
-                ),
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
-              top: BorderSide(width: 1.0, color: Colors.grey[300]),
-              left: BorderSide(width: 1.0, color: Colors.grey[300]),
-              right: BorderSide(width: 1.0, color: Colors.grey[300]),
+              ],
             ),
           ),
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    margin: const EdgeInsets.only(left: 10.0),
-                    child: Icon(
-                      Icons.local_convenience_store,
-                      color: const Color.fromRGBO(0, 175, 82, 1),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    margin: const EdgeInsets.only(left: 10.0),
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ],
+          Container(
+            margin: const EdgeInsets.only(bottom: 15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(10.0) //         <--- border radius here
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 10.0),
-                child: Icon(
-                  Icons.more_vert,
-                  color: Colors.grey[400],
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(left: 10.0),
-                    child: Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    margin: const EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        if(num == 12)
-        Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          padding: EdgeInsets.only(bottom: 10.0),
-          height: 50.0,
-          child: RaisedButton(
-            onPressed: () {
-              print("Hủy đơn hàng");
-            },
-            textColor: Colors.white,
-            color: Colors.red,
-            child: Text(
-              'Hủy Đơn',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 18.0,
-                letterSpacing: 2.0,
-                fontFamily: 'Montserrat',
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.grey[300]),
+                top: BorderSide(width: 1.0, color: Colors.grey[300]),
+                left: BorderSide(width: 1.0, color: Colors.grey[300]),
+                right: BorderSide(width: 1.0, color: Colors.grey[300]),
               ),
             ),
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      margin: const EdgeInsets.only(left: 10.0),
+                      child: Icon(
+                        Icons.local_convenience_store,
+                        color: const Color.fromRGBO(0, 175, 82, 1),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      margin: const EdgeInsets.only(left: 10.0),
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10.0),
+                  child: Icon(
+                    Icons.more_vert,
+                    color: Colors.grey[400],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      margin: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        '${utf8.decode(latin1.encode(myOrder.body.addressDelivery), allowMalformed: true)}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+          if (num == 12)
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: EdgeInsets.only(bottom: 10.0),
+              height: 50.0,
+              child: RaisedButton(
+                onPressed: () async {
+                  final myService1 = OrderApiService.create();
+                  await myService1.deleteOrder(ID, account.username).then(
+                        (value) => showToastDelete(),
+                  );
+                },
+                textColor: Colors.white,
+                color: Colors.red,
+                child: Text(
+                  'Hủy Đơn',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    letterSpacing: 2.0,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    }
+
   }
 
-  void showPinsOnMap(double lat, double lng) {
+  Future<String> showPinsOnMap(double lat, double lng) async {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition = LatLng(lat, lng);
     // get a LatLng out of the LocationData object
-    var destPosition =
-        LatLng(destinationLocation.latitude, destinationLocation.longitude);
+    var destPosition = LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
 
     sourcePinInfo = PinInformation(
         locationName: "Start Location",
@@ -1595,20 +1694,21 @@ class _ProgressPage extends State<ProgressPage> {
           pinPillPosition = 0;
           //});
         },
-        icon: destinationIcon));
+        icon: BitmapDescriptor.defaultMarker));
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
-    setPolylines(lat, lng);
-    updatePinOnMap(lat, lng);
+    return "Sucess";
+//    setPolylines(lat, lng);
+//    updatePinOnMap(lat, lng);
   }
 
-  void setPolylines(double lat, double lng) async {
+  Future<String> setPolylines(double lat, double lng) async {
     List<PointLatLng> result = await polylinePoints.getRouteBetweenCoordinates(
         googleAPIKey,
         lat,
         lng,
-        destinationLocation.latitude,
-        destinationLocation.longitude);
+        DEST_LOCATION.latitude,
+        DEST_LOCATION.longitude);
     polylineCoordinates.clear();
 
     if (result.isNotEmpty) {
@@ -1624,9 +1724,10 @@ class _ProgressPage extends State<ProgressPage> {
           points: polylineCoordinates));
       //});
     }
+    return "Sucess";
   }
 
-  void updatePinOnMap(double lat, double lng) async {
+  Future<String> updatePinOnMap(double lat, double lng) async {
     // create a new CameraPosition instance
     // every time the location changes, so the camera
     // follows the pin as it moves with an animation
@@ -1638,6 +1739,7 @@ class _ProgressPage extends State<ProgressPage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     // do this inside the setState() so Flutter gets notified
     // that a widget update is due
+
 
     setState(() {
       // updated position
@@ -1659,5 +1761,7 @@ class _ProgressPage extends State<ProgressPage> {
           position: pinPosition, // updated position
           icon: sourceIcon));
     });
+    setPolylines(lat, lng);
+    return "Success";
   }
 }

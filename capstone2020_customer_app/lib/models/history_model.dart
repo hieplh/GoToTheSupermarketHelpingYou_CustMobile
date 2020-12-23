@@ -1,4 +1,6 @@
 
+import 'package:capstone2020customerapp/models/shipper_model.dart';
+import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'history_model.g.dart';
 
@@ -6,9 +8,9 @@ part 'history_model.g.dart';
 class History{
   String id;
   String addressDelivery;
-  String marketName;
+  StoreModel market;
   String note;
-  String shipper;
+  Shipper shipper;
   int status;
   String createDate;
   String createTime;
@@ -23,7 +25,7 @@ class History{
   History(
       this.id,
       this.addressDelivery,
-      this.marketName,
+      this.market,
       this.note,
       this.shipper,
       this.status,

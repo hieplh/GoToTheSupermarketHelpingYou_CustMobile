@@ -23,9 +23,9 @@ class _HistoryPage extends State<HistoryPage> {
   History historyDetail;
 
   Future<void> getAllFood() async {
-
     final myService1 = HistoryApiService.create();
     final response1 = await myService1.getAllHistory("${account.username}");
+    print(response1.statusCode);
     listHistory = response1.body;
 
 //    for(var list in listHistory){
@@ -98,9 +98,9 @@ class _HistoryPage extends State<HistoryPage> {
     return Column(
       children: <Widget>[
         for(var listHistory in listHistory)
-        Container(
+          Container(
           margin: EdgeInsets.only(top: 10.0),
-          height: 150.0,
+          height: 170.0,
           color: Colors.grey[200],
           //width: MediaQuery.of(context).size.width * 0.9,
           child: Column(
@@ -112,7 +112,7 @@ class _HistoryPage extends State<HistoryPage> {
                       context, MaterialPageRoute(builder: (context) => HistoryDetailPage(historyDetail: historyDetail,)));
                 },
                 child: Container(
-                  
+
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -140,7 +140,7 @@ class _HistoryPage extends State<HistoryPage> {
                                       padding: EdgeInsets.only(top: 15.0),
                                       width: MediaQuery.of(context).size.width * 0.4,
                                       child: Text(
-                                        '${utf8.decode(latin1.encode(listHistory.marketName), allowMalformed: true)}',
+                                        '${utf8.decode(latin1.encode(listHistory.market.name), allowMalformed: true)}',
                                         style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.bold,
@@ -205,11 +205,10 @@ class _HistoryPage extends State<HistoryPage> {
             ],
           ),
         ),
+
       ],
 
     );
   }
-
-
 
 }

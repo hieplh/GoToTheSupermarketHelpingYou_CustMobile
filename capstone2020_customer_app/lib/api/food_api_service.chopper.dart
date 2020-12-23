@@ -24,8 +24,8 @@ class _$FoodApiService extends FoodApiService {
   }
 
   @override
-  Future<Response<FoodModel>> getFoodDetail(String food_id) {
-    final $url = '/food/$food_id';
+  Future<Response<FoodModel>> getFoodDetail(String store_id, String food_id) {
+    final $url = '/food/$store_id/$food_id';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<FoodModel, FoodModel>($request);
   }

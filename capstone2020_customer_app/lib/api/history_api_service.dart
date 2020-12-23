@@ -24,7 +24,7 @@ abstract class HistoryApiService extends ChopperService{
     );
     return _$HistoryApiService(client);
   }
-  @Get(path: "/histories/customer/{cust_id}/page/1")
+  @Get(path: "/histories/customer/{cust_id}/page/0")
   Future<Response<List<History>>> getAllHistory(@Path() String cust_id);
   @Get(path: "/history/{order_id}")
   Future<Response<List<OrderDetail>>> getHistoryDetail(@Path() String order_id);

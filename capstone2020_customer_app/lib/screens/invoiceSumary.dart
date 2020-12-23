@@ -69,14 +69,30 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
           "details": [
             for(var list in data)
             {
-              "foodId": "${list.id}",
-              "foodName": "${utf8.decode(latin1.encode(list.name), allowMalformed: true)}",
-              "id": "${list.id}",
-              "image": "${list.image}",
+              "food": {
+                "id": "${list.id}",
+                "price": '${list.price}',
+                "saleOff": {
+                  "endDate": list.foods.saleOff.endDate,
+                  "endTime": list.foods.saleOff.endTime,
+                  "saleOff": list.foods.saleOff.saleOff,
+                  "startDate": list.foods.saleOff.startDate,
+                  "startTime": list.foods.saleOff.startTime
+                }
+              },
               "priceOriginal": '${list.price}',
-              "pricePaid": '0',
-              "saleOff": '0',
-              "weight": '1'
+              "pricePaid": (double.parse(list.price) - (double.parse(list.price)*list.foods.saleOff.saleOff)/100),
+              "saleOff": '${list.foods.saleOff.saleOff}',
+              "weight": 1
+//              "foodId": "${list.id}",
+//              "foodName": "${utf8.decode(latin1.encode(list.name), allowMalformed: true)}",
+//              "id": "${list.id}",
+//              "image": "${list.image}",
+//              "priceOriginal": '${list.price}',
+//              "pricePaid": '0',
+//              "saleOff": '0',
+//              "weight": '1'
+
             }
           ],
           "market": storeID,
@@ -94,7 +110,9 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
       Map<String, dynamic> responseJson = json.decode(response.body);
       ID = responseJson["msg"];
       print(response.statusCode);
-
+      listCart = new List();
+      badgeData = 0;
+      total = 0;
 //      var url = API_URL_STARTPOINT + '/account/';
 //      var response1 = await http.put(Uri.parse(url),
 //          headers: {

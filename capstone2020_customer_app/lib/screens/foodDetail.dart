@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:capstone2020customerapp/api/food_api_service.dart';
+import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/category_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
+import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../api_url_constain.dart';
 
@@ -21,6 +24,18 @@ class _FoodDetailPage extends State<FoodDetailPage> {
   String foodID;
   _FoodDetailPage(this.foodID);
 
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'Thêm Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+
+  }
+
   FoodModel food;
   List<CategoryModel> category;
   List<FoodModel> foodList = new List();
@@ -28,7 +43,7 @@ class _FoodDetailPage extends State<FoodDetailPage> {
     print('foodID: ' + foodID);
     if(foodID.contains(" ") == false){
       final myService = FoodApiService.create();
-      final response = await myService.getFoodDetail(foodID);
+      final response = await myService.getFoodDetail(idStore, foodID);
 
       food = response.body;
     }else{
@@ -94,25 +109,37 @@ class _FoodDetailPage extends State<FoodDetailPage> {
       children: <Widget>[
         Container(
           height: 75.0,
+          width: MediaQuery.of(context).size.width,
           color: Colors.grey[200],
           child: Column(
             children: <Widget>[
-              Container(
+              if(food.saleOff.saleOff == 0)
+                Container(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Text(
                   '${utf8.decode(latin1.encode(food.name), allowMalformed: true)} - ${oCcy.format(food.price)}đ',
                   style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                 ),
               ),
-              Container(
+              if(food.saleOff.saleOff != 0)
+                Container(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    '${utf8.decode(latin1.encode(food.name), allowMalformed: true)} - ${oCcy.format(food.price - (food.price*food.saleOff.saleOff/100))}đ',
+                    style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              if(food.saleOff.saleOff != 0)
+                Container(
                 padding: const EdgeInsets.only(top: 5.0),
                 alignment: Alignment.center,
                 child: Text(
-                  'Số Lượng: 23',
+                  'Giá gốc: ${oCcy.format(food.price)}',
                   style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 16.0,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.lineThrough
                   ),
                 ),
               ),
@@ -158,10 +185,8 @@ class _FoodDetailPage extends State<FoodDetailPage> {
         ),
         Container(
           width: MediaQuery.of(context).size.width * 0.9,
-          padding: EdgeInsets.only(bottom: 20.0),
-          child: StreamBuilder<String>(
-            //stream: bloc.email,
-            builder: (context, snapshot) => TextFormField(
+          padding: EdgeInsets.only(bottom: 20.0, top: 10.0),
+          child: TextFormField(
               //onChanged: bloc.emailChanged,
               style: TextStyle(
                 color: Colors.black,
@@ -170,13 +195,12 @@ class _FoodDetailPage extends State<FoodDetailPage> {
               //onSaved: (input) => search = input,
               decoration: InputDecoration(
                 labelText: 'E.g. Tôi không cần túi nhựa',
-                labelStyle: TextStyle(
-                    color: myFocusNode.hasFocus
-                        ? const Color.fromRGBO(0, 255, 0, 1)
-                        : Colors.grey),
+//                labelStyle: TextStyle(
+//                    color: myFocusNode.hasFocus
+//                        ? const Color.fromRGBO(0, 255, 0, 1)
+//                        : Colors.grey),
               ),
             ),
-          ),
         ),
       ],
     );
@@ -215,7 +239,15 @@ class _FoodDetailPage extends State<FoodDetailPage> {
       height: 60.0,
       child: RaisedButton(
         onPressed: () {
-          print(foodID);
+          Data data = new Data('${food.id}','${food.image}', '${food.name}', '${food.price}', 1, food);
+          total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
+          listCart.add(data);
+          badgeData++;
+          quantity.putIfAbsent(data.id, () => data.quantity);
+          showToast();
+          Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
+            return HomePage(storeID: idStore,);
+          }));
         },
         textColor: Colors.white,
         color: const Color.fromRGBO(0, 175, 82, 1),

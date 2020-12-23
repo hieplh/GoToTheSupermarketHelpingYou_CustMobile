@@ -9,8 +9,9 @@ part of 'order_detail_model.dart';
 OrderDetail _$OrderDetailFromJson(Map<String, dynamic> json) {
   return OrderDetail(
     json['id'] as String,
-    json['foodId'] as String,
-    json['image'] as String,
+    json['food'] == null
+        ? null
+        : FoodModel.fromJson(json['food'] as Map<String, dynamic>),
     (json['priceOriginal'] as num)?.toDouble(),
     (json['pricePaid'] as num)?.toDouble(),
     (json['weight'] as num)?.toDouble(),
@@ -21,8 +22,7 @@ OrderDetail _$OrderDetailFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$OrderDetailToJson(OrderDetail instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'foodId': instance.foodId,
-      'image': instance.image,
+      'food': instance.food,
       'priceOriginal': instance.priceOriginal,
       'pricePaid': instance.pricePaid,
       'weight': instance.weight,

@@ -1,28 +1,41 @@
 import 'dart:convert';
 
 import 'package:capstone2020customerapp/api_url_constain.dart';
+import 'package:capstone2020customerapp/models/addToCart.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/screens/foodDetail.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class FoodTypePage extends StatefulWidget {
   final String image;
   final String type;
   final List<FoodModel> foods;
-  final int quantity;
+  final int quantityy;
 
-  FoodTypePage({Key key, @required this.image, @required this.type, @required this.foods, @required this.quantity}) : super(key: key);
+  FoodTypePage({Key key, @required this.image, @required this.type, @required this.foods, @required this.quantityy}) : super(key: key);
   @override
-  _FoodTypePage createState() => _FoodTypePage(image, type, foods, quantity);
+  _FoodTypePage createState() => _FoodTypePage(image, type, foods, quantityy);
 }
 
 class _FoodTypePage extends State<FoodTypePage> {
   String image;
   String type;
   List<FoodModel> foods;
-  int quantity;
-  _FoodTypePage(this.image, this.type, this.foods, this.quantity);
+  int quantityy;
+  _FoodTypePage(this.image, this.type, this.foods, this.quantityy);
 
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'Thêm Thành Công',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -116,7 +129,7 @@ class _FoodTypePage extends State<FoodTypePage> {
                 padding: const EdgeInsets.only(top: 5.0),
                 alignment: Alignment.center,
                 child: Text(
-                  '${quantity} loại',
+                  '${quantityy} loại',
                   style: TextStyle(
                     fontSize: 13.0,
                     color: Colors.grey,
@@ -164,18 +177,61 @@ class _FoodTypePage extends State<FoodTypePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: Text(
-                'Số Lượng: 23\n\n'
-                    '${oCcy.format(listFood.price)}đ',
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 13.0,
-                ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if(listFood.saleOff.saleOff != 0)
+                    Container(
+                    child: Text(
+                      'Giá gốc: ${oCcy.format(listFood.price)}đ',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 13.0,
+                          decoration: TextDecoration.lineThrough
+                      ),
+                    ),
+                  ),
+                  if(listFood.saleOff.saleOff != 0)
+                    Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      '${oCcy.format(listFood.price - (listFood.price*listFood.saleOff.saleOff/100))}đ',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 16.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  if(listFood.saleOff.saleOff == 0)
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        '${oCcy.format(listFood.price)}đ',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 13.0,
+                        ),
+                      ),
+                    ),
+                ],
+
               ),
-              trailing: Icon(
-                Icons.add_circle_outline,
-                color: const Color.fromRGBO(0, 175, 82, 1),
-                size: 30.0,
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: const Color.fromRGBO(0, 175, 82, 1),
+                  size: 30.0,
+                ),
+                onPressed: (){
+                  Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1, listFood);
+                  total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
+                  listCart.add(data);
+                  badgeData++;
+                  quantity.putIfAbsent(data.id, () => data.quantity);
+                  showToast();
+                },
               ),
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {

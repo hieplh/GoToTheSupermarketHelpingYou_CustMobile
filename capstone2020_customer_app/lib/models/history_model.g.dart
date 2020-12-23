@@ -10,9 +10,13 @@ History _$HistoryFromJson(Map<String, dynamic> json) {
   return History(
     json['id'] as String,
     json['addressDelivery'] as String,
-    json['marketName'] as String,
+    json['market'] == null
+        ? null
+        : StoreModel.fromJson(json['market'] as Map<String, dynamic>),
     json['note'] as String,
-    json['shipper'] as String,
+    json['shipper'] == null
+        ? null
+        : Shipper.fromJson(json['shipper'] as Map<String, dynamic>),
     json['status'] as int,
     json['createDate'] as String,
     json['createTime'] as String,
@@ -27,7 +31,7 @@ History _$HistoryFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$HistoryToJson(History instance) => <String, dynamic>{
       'id': instance.id,
       'addressDelivery': instance.addressDelivery,
-      'marketName': instance.marketName,
+      'market': instance.market,
       'note': instance.note,
       'shipper': instance.shipper,
       'status': instance.status,

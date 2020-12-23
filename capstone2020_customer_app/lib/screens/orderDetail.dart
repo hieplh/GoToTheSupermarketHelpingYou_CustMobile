@@ -158,7 +158,7 @@ class _OrderDetailPage extends State<OrderDetailPage> {
                         padding: EdgeInsets.only(top: 5.0),
                         width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
-                          '${utf8.decode(latin1.encode(historyDetail.marketName), allowMalformed: true)}',
+                          '${utf8.decode(latin1.encode(historyDetail.market.name), allowMalformed: true)}',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
@@ -204,7 +204,7 @@ class _OrderDetailPage extends State<OrderDetailPage> {
                       margin: const EdgeInsets.only(left: 10.0),
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        '${utf8.decode(latin1.encode(historyDetail.marketName), allowMalformed: true)}',
+                        '${utf8.decode(latin1.encode(historyDetail.market.name), allowMalformed: true)}',
                         style: TextStyle(
                           fontSize: 16.0,
                         ),
@@ -282,7 +282,7 @@ class _OrderDetailPage extends State<OrderDetailPage> {
                               ),
                             ),
                             title: Text(
-                              '${utf8.decode(latin1.encode(list.foodId), allowMalformed: true)}',
+                              '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 15.0,

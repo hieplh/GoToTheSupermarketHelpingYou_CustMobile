@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+
+import 'food_model.dart';
 part 'order_detail_model.g.dart';
 
 @JsonSerializable()
 class OrderDetail{
   String id;
-  String foodId;
-  String image;
+  FoodModel food;
   double priceOriginal;
   double pricePaid;
   double weight;
@@ -14,8 +15,7 @@ class OrderDetail{
 
   OrderDetail(
       this.id,
-      this.foodId,
-      this.image,
+      this.food,
       this.priceOriginal,
       this.pricePaid,
       this.weight,

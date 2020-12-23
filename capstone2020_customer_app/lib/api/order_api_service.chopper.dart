@@ -22,4 +22,11 @@ class _$OrderApiService extends OrderApiService {
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Order, Order>($request);
   }
+
+  @override
+  Future<Response<Order>> deleteOrder(String order_id, String id) {
+    final $url = '/delete/$order_id/customer/$id';
+    final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<Order, Order>($request);
+  }
 }

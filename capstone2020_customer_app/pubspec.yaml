@@ -40,6 +40,7 @@ dependencies:
   flutter_polyline_points: ^0.1.0
   geocoder: ^0.2.1
   flutter_rating_bar: ^3.0.0
+  shared_preferences: ^0.4.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -71,8 +72,6 @@ flutter:
    - assets/
    - assets/destination_map_marker.png
    - assets/driving_pin.png
-   - assets/friend1.jpg
-   - assets/friend2.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

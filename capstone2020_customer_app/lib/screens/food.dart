@@ -26,7 +26,7 @@ class _FoodPage extends State<FoodPage> {
   CartItemsBloc cart = new CartItemsBloc();
   List<CategoryModel> category;
   List<FoodModel> list = new List();
-  List<Data> listCart = new List();
+  List<FoodModel> listNotSaleOff = new List();
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Thêm Thành Công',
@@ -48,6 +48,15 @@ class _FoodPage extends State<FoodPage> {
     for(var cate in category){
       list += cate.foods;
     }
+
+    if(listNotSaleOff.length == 0){
+      for(var listSale in list){
+        if(listSale.saleOff.saleOff == 0){
+          listNotSaleOff.add(listSale);
+        }
+      }
+    }
+
 //    for (var listItem in list) {
 //      print(listItem.name);
 //    }
@@ -124,7 +133,7 @@ class _FoodPage extends State<FoodPage> {
             ],
           ),
         ),
-        for (var listFood in list)
+        for (var listFood in listNotSaleOff)
           Container(
             padding: EdgeInsets.only(bottom: 10.0),
             decoration: BoxDecoration(
@@ -163,8 +172,11 @@ class _FoodPage extends State<FoodPage> {
                   size: 30.0,
                 ),
                 onPressed: (){
-                  cart.addToCart("${listFood.id}");
-                  print(cart.addItems);
+                  Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1, listFood);
+                  total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
+                  listCart.add(data);
+                  badgeData++;
+                  quantity.putIfAbsent(data.id, () => data.quantity);
                   showToast();
                 },
               ),

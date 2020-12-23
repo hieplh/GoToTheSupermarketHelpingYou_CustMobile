@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:capstone2020customerapp/api/account_api_service.dart';
 import 'package:capstone2020customerapp/models/customer_model.dart';
+import 'package:capstone2020customerapp/screens/updateDeliveryAddress.dart';
+import 'package:capstone2020customerapp/screens/updateInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../api_url_constain.dart';
 import 'login.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -26,7 +29,7 @@ class _ProfilePage extends State<ProfilePage>
   Customer cus;
   Future<void> getProfile() async {
       final myService = AccountApiService.create();
-      final response = await myService.getCustomerByID("cust123");
+      final response = await myService.getCustomerByID(customer);
       cus = response.body;
 
   }
@@ -190,7 +193,7 @@ class _ProfilePage extends State<ProfilePage>
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             new Text(
-                                              'Email',
+                                              'Date of Birth',
                                               style: TextStyle(
                                                   fontSize: 16.0,
                                                   fontWeight: FontWeight.bold),
@@ -207,7 +210,7 @@ class _ProfilePage extends State<ProfilePage>
                                       children: <Widget>[
                                         new Flexible(
                                             child: Text(
-                                              '${cus.email}',
+                                              '${cus.dob}',
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 20.0,
@@ -254,6 +257,100 @@ class _ProfilePage extends State<ProfilePage>
                                         ),
                                       ],
                                     )),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 25.0),
+                                    child: new Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        new Column(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            new Text(
+                                              'Delivery Address',
+                                              style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        new Column(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .end,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            _status
+                                                ? _getEditDeliveryIcon()
+                                                : new Container(),
+                                          ],
+                                        )
+                                      ],
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 25.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        new Column(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            new Text(
+                                              'Address',
+                                              style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                                if(cus.addresses == null)
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 2.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        new Flexible(
+                                            child: Text(
+                                              'Chưa có địa chỉ',
+                                              style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontSize: 20.0,
+                                              ),
+                                            )
+                                        ),
+                                      ],
+                                    )),
+                                if(cus.addresses != null)
+                                  for(var add in cus.addresses)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: new Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          new Flexible(
+                                              child: Text(
+                                                '${utf8.decode(latin1.encode(add.addr1 + " "
+                                                    +  add.addr2 + " "
+                                                    + add.addr3 + " "
+                                                    + add.addr4), allowMalformed: true)}',
+                                                style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 20.0,
+                                                ),
+                                              )
+                                          ),
+                                        ],
+                                      )),
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
@@ -382,9 +479,26 @@ class _ProfilePage extends State<ProfilePage>
         ),
       ),
       onTap: () {
-        setState(() {
-          _status = false;
-        });
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => UpdateInfoPage()));
+      },
+    );
+  }
+
+  Widget _getEditDeliveryIcon() {
+    return new GestureDetector(
+      child: new CircleAvatar(
+        backgroundColor: Colors.red,
+        radius: 14.0,
+        child: new Icon(
+          Icons.edit,
+          color: Colors.white,
+          size: 16.0,
+        ),
+      ),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => UpdateAddressPage()));
       },
     );
   }

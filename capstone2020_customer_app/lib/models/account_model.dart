@@ -7,7 +7,6 @@ part 'account_model.g.dart';
 
 @JsonSerializable()
 class Account{
-  String id;
   String username;
   String firstName;
   String middleName;
@@ -22,7 +21,6 @@ class Account{
   List<AddressModel> addresses;
 
   Account(
-      this.id,
       this.username,
       this.firstName,
       this.middleName,

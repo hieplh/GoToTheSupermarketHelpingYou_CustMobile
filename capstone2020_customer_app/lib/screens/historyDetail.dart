@@ -158,22 +158,33 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                         padding: EdgeInsets.only(top: 5.0),
                         width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
-                          '${utf8.decode(latin1.encode(historyDetail.marketName), allowMalformed: true)}',
+                          '${utf8.decode(latin1.encode(historyDetail.market.name), allowMalformed: true)}',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      Container(
+                      if(historyDetail.shipper != null)
+                        Container(
                         child: Text(
-                          'Delivered - Jupiter Yamaha - 72C1-79945',
+                          'Delivered\n${historyDetail.shipper.vin}',
                           style: TextStyle(
                             fontSize: 16.0,
                             color: Colors.grey[700],
                           ),
                         ),
                       ),
+                      if(historyDetail.shipper == null)
+                        Container(
+                          child: Text(
+                            'Hủy đơn hàng',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -204,7 +215,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                       margin: const EdgeInsets.only(left: 10.0),
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        '${utf8.decode(latin1.encode(historyDetail.marketName), allowMalformed: true)}',
+                        '${utf8.decode(latin1.encode(historyDetail.market.name), allowMalformed: true)}',
                         style: TextStyle(
                           fontSize: 16.0,
                         ),
@@ -282,7 +293,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                               ),
                             ),
                             title: Text(
-                              '${utf8.decode(latin1.encode(list.foodId), allowMalformed: true)}',
+                              '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 15.0,
@@ -357,7 +368,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
             color: Colors.grey[200],
             height: 10.0,
           ),
-          if(historyDetail.note == null)
+          if(historyDetail.note == "")
             Container(
               width: MediaQuery.of(context).size.width ,
               padding: const EdgeInsets.only(left: 10.0),
@@ -386,7 +397,7 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                 ],
               ),
             ),
-          if(historyDetail.note != null)
+          if(historyDetail.note != "")
             Container(
               width: MediaQuery.of(context).size.width ,
               padding: const EdgeInsets.only(left: 10.0),

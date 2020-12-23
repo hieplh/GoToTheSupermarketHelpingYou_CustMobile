@@ -12,8 +12,12 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
     json['cust'] as String,
     json['addressDelivery'] as String,
     json['note'] as String,
-    json['market'] as String,
-    json['shipper'] as String,
+    json['market'] == null
+        ? null
+        : StoreModel.fromJson(json['market'] as Map<String, dynamic>),
+    json['shipper'] == null
+        ? null
+        : Shipper.fromJson(json['shipper'] as Map<String, dynamic>),
     json['createDate'] as String,
     json['createTime'] as String,
     json['status'] as int,

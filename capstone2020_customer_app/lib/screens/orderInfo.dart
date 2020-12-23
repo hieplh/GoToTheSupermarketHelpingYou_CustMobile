@@ -42,14 +42,12 @@ class _OrderInfoPage extends State<OrderInfoPage> {
 
     setState(() {
       time = picked;
-      double _doubleYourTime = time.hour.toDouble() +
-          (time.minute.toDouble() / 60);
-      double _doubleNowTime = timeNow.hour.toDouble() +
-          (timeNow.minute.toDouble() / 60);
+      int _doubleYourTime = time.hour.toInt()*60 + time.minute.toInt();
+      int _doubleNowTime = timeNow.hour.toInt()*60 + timeNow.minute.toInt();
 
-      double _timeDiff = _doubleYourTime - _doubleNowTime;
+      int _timeDiff = _doubleYourTime - _doubleNowTime;
       print(_timeDiff);
-      if(_timeDiff >= 3){
+      if(_timeDiff >= 180){
         timePicked = time.hour.toString() + ":" + time.minute.toString() + ":00";
         if(17 <= int.parse(time.hour.toString()) && int.parse(time.hour.toString()) <= 20){
           deliveryFee = 50000;
@@ -574,7 +572,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                       padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
                       margin: const EdgeInsets.only(right: 20.0),
                       child: Text(
-                        '50,000đ',
+                        '${oCcy.format(shoppingFee)}đ',
                         style: TextStyle(
                           fontSize: 18.0,
                           color: const Color.fromRGBO(0, 175, 82, 1),

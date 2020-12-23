@@ -5,33 +5,31 @@ part 'shipper_model.g.dart';
 
 @JsonSerializable()
 class Shipper{
-  String id;
   String username;
   String firstName;
   String middleName;
   String lastName;
-  String email;
   String phone;
   String dob;
   String role;
   int numDelivery;
   int numCancel;
   double wallet;
+  String vin;
 
 
   Shipper(
-      this.id,
       this.username,
       this.firstName,
       this.middleName,
       this.lastName,
-      this.email,
       this.phone,
       this.dob,
       this.role,
       this.numDelivery,
       this.numCancel,
-      this.wallet
+      this.wallet,
+      this.vin
       );
 
   factory Shipper.fromJson(Map<String, dynamic> json) =>

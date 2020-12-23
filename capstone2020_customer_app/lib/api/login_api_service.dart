@@ -27,8 +27,14 @@ abstract class LoginApiService extends ChopperService{
   @Post(path: "username")
   Future<Response<Account>> postAccount(@Body() Map<String, dynamic> body);
 
-  @Put()
+  @Put(path: "wallet")
   Future<Response> updateWallet(@Body() Map<String, dynamic> body);
+
+  @Post(path: "register")
+  Future<Response<Account>> postRegister(@Body() Map<String, dynamic> body);
+
+  @Put(path: "info")
+  Future<Response> updateInfor(@Body() Map<String, dynamic> body);
 }
 
 class JsonToTypeConverter extends JsonConverter {

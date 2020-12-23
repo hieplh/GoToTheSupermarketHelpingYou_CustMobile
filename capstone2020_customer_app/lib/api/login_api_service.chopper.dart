@@ -26,7 +26,23 @@ class _$LoginApiService extends LoginApiService {
 
   @override
   Future<Response<dynamic>> updateWallet(Map<String, dynamic> body) {
-    final $url = '/account/';
+    final $url = '/account/wallet';
+    final $body = body;
+    final $request = Request('PUT', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<Account>> postRegister(Map<String, dynamic> body) {
+    final $url = '/account/register';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<Account, Account>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updateInfor(Map<String, dynamic> body) {
+    final $url = '/account/info';
     final $body = body;
     final $request = Request('PUT', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);

@@ -13,7 +13,10 @@ import 'package:capstone2020customerapp/models/category_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/models/store_model.dart';
 import 'package:capstone2020customerapp/models/tracking_model.dart';
+import 'package:capstone2020customerapp/screens/aboutUs.dart';
+import 'package:capstone2020customerapp/screens/policy.dart';
 import 'package:capstone2020customerapp/screens/profile.dart';
+import 'package:capstone2020customerapp/screens/support.dart';
 import 'package:capstone2020customerapp/screens/wallet.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:capstone2020customerapp/screens/food.dart';
@@ -46,19 +49,18 @@ FocusNode myFocusNode = new FocusNode();
 class _HomePage extends State<HomePage> {
 
   String storeID;
-  double total = 0;
+
   _HomePage(this.storeID);
   int _selectedIndex = 0;
   String search;
   TextEditingController searchController = new TextEditingController();
   List<CategoryModel> category;
   List<FoodModel> list = new List();
-  List<Data> listCart = new List();
+  List<FoodModel> listNotSaleOff = new List();
+  List<FoodModel> listSaleOff = new List();
   List<String> foodName = [];
-  Map<String, int> quantity = new Map();
   int _defaultValue = 1;
   var showBadge = true;
-  int badgeData = 0;
   int cont = 0;
   StoreModel market;
 
@@ -102,6 +104,17 @@ class _HomePage extends State<HomePage> {
       }
     }
 
+    if(listSaleOff.length == 0){
+      if(listNotSaleOff.length == 0){
+        for(var listSale in list){
+          if(listSale.saleOff.saleOff != 0){
+            listSaleOff.add(listSale);
+          }else{
+            listNotSaleOff.add(listSale);
+          }
+        }
+      }
+    }
 
 
     if(listExample.length == 0){
@@ -141,9 +154,14 @@ class _HomePage extends State<HomePage> {
     final response2 = await myService2.postAccount({"password" : pass, "role" : "customer", "username" : customer},);
     account = response2.body;
 
-    for(var addr in account.addresses){
-      deliveryAddr = utf8.decode(latin1.encode(addr.addr1 + " " +  addr.addr2 + " " + addr.addr3 + " " + addr.addr4), allowMalformed: true);
+    if(account.addresses == null){
+      deliveryAddr = "";
+    }else{
+      for(var addr in account.addresses){
+        deliveryAddr = utf8.decode(latin1.encode(addr.addr1 + " " +  addr.addr2 + " " + addr.addr3 + " " + addr.addr4), allowMalformed: true);
+      }
     }
+
 
     final myService3 = MarketDetailApiService.create();
     final response3 = await myService3.getStoreByID(storeID);
@@ -154,6 +172,10 @@ class _HomePage extends State<HomePage> {
 //    for (var listItem in list) {
 //        foodName.add(utf8.decode(latin1.encode(listItem.name), allowMalformed: true));
 //      }
+    if(listCart.length == 0){
+      print(total);
+      total = 0;
+    }
 
     if(ID != null){
       final myService1 = OrderApiService.create();
@@ -168,7 +190,7 @@ class _HomePage extends State<HomePage> {
 //      var addresses = await Geocoder.local.findAddressesFromQuery(query);
 //      var first = addresses.first;
 
-      DEST_LOCATION = LatLng(double.parse(convertDestLatLng.lat), double.parse(convertDestLatLng.lat));
+      DEST_LOCATION = LatLng(double.parse(convertDestLatLng.lat), double.parse(convertDestLatLng.lng));
       print("dest location : ${DEST_LOCATION}");
 //      print("${first.featureName} : ${first.coordinates}");
       final query1 = "${utf8.decode(latin1.encode(market.addr1), allowMalformed: true)}" + " "
@@ -184,7 +206,7 @@ class _HomePage extends State<HomePage> {
 //      var addresses1 = await Geocoder.local.findAddressesFromQuery(query1);
 //      var first1 = addresses1.first;
 
-      SOURCE_LOCATION = LatLng(double.parse(convertSourceLatLng.lat), double.parse(convertSourceLatLng.lat));
+      SOURCE_LOCATION = LatLng(double.parse(convertSourceLatLng.lat), double.parse(convertSourceLatLng.lng));
       print("source location : ${SOURCE_LOCATION}");
 //      print("${first1.featureName} : ${first1.coordinates}");
     }
@@ -271,16 +293,16 @@ class _HomePage extends State<HomePage> {
             icon: Icon(
               Icons.home,
             ),
-            title: Text('Home'),
+            title: Text('Trang Chủ'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.assignment,
             ),
-            title: Text('Activity'),
+            title: Text('Hoạt Động'),
           ),
           BottomNavigationBarItem(
-            title: Text('Cart'),
+            title: Text('Giỏ Hàng'),
               icon: new Stack(
                 children: <Widget>[
                   new Icon(Icons.shopping_cart),
@@ -310,7 +332,7 @@ class _HomePage extends State<HomePage> {
             icon: Icon(
               Icons.person,
             ),
-            title: Text('Information'),
+            title: Text('Tài Khoản'),
           ),
         ],
         currentIndex: _selectedIndex,
@@ -336,12 +358,12 @@ class _HomePage extends State<HomePage> {
           ),
         ),
         Container(
-//          width: MediaQuery.of(context).size.width * 0.8,
+//          width: MediaQuery.of(context).size.width * 0.7,
           alignment: Alignment.center,
           child: Text(
             '${utf8.decode(latin1.encode(market.name), allowMalformed: true)}',
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: 17.0,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
             ),
@@ -523,7 +545,10 @@ class _HomePage extends State<HomePage> {
                   Icons.keyboard_arrow_right,
                   color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => SupportPage()));
+                },
               ),
             ),
           ),
@@ -587,7 +612,10 @@ class _HomePage extends State<HomePage> {
                   Icons.keyboard_arrow_right,
                   color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => PolicyPage()));
+                },
               ),
             ),
           ),
@@ -617,7 +645,10 @@ class _HomePage extends State<HomePage> {
                   Icons.keyboard_arrow_right,
                   color: const Color.fromRGBO(0, 175, 82, 1),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AboutUsPage()));
+                },
               ),
             ),
           ),
@@ -684,7 +715,7 @@ class _HomePage extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            for (var listFood in list)
+            for (var listFood in listNotSaleOff)
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -792,7 +823,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage(image: 'https://cdnmedia.eurofins.com/apac/media/603979/kiem-nghiem-chat-luong-thit-tuoi.jpg?width=480.5764411027569&height=500', type: 'Thịt Heo', foods: pig, quantity: pig.length,);
+                  return FoodTypePage(image: 'https://cdnmedia.eurofins.com/apac/media/603979/kiem-nghiem-chat-luong-thit-tuoi.jpg?width=480.5764411027569&height=500', type: 'Thịt Heo', foods: pig, quantityy: pig.length,);
                 }));
               },
               child: Container(
@@ -845,7 +876,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage(image: 'https://fohlabeef.vn/wp-content/uploads/2019/05/th%C4%83n-n%E1%BB%99i-b%C3%B2-%C3%BAc-Tenderloin.png', type: 'Thịt Bò', foods: beef, quantity: beef.length,);
+                  return FoodTypePage(image: 'https://fohlabeef.vn/wp-content/uploads/2019/05/th%C4%83n-n%E1%BB%99i-b%C3%B2-%C3%BAc-Tenderloin.png', type: 'Thịt Bò', foods: beef, quantityy: beef.length,);
                 }));
               },
               child: Container(
@@ -898,7 +929,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage(image: 'https://www.thespruceeats.com/thmb/u91gwhnYG4kP40OkswDDM1VQjQA=/3648x3648/smart/filters:no_upscale()/roasted-chicken-legs-521968290-5888fd773df78caebc737427.jpg', type: 'Thịt Gà', foods: chicken, quantity: chicken.length,);
+                  return FoodTypePage(image: 'https://www.thespruceeats.com/thmb/u91gwhnYG4kP40OkswDDM1VQjQA=/3648x3648/smart/filters:no_upscale()/roasted-chicken-legs-521968290-5888fd773df78caebc737427.jpg', type: 'Thịt Gà', foods: chicken, quantityy: chicken.length,);
                 }));
               },
               child: Container(
@@ -951,7 +982,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage(image: 'https://vinmec-prod.s3.amazonaws.com/images/20200708_040238_836115_15639394169.max-800x800.jpg', type: 'Cá', foods: fish, quantity: fish.length,);
+                  return FoodTypePage(image: 'https://vinmec-prod.s3.amazonaws.com/images/20200708_040238_836115_15639394169.max-800x800.jpg', type: 'Cá', foods: fish, quantityy: fish.length,);
                 }));
               },
               child: Container(
@@ -1004,7 +1035,7 @@ class _HomePage extends State<HomePage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return FoodTypePage(image: 'https://xachtaynhat.net/wp-content/uploads/2018/06/rau-cu-fancl-300x300.jpg', type: 'Rau Củ Tươi', foods: vegetable, quantity: vegetable.length,);
+                  return FoodTypePage(image: 'https://xachtaynhat.net/wp-content/uploads/2018/06/rau-cu-fancl-300x300.jpg', type: 'Rau Củ Tươi', foods: vegetable, quantityy: vegetable.length,);
                 }));
               },
               child: Container(
@@ -1074,7 +1105,7 @@ class _HomePage extends State<HomePage> {
           ],
         ),
       ),
-      for (var listFood in list)
+      for (var listFood in listSaleOff)
         Container(
           padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
@@ -1096,15 +1127,35 @@ class _HomePage extends State<HomePage> {
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 18.0,
-                fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(
-              '${oCcy.format(listFood.price)}đ',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 13.0,
-              ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    'Giá gốc: ${oCcy.format(listFood.price)}đ',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 13.0,
+                        decoration: TextDecoration.lineThrough
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    '${oCcy.format(listFood.price - (listFood.price*listFood.saleOff.saleOff/100))}đ',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 16.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+
             ),
             trailing: IconButton(
               icon: Icon(
@@ -1113,8 +1164,8 @@ class _HomePage extends State<HomePage> {
                 size: 30.0,
               ),
               onPressed: (){
-                Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1);
-                total = total + double.parse(data.price.toString());
+                Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1, listFood);
+                total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
 //              if(listCart.length == 0){
                 listCart.add(data);
                 badgeData++;
@@ -1313,15 +1364,27 @@ class _HomePage extends State<HomePage> {
                               ),
                             ),
                           ),
-                          Container(
-                            child: Text(
-                              '${oCcy.format(double.parse(listOrder.price))}đ\n',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.grey,
+                          if(listOrder.foods.saleOff.saleOff != 0)
+                            Container(
+                              child: Text(
+                                'Giá gốc: ${oCcy.format(double.parse(listOrder.price))}đ\n',
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough
+                                ),
                               ),
                             ),
-                          ),
+                          if(listOrder.foods.saleOff.saleOff == 0)
+                            Container(
+                              child: Text(
+                                '${oCcy.format(double.parse(listOrder.price))}đ\n',
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
                           Row(
                             children: <Widget>[
                               Container(
@@ -1399,7 +1462,8 @@ class _HomePage extends State<HomePage> {
                           Container(
                             child: Row(
                               children: <Widget>[
-                                Container(
+                                if(listOrder.foods.saleOff.saleOff == 0)
+                                  Container(
                                   width: MediaQuery.of(context).size.width * 0.4,
                                   child: Text(
                                     '${oCcy.format((double.parse(listOrder.price) * listOrder.quantity))}đ',
@@ -1409,6 +1473,18 @@ class _HomePage extends State<HomePage> {
                                     ),
                                   ),
                                 ),
+                                if(listOrder.foods.saleOff.saleOff != 0)
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.4,
+                                    child: Text(
+                                      '${oCcy.format(((double.parse(listOrder.price) - (double.parse(listOrder.price)*listOrder.foods.saleOff.saleOff/100)) * listOrder.quantity))}đ',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+
                                 Container(
                                   child: IconButton(
                                     icon: new Icon(
@@ -1568,8 +1644,15 @@ class _HomePage extends State<HomePage> {
       height: 70.0,
       child: RaisedButton(
         onPressed: () {
+          if(listCart.length <= 5){
+            shoppingFee = 80000;
+          }else if(5 < listCart.length && listCart.length <= 10){
+            shoppingFee = 100000;
+          }else if(shoppingFee > 10){
+            shoppingFee = 120000;
+          }
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return OrderInfoPage(list: listCart, total: total, storeID: storeID,);
+          return OrderInfoPage(list: listCart, total: total, storeID: storeID,);
           }));
         },
         textColor: Colors.white,

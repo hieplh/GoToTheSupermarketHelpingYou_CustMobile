@@ -90,55 +90,6 @@ class _SupermarketPage extends State<SupermarketPage> {
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: StreamBuilder<String>(
-              //stream: bloc.email,
-              builder: (context, snapshot) => TextFormField(
-                //onChanged: bloc.emailChanged,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                controller: searchController,
-                onSaved: (input) => search = input,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: const Color.fromRGBO(0, 175, 82, 1),
-                    size: 30.0,
-                  ),
-                  labelText: 'Tìm kiếm Brand Siêu Thị',
-                  hintText: 'Nhập Brand siêu thị',
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                      color: const Color.fromRGBO(0, 141, 177, 1),
-                    ),
-                  ),
-                  labelStyle: TextStyle(
-                      color:
-                      myFocusNode.hasFocus ? const Color.fromRGBO(0, 141, 177, 1) : Colors.black),
-                  hintStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  errorText: snapshot.error,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text(
@@ -189,7 +140,7 @@ class _SupermarketPage extends State<SupermarketPage> {
                 size: 40.0,
               ),
               onTap: (){
-                changeToDetail('${list.id}', '${list.image}');
+                changeToDetail('${list.id}', '${list.image}', '${list.name}');
               },
               isThreeLine: true,
             ),
@@ -215,11 +166,11 @@ class _SupermarketPage extends State<SupermarketPage> {
           return LoginPage();
         }), ModalRoute.withName('/'));
   }
-  changeToDetail(String id, String image) async {
+  changeToDetail(String id, String image, String name) async {
 
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) {
-          return DetailSupermarketPage(marketID: id, marketImage: image,);
+          return DetailSupermarketPage(marketID: id, marketImage: image, marketName: name,);
         }));
   }
 
