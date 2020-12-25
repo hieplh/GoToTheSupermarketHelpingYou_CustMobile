@@ -18,7 +18,7 @@ class _$FeedbackApiService extends FeedbackApiService {
 
   @override
   Future<Response<dynamic>> getFeedback(
-      String order_id, String content, String rating) {
+      String order_id, String content, int rating) {
     final $url = '/feedback/$order_id/$content/$rating';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);

@@ -71,6 +71,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
             {
               "food": {
                 "id": "${list.id}",
+                "image": "${list.image}",
                 "price": '${list.price}',
                 "saleOff": {
                   "endDate": list.foods.saleOff.endDate,

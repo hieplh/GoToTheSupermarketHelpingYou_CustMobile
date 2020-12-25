@@ -87,11 +87,15 @@ class _LoginPageState extends State<LoginPage> {
   }
   Widget _buildLogo(){
     return Container(
-      padding: EdgeInsets.only(top: 60.0),
+
+      padding: EdgeInsets.only(top: 60.0, bottom: 20.0),
         alignment: Alignment.center,
-        child: Image(
-          image: AssetImage('assets/apple-touch-icon-120x120.png'),
+        child: Image.asset(
+          'assets/logo.png',
+          fit: BoxFit.contain,
+          width: MediaQuery.of(context).size.width * 0.8,
         ),
+
     );
   }
   Widget _buildUsernameInput(){

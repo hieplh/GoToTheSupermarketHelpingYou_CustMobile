@@ -107,7 +107,7 @@ class _FoodTypePage extends State<FoodTypePage> {
                 Container(
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Text(
-                    'Cá',
+                    'Hải Sản',
                     style: TextStyle(
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold

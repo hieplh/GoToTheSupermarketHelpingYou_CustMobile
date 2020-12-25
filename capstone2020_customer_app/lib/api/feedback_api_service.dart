@@ -19,7 +19,7 @@ abstract class FeedbackApiService extends ChopperService{
     return _$FeedbackApiService(client);
   }
   @Get(path: "{order_id}/{content}/{rating}")
-  Future<Response> getFeedback(@Path() String order_id, @Path() String content, @Path() String rating);
+  Future<Response> getFeedback(@Path() String order_id, @Path() String content, @Path() int rating);
 
 }
 

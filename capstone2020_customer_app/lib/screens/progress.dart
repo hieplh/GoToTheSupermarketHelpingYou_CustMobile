@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:capstone2020customerapp/api/account_api_service.dart';
+import 'package:capstone2020customerapp/api/feedback_api_service.dart';
 import 'package:capstone2020customerapp/api/market_detail_api_service.dart';
 import 'package:capstone2020customerapp/api/order_api_service.dart';
 import 'package:capstone2020customerapp/api/tracking_api_service.dart';
@@ -87,6 +88,8 @@ class _ProgressPage extends State<ProgressPage> {
   StoreModel market;
   Tracking trac;
   Timer getLatLg;
+  TextEditingController contentController = new TextEditingController();
+  String rate = "0";
   String data = "wait";
   void initState() {
     super.initState();
@@ -200,7 +203,8 @@ class _ProgressPage extends State<ProgressPage> {
         status == -22 ||
         status == -23 ||
         status == -24 ||
-        status == -31) {
+        status == -31 ||
+        status == -13) {
       num = 0;
       showOnCancelFromShipperToast(context);
       setState(() {
@@ -345,7 +349,9 @@ class _ProgressPage extends State<ProgressPage> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      print(rating);
+                      var cont = rating.toString().split(".0");
+                      rate = cont[0];
+                      print(rate);
                     },
                   ),
                 ),
@@ -388,28 +394,37 @@ class _ProgressPage extends State<ProgressPage> {
               ],
             ),
             content: TextFormField(
+              controller: contentController,
               decoration: const InputDecoration(
                 //icon: Icon(Icons.feedback),
                 hintText: 'Feedback...',
                 //labelText: 'Name *',
               ),
               onSaved: (String value) {
-                // This optional block of code can be used to run
-                // code when the user saves the form.
               },
             ),
             actions: <Widget>[
               new FlatButton(
                 child: new Text('Xác Nhận'),
-                onPressed: () {
-                  img = img0;
-                  ID = null;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                    return HomePage(
-                      storeID: idStore,
-                    );
-                  }), ModalRoute.withName('/'));
+                onPressed: () async {
+                  print("content " + contentController.text);
+                  print("rate " + rate.toString());
+                  final myService = FeedbackApiService.create();
+                  final response = await myService.getFeedback(ID, contentController.text, int.parse(rate));
+                  if(response.statusCode == 200){
+                    img = img0;
+                    ID = null;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) {
+                          return HomePage(
+                            storeID: idStore,
+                          );
+                        }), ModalRoute.withName('/'));
+                  }else{
+                    print(response.statusCode);
+                    print(response.body);
+                  }
+
                 },
               )
             ],

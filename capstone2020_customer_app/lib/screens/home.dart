@@ -136,7 +136,7 @@ class _HomePage extends State<HomePage> {
                   chicken += cate.foods;
                 }else if(cate.id == "THITHEO"){
                   pig += cate.foods;
-                }else if(cate.id == "CA"){
+                }else if(cate.id == "HAISAN"){
                   fish += cate.foods;
                 }else{
                   vegetable += cate.foods;
@@ -1006,7 +1006,7 @@ class _HomePage extends State<HomePage> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              'Cá',
+                              'Hải Sản',
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
