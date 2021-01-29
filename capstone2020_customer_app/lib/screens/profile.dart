@@ -172,7 +172,7 @@ class _ProfilePage extends State<ProfilePage>
                                       children: <Widget>[
                                         new Flexible(
                                             child: Text(
-                                              '${utf8.decode(latin1.encode(cus.lastName)) + " " + utf8.decode(latin1.encode(cus.middleName)) + " " + utf8.decode(latin1.encode(cus.firstName))}',
+                                              '${utf8.decode(latin1.encode(cus.fullname))}',
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 20.0,
@@ -248,7 +248,7 @@ class _ProfilePage extends State<ProfilePage>
                                       children: <Widget>[
                                         new Flexible(
                                             child: Text(
-                                              '${cus.phone}',
+                                              '${cus.username}',
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 20.0,

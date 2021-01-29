@@ -23,6 +23,7 @@ class _HistoryPage extends State<HistoryPage> {
   History historyDetail;
 
   Future<void> getAllFood() async {
+
     final myService1 = HistoryApiService.create();
     final response1 = await myService1.getAllHistory("${account.username}");
     print(response1.statusCode);

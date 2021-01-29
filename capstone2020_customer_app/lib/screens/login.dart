@@ -8,6 +8,7 @@ import 'package:capstone2020customerapp/api/tracking_api_service.dart';
 import 'package:capstone2020customerapp/models/account_model.dart';
 import 'package:capstone2020customerapp/models/shipper_model.dart';
 import 'package:capstone2020customerapp/models/tracking_model.dart';
+import 'package:capstone2020customerapp/screens/forgetPassword.dart';
 import 'package:capstone2020customerapp/screens/home.dart';
 import 'package:capstone2020customerapp/screens/register.dart';
 import 'package:capstone2020customerapp/screens/supermarket.dart';
@@ -80,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
 //              _buildText(),
 //              _buildFacebookAndGoogleLoginButton(),
               _buildRegisterButton(),
+              _buildForgetPasswordButton(),
             ],
         ),
       ),
@@ -403,6 +405,29 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+    );
+  }
+
+  Widget _buildForgetPasswordButton(){
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ForgetPasswordPage()));
+      },
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Quên mật khẩu?",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

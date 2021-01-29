@@ -9,10 +9,7 @@ part of 'shipper_model.dart';
 Shipper _$ShipperFromJson(Map<String, dynamic> json) {
   return Shipper(
     json['username'] as String,
-    json['firstName'] as String,
-    json['middleName'] as String,
-    json['lastName'] as String,
-    json['phone'] as String,
+    json['fullname'] as String,
     json['dob'] as String,
     json['role'] as String,
     json['numDelivery'] as int,
@@ -24,10 +21,7 @@ Shipper _$ShipperFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ShipperToJson(Shipper instance) => <String, dynamic>{
       'username': instance.username,
-      'firstName': instance.firstName,
-      'middleName': instance.middleName,
-      'lastName': instance.lastName,
-      'phone': instance.phone,
+      'fullname': instance.fullname,
       'dob': instance.dob,
       'role': instance.role,
       'numDelivery': instance.numDelivery,

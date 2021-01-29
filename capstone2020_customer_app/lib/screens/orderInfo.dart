@@ -179,10 +179,10 @@ class _OrderInfoPage extends State<OrderInfoPage> {
               for(var addr in address)
                 CheckboxGroup(
                   labels: <String>[
-                    '${addr.street + ", \n" + addr.district + ", \n" + addr.ward + ", \n" + addr.city +"\n"}',
+                    '${addr.street + ", \n" + addr.ward + ", \n" + addr.district + ", \n" + addr.city +"\n"}',
                   ],
                   onChange: (bool isChecked, String label, int index) => print("isChecked: $isChecked   label: $label  index: $index"),
-                  onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.district + ", " + addr.ward + ", " + addr.city}',
+                  onSelected: (List<String> checked) => deliveryAddr = '${addr.street + ", " + addr.ward + ", " + addr.district + ", " + addr.city}',
                 ),
             ],
 
@@ -344,11 +344,12 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                   fontSize: 18.0,
                 ),
                 controller: phoneController,
+                keyboardType: TextInputType.phone,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
                   enabled: true,
-                  hintText: '${account.phone}',
+                  hintText: '${account.username}',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
@@ -408,7 +409,7 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                 decoration: InputDecoration(
                   //labelText: 'Tìm kiếm đồ ăn...',
                   enabled: true,
-                  hintText: '${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}',
+                  hintText: '${utf8.decode(latin1.encode(account.fullname))}',
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide(
@@ -554,62 +555,62 @@ class _OrderInfoPage extends State<OrderInfoPage> {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-                      margin: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        'Chi Phí Đi Chợ: ',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
-                      margin: const EdgeInsets.only(right: 20.0),
-                      child: Text(
-                        '${oCcy.format(shoppingFee)}đ',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                    ),
-                  ],
-
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      margin: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        'Chi Phí Giao Hàng: ',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      margin: const EdgeInsets.only(right: 20.0),
-                      child: Text(
-                        '${oCcy.format(deliveryFee)}đ',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: const Color.fromRGBO(0, 175, 82, 1),
-                        ),
-                      ),
-                    ),
-                  ],
-
-                ),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: <Widget>[
+//                    Container(
+//                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+//                      margin: const EdgeInsets.only(left: 20.0),
+//                      child: Text(
+//                        'Chi Phí Đi Chợ: ',
+//                        style: TextStyle(
+//                          fontSize: 18.0,
+//                          color: const Color.fromRGBO(0, 175, 82, 1),
+//                        ),
+//                      ),
+//                    ),
+//                    Container(
+//                      padding: const EdgeInsets.only(bottom: 15.0, top: 15.0),
+//                      margin: const EdgeInsets.only(right: 20.0),
+//                      child: Text(
+//                        '${oCcy.format(shoppingFee)}đ',
+//                        style: TextStyle(
+//                          fontSize: 18.0,
+//                          color: const Color.fromRGBO(0, 175, 82, 1),
+//                        ),
+//                      ),
+//                    ),
+//                  ],
+//
+//                ),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: <Widget>[
+//                    Container(
+//                      padding: const EdgeInsets.only(bottom: 15.0),
+//                      margin: const EdgeInsets.only(left: 20.0),
+//                      child: Text(
+//                        'Chi Phí Giao Hàng: ',
+//                        style: TextStyle(
+//                          fontSize: 18.0,
+//                          color: const Color.fromRGBO(0, 175, 82, 1),
+//                        ),
+//                      ),
+//                    ),
+//                    Container(
+//                      padding: const EdgeInsets.only(bottom: 15.0),
+//                      margin: const EdgeInsets.only(right: 20.0),
+//                      child: Text(
+//                        '${oCcy.format(deliveryFee)}đ',
+//                        style: TextStyle(
+//                          fontSize: 18.0,
+//                          color: const Color.fromRGBO(0, 175, 82, 1),
+//                        ),
+//                      ),
+//                    ),
+//                  ],
+//
+//                ),
               ],
             ),
           ),

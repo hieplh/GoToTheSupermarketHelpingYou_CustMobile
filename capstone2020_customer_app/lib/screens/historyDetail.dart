@@ -283,10 +283,11 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                   child: Column(
                     children: <Widget>[
                       for (var list in listOrderHistory)
-                        Container(
+                        if(list.saleOff != 0)
+                          Container(
                           child: ListTile(
                             leading: Text(
-                              '1x',
+                              '${oCcy.format(list.weight)}x',
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
@@ -296,7 +297,8 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
                               '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
-                                fontSize: 15.0,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
 //                          subtitle: Text(
@@ -306,20 +308,147 @@ class _HistoryDetailPage extends State<HistoryDetailPage> {
 //                              fontSize: 13.0,
 //                            ),
 //                          ),
-                            trailing: Text(
-                              '${oCcy.format(list.priceOriginal)}đ',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                              ),
+                            trailing: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Container(
+                                  height: 20,
+                                  child: Text(
+                                    '${oCcy.format(double.parse(list.priceOriginal.toString()))}đ(-${list.saleOff}%)\n',
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  //padding: EdgeInsets.only(left: 60.0),
+                                  child: Text(
+                                    '${oCcy.format(list.pricePaid * list.weight)}đ\n',
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                      for (var list in listOrderHistory)
+                        if(list.saleOff == 0)
+                          Container(
+                            child: ListTile(
+                              leading: Text(
+                                '${oCcy.format(list.weight)}x',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              title: Text(
+                                '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 17.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+//                          subtitle: Text(
+//                            '${listFood.price}',
+//                            style: TextStyle(
+//                              fontFamily: 'Montserrat',
+//                              fontSize: 13.0,
+//                            ),
+//                          ),
+                              trailing: Text(
+                                '${oCcy.format(list.pricePaid * list.weight)}đ',
+                                style: TextStyle(
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                            ),
+                          ),
                     ],
 
                   ),
                 ),
               ],
             ),
+          ),
+          Container(
+            color: Colors.grey[200],
+            height: 10.0,
+          ),
+          Column(
+            children: <Widget>[
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                      child: Text(
+                        'Phí đi chợ',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(right: 10.0),
+                          padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                          child: Text(
+                            '${oCcy.format(historyDetail.costShopping)}đ',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                ),
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: Text(
+                        'Phí giao hàng',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(right: 10.0),
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: Text(
+                            '${oCcy.format(historyDetail.costDelivery)}đ',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                ),
+              ),
+            ],
+
           ),
           Container(
             color: Colors.grey[200],

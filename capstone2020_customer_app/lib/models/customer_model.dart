@@ -6,10 +6,7 @@ part 'customer_model.g.dart';
 @JsonSerializable()
 class Customer{
   String username;
-  String firstName;
-  String middleName;
-  String lastName;
-  String phone;
+  String fullname;
   String dob;
   String role;
   int numSuccess;
@@ -20,10 +17,7 @@ class Customer{
 
   Customer(
       this.username,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.phone,
+      this.fullname,
       this.dob,
       this.role,
       this.numSuccess,

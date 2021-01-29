@@ -486,7 +486,7 @@ class _HomePage extends State<HomePage> {
                   backgroundImage: NetworkImage("https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                 ),
                 title: Text(
-                  '${utf8.decode(latin1.encode(account.lastName)) + " " + utf8.decode(latin1.encode(account.middleName)) + " " + utf8.decode(latin1.encode(account.firstName))}',
+                  '${utf8.decode(latin1.encode(account.fullname))}',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20.0,
@@ -1134,7 +1134,7 @@ class _HomePage extends State<HomePage> {
               children: <Widget>[
                 Container(
                   child: Text(
-                    'Giá gốc: ${oCcy.format(listFood.price)}đ',
+                    'Giá gốc: ${oCcy.format(listFood.price)}đ(-${listFood.saleOff.saleOff}%)',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 13.0,
@@ -1166,26 +1166,29 @@ class _HomePage extends State<HomePage> {
               onPressed: (){
                 Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1, listFood);
                 total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
-//              if(listCart.length == 0){
-                listCart.add(data);
-                badgeData++;
-//              }else{
-//                for(int i = 0; i < listCart.length; i++){
-//                  if(listFood.id != listCart[i].id && cont == 0){
-//                    listCart.add(data);
-//                    badgeData++;
-//                    cont = 1;
-//                    break;
-//                  }else{
-//                    cont = 0;
-//                    if(cont == 0 && listFood.id == listCart[i].id){
-//                      listCart[i].quantity++;
-//                      break;
-//                    }
-//                  }
-//                }
-//              }
-
+                if(listCart.length == 0){
+                  listCart.add(data);
+                  badgeData++;
+                }else{
+                  for(int i = 0; i < listCart.length; i++){
+                    if(listFood.id == listCart[i].id){
+                      count = i;
+                      print(count);
+                      break;
+                    }else{
+                      if(listFood.id != listCart[i].id){
+                        //listCart[i].quantity++;
+                        count = -1;
+                      }
+                    }
+                  }
+                  if(count == -1){
+                    listCart.add(data);
+                    badgeData++;
+                  }else{
+                    listCart[count].quantity++;
+                  }
+                }
                 quantity.putIfAbsent(data.id, () => data.quantity);
                 print(quantity);
                 print(total);
@@ -1367,7 +1370,7 @@ class _HomePage extends State<HomePage> {
                           if(listOrder.foods.saleOff.saleOff != 0)
                             Container(
                               child: Text(
-                                'Giá gốc: ${oCcy.format(double.parse(listOrder.price))}đ\n',
+                                'Giá gốc: ${oCcy.format(double.parse(listOrder.price))}đ(-${listOrder.foods.saleOff.saleOff}%)\n',
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   color: Colors.grey,
@@ -1402,7 +1405,8 @@ class _HomePage extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    SizedBox(
+                                    if(listOrder.quantity > 0)
+                                      SizedBox(
                                       width: 30.0,
                                       height: 30.0,
                                       child: FloatingActionButton(
@@ -1413,7 +1417,7 @@ class _HomePage extends State<HomePage> {
                                                 if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
                                                   quantity.update(data.id, (value) => (quantity[data.id] - 1));
                                                   if(quantity[data.id] < data.quantity){
-                                                    total = total - double.parse(data.price.toString());
+                                                    total = total - (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
                                                   }
                                                   data.quantity = quantity[data.id];
                                                 }
@@ -1440,7 +1444,7 @@ class _HomePage extends State<HomePage> {
                                               if(utf8.decode(latin1.encode(listOrder.name), allowMalformed: true) == utf8.decode(latin1.encode(data.name), allowMalformed: true)){
                                                 quantity.update(data.id, (value) => (quantity[data.id] + 1));
                                                 if(quantity[data.id] > data.quantity ){
-                                                  total = total + double.parse(data.price.toString());
+                                                  total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
                                                 }
                                                 data.quantity = quantity[data.id];
 

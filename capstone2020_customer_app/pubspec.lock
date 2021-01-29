@@ -127,6 +127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.5"
+  circular_countdown_timer:
+    dependency: "direct main"
+    description:
+      name: circular_countdown_timer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   cli_util:
     dependency: transitive
     description:
@@ -216,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0+2"
+  flutter_otp:
+    dependency: "direct main"
+    description:
+      name: flutter_otp
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -548,6 +562,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sms:
+    dependency: transitive
+    description:
+      name: sms
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.4"
   source_gen:
     dependency: transitive
     description:

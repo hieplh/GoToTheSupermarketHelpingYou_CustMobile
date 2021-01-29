@@ -26,7 +26,7 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
 
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
-  TextEditingController firstNameController = new TextEditingController();
+  TextEditingController fullNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
   TextEditingController middleNameController = new TextEditingController();
   TextEditingController dobController = new TextEditingController();
@@ -199,111 +199,15 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
                                               style: TextStyle(
                                                 color: Colors.black,
                                               ),
-                                              controller: firstNameController,
+                                              controller: fullNameController,
                                               decoration: InputDecoration(
                                                 prefixIcon: Icon(
                                                   Icons.person,
                                                   color: const Color.fromRGBO(0, 175, 82, 1),
                                                   size: 30.0,
                                                 ),
-                                                labelText: '${utf8.decode(latin1.encode(cus.firstName))}',
-                                                hintText: 'Tên',
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                labelStyle: TextStyle(
-                                                    color:
-                                                    myFocusNode.hasFocus ? Colors.black : Colors.black),
-                                                hintStyle: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                                errorText: snapshot.error,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.8,
-                                          padding: EdgeInsets.only(bottom: 20.0),
-                                          child: StreamBuilder<String>(
-                                            //stream: bloc.email,
-                                            builder: (context, snapshot) => TextFormField(
-                                              //onChanged: bloc.emailChanged,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                              controller: middleNameController,
-                                              decoration: InputDecoration(
-                                                prefixIcon: Icon(
-                                                  Icons.person,
-                                                  color: const Color.fromRGBO(0, 175, 82, 1),
-                                                  size: 30.0,
-                                                ),
-                                                labelText: '${utf8.decode(latin1.encode(cus.middleName))}',
-                                                hintText: 'Tên đệm',
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                labelStyle: TextStyle(
-                                                    color:
-                                                    myFocusNode.hasFocus ? Colors.black : Colors.black),
-                                                hintStyle: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                                errorText: snapshot.error,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.8,
-                                          padding: EdgeInsets.only(bottom: 20.0),
-                                          child: StreamBuilder<String>(
-                                            //stream: bloc.email,
-                                            builder: (context, snapshot) => TextFormField(
-                                              //onChanged: bloc.emailChanged,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                              controller: lastNameController,
-                                              decoration: InputDecoration(
-                                                prefixIcon: Icon(
-                                                  Icons.person,
-                                                  color: const Color.fromRGBO(0, 175, 82, 1),
-                                                  size: 30.0,
-                                                ),
-                                                labelText: '${utf8.decode(latin1.encode(cus.lastName))}',
-                                                hintText: 'Họ',
+                                                labelText: '${utf8.decode(latin1.encode(cus.fullname))}',
+                                                hintText: 'Họ và Tên',
                                                 focusedBorder: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(30.0),
                                                   borderSide: BorderSide(
@@ -373,6 +277,7 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
                                                 color: Colors.black,
                                               ),
                                               controller: dobController,
+                                              keyboardType: TextInputType.text,
                                               decoration: InputDecoration(
                                                 prefixIcon: Icon(
                                                   Icons.calendar_today,
@@ -412,83 +317,84 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
                                         ),
                                       ],
                                     )),
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0),
-                                    child: new Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        new Column(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            new Text(
-                                              'Mobile',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.8,
-                                          padding: EdgeInsets.only(bottom: 20.0),
-                                          child: StreamBuilder<String>(
-                                            //stream: bloc.email,
-                                            builder: (context, snapshot) => TextFormField(
-                                              //onChanged: bloc.emailChanged,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                              controller: phoneNumberController,
-                                              decoration: InputDecoration(
-                                                prefixIcon: Icon(
-                                                  Icons.phone,
-                                                  color: const Color.fromRGBO(0, 175, 82, 1),
-                                                  size: 30.0,
-                                                ),
-                                                labelText: '${cus.phone}',
-                                                hintText: 'Số điện thoại',
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                labelStyle: TextStyle(
-                                                    color:
-                                                    myFocusNode.hasFocus ? Colors.black : Colors.black),
-                                                hintStyle: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                                errorText: snapshot.error,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
+//                                Padding(
+////                                    padding: EdgeInsets.only(
+////                                        left: 25.0, right: 25.0),
+////                                    child: new Row(
+////                                      mainAxisSize: MainAxisSize.max,
+////                                      children: <Widget>[
+////                                        new Column(
+////                                          mainAxisAlignment: MainAxisAlignment
+////                                              .start,
+////                                          mainAxisSize: MainAxisSize.min,
+////                                          children: <Widget>[
+////                                            new Text(
+////                                              'Mobile',
+////                                              style: TextStyle(
+////                                                  fontSize: 16.0,
+////                                                  fontWeight: FontWeight.bold),
+////                                            ),
+////                                          ],
+////                                        ),
+////                                      ],
+////                                    )),
+////                                Padding(
+////                                    padding: EdgeInsets.only(
+////                                        left: 25.0, right: 25.0, top: 2.0),
+////                                    child: new Row(
+////                                      mainAxisSize: MainAxisSize.max,
+////                                      children: <Widget>[
+////                                        Container(
+////                                          width: MediaQuery.of(context).size.width * 0.8,
+////                                          padding: EdgeInsets.only(bottom: 20.0),
+////                                          child: StreamBuilder<String>(
+////                                            //stream: bloc.email,
+////                                            builder: (context, snapshot) => TextFormField(
+////                                              //onChanged: bloc.emailChanged,
+////                                              style: TextStyle(
+////                                                color: Colors.black,
+////                                              ),
+////                                              controller: phoneNumberController,
+////                                              keyboardType: TextInputType.phone,
+////                                              decoration: InputDecoration(
+////                                                prefixIcon: Icon(
+////                                                  Icons.phone,
+////                                                  color: const Color.fromRGBO(0, 175, 82, 1),
+////                                                  size: 30.0,
+////                                                ),
+////                                                labelText: '${cus.username}',
+////                                                hintText: 'Số điện thoại',
+////                                                focusedBorder: OutlineInputBorder(
+////                                                  borderRadius: BorderRadius.circular(30.0),
+////                                                  borderSide: BorderSide(
+////                                                    color: Colors.black,
+////                                                  ),
+////                                                ),
+////                                                enabledBorder: OutlineInputBorder(
+////                                                  borderRadius: BorderRadius.circular(30.0),
+////                                                  borderSide: BorderSide(
+////                                                    color: Colors.black,
+////                                                  ),
+////                                                ),
+////                                                border: OutlineInputBorder(
+////                                                  borderRadius: BorderRadius.circular(30.0),
+////                                                  borderSide: BorderSide(
+////                                                    color: Colors.black,
+////                                                  ),
+////                                                ),
+////                                                labelStyle: TextStyle(
+////                                                    color:
+////                                                    myFocusNode.hasFocus ? Colors.black : Colors.black),
+////                                                hintStyle: TextStyle(
+////                                                  color: Colors.black,
+////                                                ),
+////                                                errorText: snapshot.error,
+////                                              ),
+////                                            ),
+////                                          ),
+////                                        ),
+////                                      ],
+////                                    )),
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
@@ -503,9 +409,7 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
                                     child: RaisedButton(
                                       onPressed: () async {
                                         print(dobController.text);
-                                        print(firstNameController.text);
-                                        print(lastNameController.text);
-                                        print(middleNameController.text);
+                                        print(fullNameController.text);
                                         print(phoneNumberController.text);
                                         var url = API_URL_STARTPOINT + '/account/info';
                                         var response = await http.put(Uri.parse(url),
@@ -515,10 +419,7 @@ class _UpdateInfoPage extends State<UpdateInfoPage>
                                             },
                                             body: json.encode({
                                               "dob" : "${dobController.text}",
-                                              "firstName" : firstNameController.text,
-                                              "lastName" : lastNameController.text,
-                                              "middleName" : middleNameController.text,
-                                              "phone" : phoneNumberController.text,
+                                              "fullname" : fullNameController.text,
                                               "role" : "customer",
                                               "username" : cus.username
                                             }));

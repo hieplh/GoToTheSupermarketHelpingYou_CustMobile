@@ -8,11 +8,7 @@ part 'account_model.g.dart';
 @JsonSerializable()
 class Account{
   String username;
-  String firstName;
-  String middleName;
-  String lastName;
-  String email;
-  String phone;
+  String fullname;
   String dob;
   String role;
   int numSuccess;
@@ -22,11 +18,7 @@ class Account{
 
   Account(
       this.username,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.email,
-      this.phone,
+      this.fullname,
       this.dob,
       this.role,
       this.numCancel,

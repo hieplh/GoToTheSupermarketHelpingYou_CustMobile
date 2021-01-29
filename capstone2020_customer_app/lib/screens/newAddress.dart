@@ -105,7 +105,47 @@ class _NewAddressPage extends State<NewAddressPage> {
   List street_12 = ["Đường số 37" , "Đường D5", "An Lộc", "An Phú Đông", "Cầu Rạch Gia", "Hà Huy Giáp",
     "Hà Thị Khiêm", "Hiệp Thành 23", "Lâm Thị Hồ", "Nguyễn Thị Căn", "Quốc Lộ 1A", "Đường Song Hành Quốc Lộ 22", "Tô Ký"];
 
+  List ward_binhtan = ["An Lạc A", "Bình Hưng Hòa", "Bình Hưng Hòa A", "Bình Hưng Hòa B", "Bình Trị Đông",
+    "Bình Trị Đông A", "Bình Trị Đông B", "Tân Tạo", "Tân Tạo A", "An Lạc"];
 
+  List street_binhtan = ["An Lạc" , "Ao Đôi", "Bà Hom", "Bến Lội", "Bình Long", "Bình Thành",
+    "Bình Trị Đông", "Bùi Tư Toàn", "Cầu Kinh", "Cây Cám", "Dương Bá Cung", "Dương Tự Quán", "Đình Nghi Xuân"];
+
+  List ward_binhthanh = ["Phường 1", "Phường 2", "Phường 3", "Phường 5", "Phường 6",
+    "Phường 7", "Phường 11", "Phường 12", "Phường 13", "Phường 14", "Phường 15", "Phường 17", "Phường 19", "Phường 21", "Phường 22", "Phường 24", "Phường 25", "Phường 26", "Phường 27", "Phường 28"];
+
+  List street_binhthanh = ["30/4" , "Bạch Đằng", "Bình Lợi", "Bùi Hữu Nghĩa", "Chu Văn An", "Đinh Bộ Lĩnh",
+    "Điện Biên Phủ", "Hoàng Hoa Thám", "Lê Quang Định", "Ngô Đức Kế", "Nguyễn Xí", "Phạm Văn Đồng", "Xô Viết Nghệ Tĩnh"];
+
+  List ward_govap = ["Phường 1", "Phường 3", "Phường 4", "Phường 5", "Phường 6",
+    "Phường 7", "Phường 8", "Phường 9", "Phường 10", "Phường 11", "Phường 12", "Phường 13", "Phường 14", "Phường 15", "Phường 16", "Phường 17"];
+
+  List street_govap = ["An Hội" , "An Nhơn", "Bạch Đằng", "Dương Quảng Hàm", "Hoàng Minh Giám", "Huỳnh Văn Nghệ",
+    "Lê Đức Thọ", "Lê Lai", "Lê Lợi", "Nguyễn Kiệm", "Nguyễn Thái Sơn", "Phạm Ngũ Lão", "Phan Huy Ích", "Phan Văn Trị", "Quang Trung"];
+
+  List ward_phunhuan = ["Phường 1", "Phường 2", "Phường 3", "Phường 4", "Phường 5",
+    "Phường 7", "Phường 8", "Phường 9", "Phường 10", "Phường 11", "Phường 13", "Phường 15", "Phường 17"];
+
+  List street_phunhuan = ["Lê Văn Sỹ" , "Chiến Thắng", "Cô Bắc", "Cô Giang", "Đào Duy Anh", "Đào Duy Từ",
+    "Hoàng Minh Giám", "Hoàng Văn Thụ", "Hồ Văn Huê", "Huỳnh Văn Bánh", "Lam Sơn", "Phan Đăng Lưu", "Phan Đình Phùng", "Trần Huy Liệu", "Trường Sa"];
+
+  List ward_tanbinh = ["Phường 1", "Phường 2", "Phường 3", "Phường 4", "Phường 5",
+    "Phường 6", "Phường 7", "Phường 8", "Phường 9", "Phường 10", "Phường 11", "Phường 12", "Phường 13", "Phường 14", "Phường 15"];
+
+  List street_tanbinh = ["Âu Cơ" , "Bành Văn Trân", "Bàu Bàng", "Bình Giã", "Bùi Thị Xuân", "Cách Mạng Tháng 8",
+    "Cộng Hòa", "Hoàng Hoa Thám", "Hoàng Minh Giám", "Hoàng Sa", "Hoàng Văn Thụ", "Huỳnh Văn Nghệ", "Lạc Long Quân", "Lê Văn Sỹ", "Lý Thường Kiệt"];
+
+  List ward_tanphu = ["Hiệp Tân", "Hòa Thạnh", "Phú Thạnh", "Phú Thọ Hòa", "Phú Trung",
+    "Sơn Kỳ", "Tân Quý", "Tân Sơn Nhì", "Tân Thành", "Tân Thới Hòa", "Tây Thạnh"];
+
+  List street_tanphu = ["30 tháng 4" , "Âu Cơ", "Bác Ái", "Bờ Bao Tân Thắng", "Chu Văn An", "Độc Lập",
+    "Lê Cao Lãng", "Lê Đình Thám", "Lê Đình Thụ", "Lê Khôi", "Nguyễn Nghiêm", "Thống Nhất", "Trần Hưng Đạo", "Trần Văn Giáp", "Trường Chinh"];
+
+  List ward_thuduc = ["Linh Chiểu", "Bình Thọ", "Linh Tây", "Linh Trung", "Linh Xuân",
+    "Bình Chiểu", "Hiệp Bình Chánh", "Hiệp Bình Phước", "Tam Bình", "Tam Phú", "Linh Đông", "Trường Thọ"];
+
+  List street_thuduc = ["Bà Giang" , "Bác Ái", "Bình Chiểu", "Chu Mạnh Trinh", "Công Lý", "Dân Chủ",
+    "Đoàn Kết", "Lê Quý Đôn", "Kha Vạn Cân", "Khổng Tử", "Khu Làng Đại Học", "Lam Sơn", "Linh Đông", "Linh Trung", "Phạm Văn Đồng"];
   TextEditingController streetController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -406,6 +446,48 @@ class _NewAddressPage extends State<NewAddressPage> {
                             child: Text(ward_12[i].toString()),
                             value: i + 1,
                           ),
+                      if(dist == "13")
+                        for(int i = 0; i < ward_binhtan.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_binhtan[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "14")
+                        for(int i = 0; i < ward_binhthanh.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_binhthanh[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "15")
+                        for(int i = 0; i < ward_govap.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_govap[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "16")
+                        for(int i = 0; i < ward_phunhuan.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_phunhuan[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "17")
+                        for(int i = 0; i < ward_tanbinh.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_tanbinh[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "18")
+                        for(int i = 0; i < ward_tanphu.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_tanphu[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "19")
+                        for(int i = 0; i < ward_thuduc.length; i++)
+                          DropdownMenuItem(
+                            child: Text(ward_thuduc[i].toString()),
+                            value: i + 1,
+                          ),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -445,6 +527,27 @@ class _NewAddressPage extends State<NewAddressPage> {
                         }
                         if(dist == "12"){
                           wardName = ward_12[value - 1];
+                        }
+                        if(dist == "13"){
+                          wardName = ward_binhtan[value - 1];
+                        }
+                        if(dist == "14"){
+                          wardName = ward_binhthanh[value - 1];
+                        }
+                        if(dist == "15"){
+                          wardName = ward_govap[value - 1];
+                        }
+                        if(dist == "16"){
+                          wardName = ward_phunhuan[value - 1];
+                        }
+                        if(dist == "17"){
+                          wardName = ward_tanbinh[value - 1];
+                        }
+                        if(dist == "18"){
+                          wardName = ward_tanphu[value - 1];
+                        }
+                        if(dist == "19"){
+                          wardName = ward_thuduc[value - 1];
                         }
                       });
                     },
@@ -559,6 +662,48 @@ class _NewAddressPage extends State<NewAddressPage> {
                             child: Text(street_12[i].toString()),
                             value: i + 1,
                           ),
+                      if(dist == "13")
+                        for(int i = 0; i < street_binhtan.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_binhtan[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "14")
+                        for(int i = 0; i < street_binhthanh.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_binhthanh[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "15")
+                        for(int i = 0; i < street_govap.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_govap[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "16")
+                        for(int i = 0; i < street_phunhuan.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_phunhuan[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "17")
+                        for(int i = 0; i < street_tanbinh.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_tanbinh[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "18")
+                        for(int i = 0; i < street_tanphu.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_tanphu[i].toString()),
+                            value: i + 1,
+                          ),
+                      if(dist == "19")
+                        for(int i = 0; i < street_thuduc.length; i++)
+                          DropdownMenuItem(
+                            child: Text(street_thuduc[i].toString()),
+                            value: i + 1,
+                          ),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -570,34 +715,55 @@ class _NewAddressPage extends State<NewAddressPage> {
                           streetName = street_2[value - 1];
                         }
                         if(dist == "3"){
-                          streetName = street_2[value - 1];
+                          streetName = street_3[value - 1];
                         }
                         if(dist == "4"){
-                          streetName = street_2[value - 1];
+                          streetName = street_4[value - 1];
                         }
                         if(dist == "5"){
-                          streetName = street_2[value - 1];
+                          streetName = street_5[value - 1];
                         }
                         if(dist == "6"){
-                          streetName = street_2[value - 1];
+                          streetName = street_6[value - 1];
                         }
                         if(dist == "7"){
-                          streetName = street_2[value - 1];
+                          streetName = street_7[value - 1];
                         }
                         if(dist == "8"){
-                          streetName = street_2[value - 1];
+                          streetName = street_8[value - 1];
                         }
                         if(dist == "9"){
-                          streetName = street_2[value - 1];
+                          streetName = street_9[value - 1];
                         }
                         if(dist == "10"){
-                          streetName = street_2[value - 1];
+                          streetName = street_10[value - 1];
                         }
                         if(dist == "11"){
-                          streetName = street_2[value - 1];
+                          streetName = street_11[value - 1];
                         }
                         if(dist == "12"){
-                          streetName = street_2[value - 1];
+                          streetName = street_12[value - 1];
+                        }
+                        if(dist == "13"){
+                          wardName = street_binhtan[value - 1];
+                        }
+                        if(dist == "14"){
+                          wardName = street_binhthanh[value - 1];
+                        }
+                        if(dist == "15"){
+                          wardName = street_govap[value - 1];
+                        }
+                        if(dist == "16"){
+                          wardName = street_phunhuan[value - 1];
+                        }
+                        if(dist == "17"){
+                          wardName = street_tanbinh[value - 1];
+                        }
+                        if(dist == "18"){
+                          wardName = street_tanphu[value - 1];
+                        }
+                        if(dist == "19"){
+                          wardName = street_thuduc[value - 1];
                         }
                       });
                     },
@@ -713,7 +879,7 @@ class _NewAddressPage extends State<NewAddressPage> {
   changeThePage() async {
     Address addr = new Address("Phan Công Bình", "0123456789", "Hồ Chí Minh", districtName, wardName, streetController.text + " " + streetName);
     address.add(addr);
-    deliveryAddr = streetController.text + ", " + districtName + ", " + wardName + ", " + "Hồ Chí Minh";
+    deliveryAddr = streetController.text + ", " + wardName + ", " + districtName + ", " + "Hồ Chí Minh";
     //print(streetController.text);
     Navigator.of(context).pop(MaterialPageRoute(builder: (context) {
       return OrderInfoPage(list: data, total: total, storeID: storeID,);

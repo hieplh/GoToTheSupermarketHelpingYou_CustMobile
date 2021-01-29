@@ -162,7 +162,6 @@ class PaypalPaymentState extends State<PaypalPayment> {
   @override
   Widget build(BuildContext context) {
     print(checkoutUrl);
-
     if (checkoutUrl != null) {
       return Scaffold(
         appBar: AppBar(
@@ -200,7 +199,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
   Widget _buildInputMoney(){
     return Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
+        padding: EdgeInsets.only(left: 20.0),
         child: StreamBuilder<String>(
           //stream: bloc.email,
           builder: (context, snapshot) => TextFormField(
@@ -209,7 +208,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
               color: Colors.black,
             ),
             controller: moneyController,
-
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.attach_money,

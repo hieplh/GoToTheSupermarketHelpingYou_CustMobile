@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:capstone2020customerapp/models/account_model.dart';
+import 'package:capstone2020customerapp/models/cost_model.dart';
 import 'package:capstone2020customerapp/models/login_model.dart';
 import 'package:capstone2020customerapp/models/order_detail_model.dart';
 import 'package:capstone2020customerapp/models/order_model.dart';
@@ -9,32 +10,24 @@ import 'package:chopper/chopper.dart';
 
 import '../api_url_constain.dart';
 
-part "login_api_service.chopper.dart";
+part "commission_api_service.chopper.dart";
 
-@ChopperApi(baseUrl: '/account/')
-abstract class LoginApiService extends ChopperService{
+@ChopperApi(baseUrl: '/service/')
+abstract class CommissionApiService extends ChopperService{
 
-  static LoginApiService create(){
+  static CommissionApiService create(){
     final client = ChopperClient(
-        baseUrl: API_URL_STARTPOINT,
-        services: [_$LoginApiService()],
+        baseUrl: API_URL,
+        services: [_$CommissionApiService()],
         converter: JsonToTypeConverter({
-          Account: (jsonData) => Account.fromJson(jsonData)
+          CostModel: (jsonData) => CostModel.fromJson(jsonData)
         })
     );
-    return _$LoginApiService(client);
+    return _$CommissionApiService(client);
   }
-  @Post(path: "username")
-  Future<Response<Account>> postAccount(@Body() Map<String, dynamic> body);
 
-  @Put(path: "wallet")
-  Future<Response> updateWallet(@Body() Map<String, dynamic> body);
-
-  @Post(path: "register")
-  Future<Response<Account>> postRegister(@Body() Map<String, dynamic> body);
-
-  @Put(path: "info")
-  Future<Response> updateInfor(@Body() Map<String, dynamic> body);
+  @Get(path: "{market_Id}/{dest_Address}/{delivery_Time}/{quantity}")
+  Future<Response<CostModel>> getServiceCost(@Path() String market_Id, @Path() String dest_Address, @Path() String delivery_Time, @Path() int quantity);
 
 
 }

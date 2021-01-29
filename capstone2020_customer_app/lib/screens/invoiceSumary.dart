@@ -49,7 +49,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
   }
 
   Future<void> postOrder()async{
-    String now = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    String now = date.year.toString() + "-0" + date.month.toString() + "-" + date.day.toString();
 //    List<OrderDetail> details = List<OrderDetail>();
 //    OrderDetail detail = new OrderDetail("BONGCAIXANH", 23900, 0, 0, 1);
 //    details.add(detail);
@@ -84,7 +84,7 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
               "priceOriginal": '${list.price}',
               "pricePaid": (double.parse(list.price) - (double.parse(list.price)*list.foods.saleOff.saleOff)/100),
               "saleOff": '${list.foods.saleOff.saleOff}',
-              "weight": 1
+              "weight": list.quantity
 //              "foodId": "${list.id}",
 //              "foodName": "${utf8.decode(latin1.encode(list.name), allowMalformed: true)}",
 //              "id": "${list.id}",
@@ -229,16 +229,27 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                             ),
                           ),
                         ),
-                        Container(
-                          child: Text(
-                            '${list.price}đ\n',
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              color: Colors.grey,
+                        if(list.foods.saleOff.saleOff != 0)
+                          Container(
+                            child: Text(
+                              'Giá gốc: ${oCcy.format(double.parse(list.price))}đ(-${list.foods.saleOff.saleOff}%)\n',
+                              style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough
+                              ),
                             ),
                           ),
-
-                        ),
+                        if(list.foods.saleOff.saleOff == 0)
+                          Container(
+                            child: Text(
+                              '${oCcy.format(double.parse(list.price))}đ\n',
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
                         Container(
                           child: Text(
                             'Số Lượng: x${list.quantity}\n',
@@ -247,15 +258,28 @@ class _InvoiceSumaryPage extends State<InvoiceSumaryPage> {
                             ),
                           ),
                         ),
-                        Container(
-                                child: Text(
-                                  '${oCcy.format((double.parse(list.price) * list.quantity))}đ',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
+                        if(list.foods.saleOff.saleOff == 0)
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              '${oCcy.format((double.parse(list.price) * list.quantity))}đ',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        if(list.foods.saleOff.saleOff != 0)
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              '${oCcy.format(((double.parse(list.price) - (double.parse(list.price)*list.foods.saleOff.saleOff/100)) * list.quantity))}đ',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),

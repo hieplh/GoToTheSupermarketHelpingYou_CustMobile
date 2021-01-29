@@ -9,33 +9,30 @@ import 'package:chopper/chopper.dart';
 
 import '../api_url_constain.dart';
 
-part "login_api_service.chopper.dart";
+part "otp_api_service.chopper.dart";
 
 @ChopperApi(baseUrl: '/account/')
-abstract class LoginApiService extends ChopperService{
+abstract class OTPApiService extends ChopperService{
 
-  static LoginApiService create(){
+  static OTPApiService create(){
     final client = ChopperClient(
         baseUrl: API_URL_STARTPOINT,
-        services: [_$LoginApiService()],
-        converter: JsonToTypeConverter({
-          Account: (jsonData) => Account.fromJson(jsonData)
-        })
+        services: [_$OTPApiService()]
     );
-    return _$LoginApiService(client);
+    return _$OTPApiService(client);
   }
-  @Post(path: "username")
-  Future<Response<Account>> postAccount(@Body() Map<String, dynamic> body);
 
-  @Put(path: "wallet")
-  Future<Response> updateWallet(@Body() Map<String, dynamic> body);
+  @Get(path: "{username}/otp/{otp}/register")
+  Future<Response> confirmOTPCode(@Path() String username, @Path() String otp);
 
-  @Post(path: "register")
-  Future<Response<Account>> postRegister(@Body() Map<String, dynamic> body);
+  @Get(path: "{username}/otp/{otp}/forget")
+  Future<Response> confirmOTPCodeForgetPassword(@Path() String username, @Path() String otp);
 
-  @Put(path: "info")
-  Future<Response> updateInfor(@Body() Map<String, dynamic> body);
+  @Get(path: "{accountId}/customer/forget")
+  Future<Response> getTicketForgetPassword(@Path() String accountId);
 
+  @Get(path: "{accountId}/newOtp")
+  Future<Response> getNewOTP(@Path() String accountId);
 
 }
 

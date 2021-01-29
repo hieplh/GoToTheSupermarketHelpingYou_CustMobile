@@ -27,6 +27,7 @@ class _FoodPage extends State<FoodPage> {
   List<CategoryModel> category;
   List<FoodModel> list = new List();
   List<FoodModel> listNotSaleOff = new List();
+  int count = 0;
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Thêm Thành Công',
@@ -121,7 +122,7 @@ class _FoodPage extends State<FoodPage> {
                 padding: const EdgeInsets.only(top: 5.0),
                 alignment: Alignment.center,
                 child: Text(
-                  '15 loại',
+                  '${listNotSaleOff.length} loại',
                   style: TextStyle(
                     fontSize: 13.0,
                     color: Colors.grey,
@@ -174,8 +175,34 @@ class _FoodPage extends State<FoodPage> {
                 onPressed: (){
                   Data data = new Data('${listFood.id}','${listFood.image}', '${listFood.name}', '${listFood.price}', 1, listFood);
                   total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
-                  listCart.add(data);
-                  badgeData++;
+                  if(listCart.length == 0){
+                    listCart.add(data);
+                    badgeData++;
+                  }else{
+                    for(int i = 0; i < listCart.length; i++){
+                      if(listFood.id == listCart[i].id){
+                        count = i;
+                        print(count);
+                        break;
+                      }else{
+                        if(listFood.id != listCart[i].id){
+                          //listCart[i].quantity++;
+                          count = -1;
+                        }
+                      }
+                    }
+                    if(count == -1){
+                      listCart.add(data);
+                      badgeData++;
+                    }else{
+                      listCart[count].quantity++;
+                    }
+                  }
+
+
+
+
+
                   quantity.putIfAbsent(data.id, () => data.quantity);
                   showToast();
                 },

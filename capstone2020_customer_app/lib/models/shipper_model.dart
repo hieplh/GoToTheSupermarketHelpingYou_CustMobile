@@ -6,10 +6,7 @@ part 'shipper_model.g.dart';
 @JsonSerializable()
 class Shipper{
   String username;
-  String firstName;
-  String middleName;
-  String lastName;
-  String phone;
+  String fullname;
   String dob;
   String role;
   int numDelivery;
@@ -20,10 +17,7 @@ class Shipper{
 
   Shipper(
       this.username,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.phone,
+      this.fullname,
       this.dob,
       this.role,
       this.numDelivery,

@@ -158,6 +158,7 @@ class _ProgressPage extends State<ProgressPage> {
       }
     }
 
+
     if (status == 21) {
       num = 21;
       img = img1;
@@ -453,9 +454,7 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.fullname), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -513,9 +512,7 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.fullname), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -573,9 +570,7 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.fullname), allowMalformed: true)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 15.0,
@@ -1175,9 +1170,7 @@ class _ProgressPage extends State<ProgressPage> {
                           "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"),
                     ),
                     title: Text(
-                      '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.middleName), allowMalformed: true)} ' +
-                          '${utf8.decode(latin1.encode(myOrder.body.shipper.lastName), allowMalformed: true)}',
+                      '${utf8.decode(latin1.encode(myOrder.body.shipper.fullname), allowMalformed: true)}' ,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 20.0,
@@ -1488,10 +1481,11 @@ class _ProgressPage extends State<ProgressPage> {
                   child: Column(
                     children: <Widget>[
                       for (var list in order)
-                        Container(
+                        if(list.saleOff != 0)
+                          Container(
                           child: ListTile(
                             leading: Text(
-                              '1x',
+                              '${oCcy.format(list.weight)}x',
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
@@ -1511,14 +1505,125 @@ class _ProgressPage extends State<ProgressPage> {
 //                              fontSize: 13.0,
 //                            ),
 //                          ),
-                            trailing: Text(
-                              '${oCcy.format(list.priceOriginal)}đ',
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
+                            trailing: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Container(
+                                  height: 20,
+                                  child: Text(
+                                    '${oCcy.format(double.parse(list.priceOriginal.toString()))}đ(-${list.saleOff}%)\n',
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  //padding: EdgeInsets.only(left: 60.0),
+                                  child: Text(
+                                    '${oCcy.format(list.pricePaid * list.weight)}đ\n',
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                      for (var list in order)
+                        if(list.saleOff == 0)
+                          Container(
+                            child: ListTile(
+                              leading: Text(
+                                '${oCcy.format(list.weight)}x',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              title: Text(
+                                '${utf8.decode(latin1.encode(list.food.name), allowMalformed: true)}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 17.0,
+                                ),
+                              ),
+//                          subtitle: Text(
+//                            '${listFood.price}',
+//                            style: TextStyle(
+//                              fontFamily: 'Montserrat',
+//                              fontSize: 13.0,
+//                            ),
+//                          ),
+                              trailing: Text(
+                                '${oCcy.format(list.pricePaid * list.weight)}đ',
+                                style: TextStyle(
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: MediaQuery.of(context).size.width * 0.55,
+                            padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                            child: Text(
+                              'Phí giao hàng',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                              Container(
+                                padding:
+                                const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: Text(
+                                  '${oCcy.format(myOrder.body.costDelivery)}đ',
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: MediaQuery.of(context).size.width * 0.55,
+                            padding: const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                            child: Text(
+                              'Phí đi chợ',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding:
+                            const EdgeInsets.only(bottom: 15.0, top: 10.0),
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: Text(
+                              '${oCcy.format(myOrder.body.costShopping)}đ',
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                        ],
+                      ),
                     ],
                   ),
                 ),

@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:capstone2020customerapp/api/login_api_service.dart';
+import 'package:capstone2020customerapp/screens/confirmOTPRegister.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone2020customerapp/screens/login.dart';
+import 'package:flutter_otp/flutter_otp.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import '../api_url_constain.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -13,18 +19,29 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPage extends State<RegisterPage> {
   String email;
 
-  TextEditingController firstNameController = new TextEditingController();
-  TextEditingController middleNameController = new TextEditingController();
-  TextEditingController lastNameController = new TextEditingController();
-  TextEditingController usernameController = new TextEditingController();
+  TextEditingController fullnameController = new TextEditingController();
   TextEditingController dobController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController rePasswordController = new TextEditingController();
   TextEditingController phoneNumberController = new TextEditingController();
 
+  FlutterOtp otp = FlutterOtp();
 
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   void showFailToast(String msg) {
+    //setState(() {
+    Fluttertoast.showToast(
+        msg: "OTP: " + msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+//        backgroundColor: const Color.fromRGBO(0, 141, 177, 1),
+        textColor: Colors.white
+    );
+    //});
+  }
+
+  void showFailInput(String msg) {
     //setState(() {
     Fluttertoast.showToast(
         msg: msg,
@@ -37,10 +54,10 @@ class _RegisterPage extends State<RegisterPage> {
     //});
   }
 
-  void showSuccessToast() {
+  void showSuccessToast(String msg) {
     //setState(() {
     Fluttertoast.showToast(
-        msg: 'Đăng Kí Thành Công',
+        msg: msg,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 1,
@@ -61,14 +78,11 @@ class _RegisterPage extends State<RegisterPage> {
             children: <Widget>[
 
               _buildLogo(),
-              _buildFirstNameInput(),
-              _buildMiddleNameInput(),
-              _buildLastNameInput(),
-              _buildUsernameInput(),
               _buildPhoneNumberInput(),
-              _buildDoBInput(),
               _buildPasswordInput(),
               _buildRePasswordInput(),
+              _buildUsernameInput(),
+              _buildDoBInput(),
               _buildRegisterButton(),
               _buildBackToLoginButton(),
 
@@ -88,163 +102,7 @@ class _RegisterPage extends State<RegisterPage> {
       ),
     );
   }
-  Widget _buildFirstNameInput(){
-    return Container(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: StreamBuilder<String>(
-          //stream: bloc.email,
-          builder: (context, snapshot) => TextFormField(
-            //onChanged: bloc.emailChanged,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            controller: firstNameController,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.person,
-                color: const Color.fromRGBO(0, 175, 82, 1),
-                size: 30.0,
-              ),
-              labelText: 'Tên',
-              hintText: 'Nhập tên',
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
-                ),
-              ),
-              labelStyle: TextStyle(
-                  color:
-                  myFocusNode.hasFocus ? Colors.black : Colors.black),
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-              errorText: snapshot.error,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  Widget _buildLastNameInput(){
-    return Container(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: StreamBuilder<String>(
-          //stream: bloc.email,
-          builder: (context, snapshot) => TextFormField(
-            //onChanged: bloc.emailChanged,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            controller: lastNameController,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.person,
-                color: const Color.fromRGBO(0, 175, 82, 1),
-                size: 30.0,
-              ),
-              labelText: 'Họ',
-              hintText: 'Nhập họ',
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
-                ),
-              ),
-              labelStyle: TextStyle(
-                  color:
-                  myFocusNode.hasFocus ? Colors.black : Colors.black),
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-              errorText: snapshot.error,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  Widget _buildMiddleNameInput(){
-    return Container(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: StreamBuilder<String>(
-          //stream: bloc.email,
-          builder: (context, snapshot) => TextFormField(
-            //onChanged: bloc.emailChanged,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            controller: middleNameController,
-            onSaved: (input) => email = input,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.person,
-                color: const Color.fromRGBO(0, 175, 82, 1),
-                size: 30.0,
-              ),
-              labelText: 'Tên đệm',
-              hintText: 'Nhập tên đệm',
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(
-                  color: const Color.fromRGBO(0, 141, 177, 1),
-                ),
-              ),
-              labelStyle: TextStyle(
-                  color:
-                  myFocusNode.hasFocus ? Colors.black : Colors.black),
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-              errorText: snapshot.error,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
   Widget _buildUsernameInput(){
     return Container(
       child: Container(
@@ -257,15 +115,15 @@ class _RegisterPage extends State<RegisterPage> {
             style: TextStyle(
               color: Colors.black,
             ),
-            controller: usernameController,
+            controller: fullnameController,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_pin,
                 color: const Color.fromRGBO(0, 175, 82, 1),
                 size: 30.0,
               ),
-              labelText: 'Tài Khoản',
-              hintText: 'Nhập tài khoản',
+              labelText: 'Họ và Tên',
+              hintText: 'Nhập họ và tên',
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30.0),
                 borderSide: BorderSide(
@@ -310,6 +168,7 @@ class _RegisterPage extends State<RegisterPage> {
               color: Colors.black,
             ),
             controller: phoneNumberController,
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.phone_android,
@@ -362,6 +221,7 @@ class _RegisterPage extends State<RegisterPage> {
               color: Colors.black,
             ),
             controller: dobController,
+            keyboardType: TextInputType.text,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.date_range,
@@ -414,6 +274,7 @@ class _RegisterPage extends State<RegisterPage> {
               color: Colors.black,
             ),
             controller: passwordController,
+            keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
@@ -466,6 +327,7 @@ class _RegisterPage extends State<RegisterPage> {
               color: Colors.black,
             ),
             controller: rePasswordController,
+            keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
@@ -584,37 +446,71 @@ class _RegisterPage extends State<RegisterPage> {
     );
   }
 
+
   changeThePage() async {
-//    final myService = ProjectApiService.create();
-//    final response = await myService.getResource();
-//    var post = response.body;
-//    print(' ${post.toString()}');
-    print(dobController.text);
-  print(firstNameController.text);
-  print(lastNameController.text);
-  print(middleNameController.text);
+
+  print("${dobController.text}");
   print(passwordController.text);
   print(phoneNumberController.text);
-  print(usernameController.text);
-    final myService = LoginApiService.create();
-    final response = await myService.postAccount({
-      "dob" : dobController.text,
-      "firstName" : firstNameController.text,
-      "lastName" : lastNameController.text,
-      "middleName" : middleNameController.text,
-      "password" : passwordController.text,
-      "phone" : phoneNumberController.text,
-      "role" : "customer",
-      "username" : usernameController.text},);
-    if(response.statusCode == 200){
-      showSuccessToast();
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-            return LoginPage();
-          }), ModalRoute.withName('/'));
+  print(fullnameController.text);
+
+  if(phoneNumberController.text != ""){
+    if(passwordController.text != ""){
+      if(rePasswordController.text != ""){
+        if(fullnameController.text != ""){
+          if(dobController.text != ""){
+            if(passwordController.text == rePasswordController.text){
+              var url = API_URL_STARTPOINT + '/account/register';
+              var response = await http.post(Uri.parse(url),
+                  headers: {
+                    'Content-type' : 'application/json',
+                    "Accept": "application/json",
+                  },
+                  body: json.encode({
+                    "dob": dobController.text,
+                    "fullname": fullnameController.text,
+                    "password": passwordController.text,
+                    "role": "customer",
+                    "username": phoneNumberController.text
+                  }));
+              print('Response status: ${response.statusCode}');
+              print('Response body: ${response.body}');
+              if(response.statusCode == 200){
+                otp.sendOtp(
+                    "902792326",
+                    'OTP is: ${response.body}',
+                    1000,
+                    9999,
+                    "+84"
+                );
+                //showSuccessToast(response.body);
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ConfirmOTPRegisterPage(phoneNumber: phoneNumberController.text,)));
+//      Navigator.of(context).pushAndRemoveUntil(
+//          MaterialPageRoute(builder: (context) {
+//            return LoginPage();
+//          }), ModalRoute.withName('/'));
+              }else{
+                showFailToast(response.body.toString());
+              }
+            }else{
+              showFailInput("Mật Khẩu nhập lại không đúng");
+            }
+          }else{
+            showFailInput("Chưa nhập ngày tháng năm sinh");
+          }
+        }else{
+          showFailInput("Chưa nhập họ và tên");
+        }
+      }else{
+        showFailInput("Chưa nhập re-password");
+      }
     }else{
-      showFailToast(response.body.toString());
+      showFailInput("Chưa nhập password");
     }
+  }else{
+    showFailInput("Chưa nhập số điện thoại");
+  }
 
   }
 

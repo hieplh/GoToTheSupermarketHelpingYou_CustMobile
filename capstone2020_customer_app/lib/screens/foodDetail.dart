@@ -23,7 +23,7 @@ FocusNode myFocusNode = new FocusNode();
 class _FoodDetailPage extends State<FoodDetailPage> {
   String foodID;
   _FoodDetailPage(this.foodID);
-
+  int count = 0;
   void showToast() {
     Fluttertoast.showToast(
         msg: 'Thêm Thành Công',
@@ -241,8 +241,29 @@ class _FoodDetailPage extends State<FoodDetailPage> {
         onPressed: () {
           Data data = new Data('${food.id}','${food.image}', '${food.name}', '${food.price}', 1, food);
           total = total + (double.parse(data.price.toString()) - (double.parse(data.price)*data.foods.saleOff.saleOff/100));
-          listCart.add(data);
-          badgeData++;
+          if(listCart.length == 0){
+            listCart.add(data);
+            badgeData++;
+          }else{
+            for(int i = 0; i < listCart.length; i++){
+              if(foodID == listCart[i].id){
+                count = i;
+                print(count);
+                break;
+              }else{
+                if(foodID != listCart[i].id){
+                  //listCart[i].quantity++;
+                  count = -1;
+                }
+              }
+            }
+            if(count == -1){
+              listCart.add(data);
+              badgeData++;
+            }else{
+              listCart[count].quantity++;
+            }
+          }
           quantity.putIfAbsent(data.id, () => data.quantity);
           showToast();
           Navigator.of(context).pop(MaterialPageRoute(builder: (context) {

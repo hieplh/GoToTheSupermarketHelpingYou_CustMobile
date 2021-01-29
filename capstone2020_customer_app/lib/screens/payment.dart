@@ -1,7 +1,9 @@
+import 'package:capstone2020customerapp/api/commission_api_service.dart';
 import 'package:capstone2020customerapp/api/food_api_service.dart';
 import 'package:capstone2020customerapp/api/login_api_service.dart';
 import 'package:capstone2020customerapp/api_url_constain.dart';
 import 'package:capstone2020customerapp/models/addToCart.dart';
+import 'package:capstone2020customerapp/models/cost_model.dart';
 import 'package:capstone2020customerapp/models/food_model.dart';
 import 'package:capstone2020customerapp/paypal/paypalPayment.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +30,20 @@ class _PaymentPage extends State<PaymentPage> {
   _PaymentPage(this.data, this.total, this.storeID, this.timePicked);
   DateTime date = DateTime.now();
   List<FoodModel> list;
+  CostModel cost;
   Future<void> getMoney() async {
     final myService2 = LoginApiService.create();
     final response2 = await myService2.postAccount({"password" : "${pass}", "role" : "customer", "username" : "${customer}"},);
     account = response2.body;
+
+
+    final myService3 = CommissionApiService.create();
+    final response3 = await myService3.getServiceCost(storeID, deliveryAddr, timePicked, data.length);
+
+    cost = response3.body;
+    shoppingFee = cost.costShopping;
+    deliveryFee = cost.costShipping;
+
   }
 
   @override
@@ -180,6 +192,63 @@ class _PaymentPage extends State<PaymentPage> {
                 fontSize: 15.0,
               ),
             ),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                margin: const EdgeInsets.only(left: 30.0),
+                child: Text(
+                  'Chi Phí Đi Chợ: ',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                margin: const EdgeInsets.only(right: 20.0),
+                child: Text(
+                  '${oCcy.format(cost.costShopping)}đ',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                  ),
+                ),
+              ),
+            ],
+
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                margin: const EdgeInsets.only(left: 30.0),
+                child: Text(
+                  'Chi Phí Giao Hàng: ',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                margin: const EdgeInsets.only(right: 20.0),
+                child: Text(
+                  '${oCcy.format(cost.costShipping)}đ',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: const Color.fromRGBO(0, 175, 82, 1),
+                  ),
+                ),
+              ),
+            ],
+
           ),
 
           Container(
